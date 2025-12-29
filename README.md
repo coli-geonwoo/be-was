@@ -17,9 +17,10 @@
     - 찾고자 하는 파일이 없을 경우 : default 404 페이지를 반환한다
 - [ ] Http Request 내용 출력
   - Http Request 구조 분리
-    - Http RequestLine : HttpMethod + RequestUrl + Http Version
+    - [x] Http RequestLine : HttpMethod + RequestUrl + Http Version
       - ex) GET /index.html HTTP/1.1
-    - Http RequestHeader 분리
+    - [x] Http RequestHeader 분리
+    - [x] Http RequestBody 분리
     - 서버로 들어오는 Http Request 내용을 적절하게 파싱하여 로거(log.debug)를 활용해 출력한다
 - [ ] Java Thread 기반 프로젝트를 Concurrent 패키지를 활용하도록 변경한다
 - [ ] 단위 테스트를 만들어 구현 내용을 검증한다.

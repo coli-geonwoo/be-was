@@ -11,4 +11,8 @@ public class HttpRequestLine {
         this.requestUrl = requestUrl;
         this.version = version;
     }
+
+    public HttpMethod getMethod() {
+        return method;
+    }
 }

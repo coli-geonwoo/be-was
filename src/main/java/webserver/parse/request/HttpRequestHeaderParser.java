@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import webserver.http.request.HttpRequestHeader;
 
-public class HttpRequestHeaderParser implements HttpRequestParser<HttpRequestHeader> {
+class HttpRequestHeaderParser implements HttpRequestParser<HttpRequestHeader> {
 
     private static final String HTTP_REQUEST_HEADER_DELIMITER = ":";
     private static final int HEADER_KEY_INDEX = 0;

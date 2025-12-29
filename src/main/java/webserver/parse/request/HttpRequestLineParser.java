@@ -6,7 +6,7 @@ import webserver.http.request.HttpRequestLine;
 import webserver.http.request.HttpVersion;
 import webserver.http.request.RequestUrl;
 
-public class HttpRequestLineParser implements HttpRequestParser<HttpRequestLine> {
+class HttpRequestLineParser implements HttpRequestParser<HttpRequestLine> {
 
     private static final int HTTP_REQUEST_LINE_TOKEN_COUNT = 3;
 
