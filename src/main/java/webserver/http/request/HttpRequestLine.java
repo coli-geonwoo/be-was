@@ -3,12 +3,12 @@ package webserver.http.request;
 public class HttpRequestLine {
 
     private final HttpMethod method;
-    private final HttpVersion version;
     private final RequestUrl requestUrl;
+    private final HttpVersion version;
 
-    public HttpRequestLine(HttpMethod method, HttpVersion version, RequestUrl requestUrl) {
+    public HttpRequestLine(HttpMethod method, RequestUrl requestUrl, HttpVersion version) {
         this.method = method;
-        this.version = version;
         this.requestUrl = requestUrl;
+        this.version = version;
     }
 }

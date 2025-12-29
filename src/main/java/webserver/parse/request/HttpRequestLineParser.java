@@ -1,0 +1,28 @@
+package webserver.parse.request;
+
+import java.util.StringTokenizer;
+import webserver.http.request.HttpMethod;
+import webserver.http.request.HttpRequestLine;
+import webserver.http.request.HttpVersion;
+import webserver.http.request.RequestUrl;
+
+public class HttpRequestLineParser implements HttpRequestParser<HttpRequestLine> {
+
+    private static final int HTTP_REQUEST_LINE_TOKEN_COUNT = 3;
+
+    @Override
+    public HttpRequestLine parse(String input) {
+        StringTokenizer tokenizer = new StringTokenizer(input);
+        validateRequestLine(tokenizer);
+        HttpMethod method = HttpMethod.valueOf(tokenizer.nextToken().toUpperCase());
+        RequestUrl requestUrl = new RequestUrl(tokenizer.nextToken());
+        HttpVersion httpVersion = HttpVersion.mapToHttpVersion(tokenizer.nextToken().toUpperCase());
+        return new HttpRequestLine(method, requestUrl, httpVersion);
+    }
+
+    private void validateRequestLine(StringTokenizer tokenizer) {
+        if (tokenizer.countTokens() != HTTP_REQUEST_LINE_TOKEN_COUNT) {
+            throw new RuntimeException("Invalid request line: " + tokenizer.countTokens());
+        }
+    }
+}
