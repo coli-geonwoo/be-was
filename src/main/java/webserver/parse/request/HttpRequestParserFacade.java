@@ -26,10 +26,11 @@ public class HttpRequestParserFacade {
         this.httpRequestBodyParser = new HttpRequestBodyParser();
     }
 
+    //TODO content-Type 만큼 더 읽기
     public HttpRequest parse(String rawRequest) {
         int firstLineEnd = rawRequest.indexOf(REQUEST_LINE_DELIMITER);
         int headerEnd = rawRequest.indexOf(REQUEST_HEADER_DELIMITER);
-        String[] lines = rawRequest.split(System.lineSeparator());
+        String[] lines = rawRequest.split(REQUEST_LINE_DELIMITER);
 
         String rawRequestLine = lines[REQUEST_LINE_INDEX];
         HttpRequestLine requestLine = httpRequestLineParser.parse(rawRequestLine);
@@ -37,7 +38,7 @@ public class HttpRequestParserFacade {
 
         String headerPart = parseRawHeaderPart(rawRequest, firstLineEnd, headerEnd);
         HttpRequestHeader requestHeader = httpRequestHeaderParser.parse(headerPart);
-        logger.debug("Request Header : {}", requestHeader);
+        logger.debug("Request Header : {}", headerPart);
 
         if(requestLine.getMethod() == HttpMethod.POST) {
             String rawBodyPart = parseRawBodyPart(rawRequest, headerEnd);
