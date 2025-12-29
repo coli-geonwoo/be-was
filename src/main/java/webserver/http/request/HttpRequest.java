@@ -13,6 +13,10 @@ public class HttpRequest {
         this.requestBody = requestBody;
     }
 
+    public HttpRequest(HttpRequestLine requestLine, HttpRequestHeader requestHeader) {
+        this(requestLine, requestHeader, HttpRequestBody.EMPTY_REQUEST_BODY);
+    }
+
     //TODO 테스트 추가
     private void validateMethodAndBody(HttpRequestLine requestLine, HttpRequestBody requestBody) {
         HttpMethod httpMethod = requestLine.getMethod();

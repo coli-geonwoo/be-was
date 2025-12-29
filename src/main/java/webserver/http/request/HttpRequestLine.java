@@ -15,4 +15,8 @@ public class HttpRequestLine {
     public HttpMethod getMethod() {
         return method;
     }
+
+    public String getRequestUrl() {
+        return requestUrl.getUrl();
+    }
 }

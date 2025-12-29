@@ -7,4 +7,8 @@ public class RequestUrl {
     public RequestUrl(String url) {
         this.url = url;
     }
+
+    public String getUrl() {
+        return url;
+    }
 }
