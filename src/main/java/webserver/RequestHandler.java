@@ -1,8 +1,10 @@
 package webserver;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
@@ -22,7 +24,17 @@ public class RequestHandler implements Runnable {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
 
-        try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+             OutputStream out = connection.getOutputStream()) {
+            //TODO br의 끝을 어떻게 알지?
+            while(true) {
+                String line = br.readLine();
+                if(line == null || line.isBlank()) {
+                    break;
+                }
+                System.out.println(line);
+            }
+
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "<h1>Hello World</h1>".getBytes();
@@ -30,6 +42,7 @@ public class RequestHandler implements Runnable {
             responseBody(dos, body);
         } catch (IOException e) {
             logger.error(e.getMessage());
+            //TODO 500에러 페이지 반환
         }
     }
 
