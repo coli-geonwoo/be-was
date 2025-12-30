@@ -26,7 +26,6 @@ public class HttpRequestParserFacade {
         this.httpRequestBodyParser = new HttpRequestBodyParser();
     }
 
-    //TODO content-Length 만큼 더 읽기
     public HttpRequest parse(String rawRequest) {
         int firstLineEnd = rawRequest.indexOf(REQUEST_LINE_DELIMITER);
         int headerEnd = rawRequest.indexOf(REQUEST_HEADER_DELIMITER);
@@ -41,7 +40,8 @@ public class HttpRequestParserFacade {
         logger.debug("Request Header : {}", headerPart);
 
         if(requestLine.getMethod() == HttpMethod.POST) {
-            String rawBodyPart = parseRawBodyPart(rawRequest, headerEnd);
+            int cotentLength = Integer.parseInt(requestHeader.getHeaderContent("Content-Length"));
+            String rawBodyPart = parseRawBodyPart(rawRequest, headerEnd, cotentLength);
             logger.debug("Request Header : {}", rawBodyPart);
             HttpRequestBody requestBody = httpRequestBodyParser.parse(rawBodyPart);
 
@@ -58,7 +58,8 @@ public class HttpRequestParserFacade {
         );
     }
 
-    private String parseRawBodyPart(String rawRequest, int headerEnd) {
-        return rawRequest.substring(headerEnd + REQUEST_HEADER_DELIMITER.length());
+    private String parseRawBodyPart(String rawRequest, int headerEnd, int contentLength) {
+        int startIndex = headerEnd + REQUEST_HEADER_DELIMITER.length();
+        return rawRequest.substring(startIndex, startIndex + contentLength);
     }
 }
