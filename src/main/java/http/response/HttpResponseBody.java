@@ -2,15 +2,15 @@ package http.response;
 
 public class HttpResponseBody {
 
-    public static HttpResponseBody EMPTY_RESPONSE_BODY = new HttpResponseBody("");
+    public static HttpResponseBody EMPTY_RESPONSE_BODY = new HttpResponseBody(new byte[0]);
 
-    private final String body;
+    private final byte[] body;
 
-    public HttpResponseBody(String body) {
+    public HttpResponseBody(byte[] body) {
         this.body = body;
     }
 
-    public String getBody() {
+    public byte[] getBody() {
         return body;
     }
 }

@@ -1,0 +1,44 @@
+package webserver.resolver;
+
+import http.request.HttpRequest;
+import http.request.RequestUrl;
+import http.response.ContentType;
+import http.response.HttpResponse;
+import http.response.HttpResponseBody;
+import http.response.HttpResponseHeader;
+import http.response.ResponseStatusLine;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+public class HttpResponseResolveFacade {
+
+    private static final String HTTP_RESPONSE_DELIMITER = "\r\n";
+
+    private final HttpResponseResolver<ResponseStatusLine> statusLineResolver;
+    private final HttpResponseResolver<HttpResponseHeader> responseHeaderResolver;
+
+    public HttpResponseResolveFacade() {
+        this.statusLineResolver = new ResponseStatusLineResolver();
+        this.responseHeaderResolver = new HttpResponseHeaderResolver();
+    }
+
+    public void resolve(HttpRequest request, HttpResponse response, DataOutputStream dataOutputStream) {
+        String statusLine = statusLineResolver.resolve(response.getStatusLine());
+        byte[] body = response.getBody();
+        addHeaders(response, request.getRequestUrl());
+        String headers = responseHeaderResolver.resolve(response.getHeaders());
+        try {
+            dataOutputStream.writeBytes(statusLine + HTTP_RESPONSE_DELIMITER);
+            dataOutputStream.writeBytes(headers + HTTP_RESPONSE_DELIMITER);
+            dataOutputStream.write(body, 0, body.length);
+            dataOutputStream.flush();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to resolve http response", e);
+        }
+    }
+
+    private void addHeaders(HttpResponse response, String requestUrl) {
+        response.addHeader(ContentType.CONTENT_TYPE_HEADER_KEY, ContentType.mapToType(requestUrl));
+        response.addHeader("Content-Length", String.valueOf(response.getBody().length));
+    }
+}

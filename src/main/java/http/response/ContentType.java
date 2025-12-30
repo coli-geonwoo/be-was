@@ -13,6 +13,8 @@ public enum ContentType {
     GIF(List.of(".gif"), "image/gif"),
     ICO(List.of(".ico"), "image/x-icon");
 
+    public static final String CONTENT_TYPE_HEADER_KEY = "Content-Type";
+
     private final List<String> extensions;
     private final String responseContentType;
 

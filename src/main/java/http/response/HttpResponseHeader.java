@@ -11,6 +11,10 @@ public class HttpResponseHeader {
         this.headers = headers;
     }
 
+    public void add(String key, String value) {
+        headers.put(key, value);
+    }
+
     public Map<String, String> getHeaders() {
         return headers;
     }
