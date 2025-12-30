@@ -1,6 +1,6 @@
 package webserver.parse.request;
 
-import webserver.http.request.HttpRequestBody;
+import http.request.HttpRequestBody;
 
 class HttpRequestBodyParser implements HttpRequestParser<HttpRequestBody> {
 

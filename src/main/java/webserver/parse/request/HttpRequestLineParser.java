@@ -1,10 +1,10 @@
 package webserver.parse.request;
 
 import java.util.StringTokenizer;
-import webserver.http.request.HttpMethod;
-import webserver.http.request.HttpRequestLine;
-import webserver.http.request.HttpVersion;
-import webserver.http.request.RequestUrl;
+import http.request.HttpMethod;
+import http.request.HttpRequestLine;
+import http.request.HttpVersion;
+import http.request.RequestUrl;
 
 class HttpRequestLineParser implements HttpRequestParser<HttpRequestLine> {
 

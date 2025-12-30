@@ -3,7 +3,7 @@ package webserver.parse.request;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
-import webserver.http.request.HttpRequestHeader;
+import http.request.HttpRequestHeader;
 
 class HttpRequestHeaderParser implements HttpRequestParser<HttpRequestHeader> {
 

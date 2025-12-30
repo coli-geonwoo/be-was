@@ -1,7 +1,6 @@
-package webserver.http.response;
+package http.response;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 public enum ContentType {
 

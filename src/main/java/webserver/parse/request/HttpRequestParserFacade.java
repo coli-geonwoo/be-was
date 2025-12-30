@@ -2,11 +2,11 @@ package webserver.parse.request;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.http.request.HttpMethod;
-import webserver.http.request.HttpRequest;
-import webserver.http.request.HttpRequestBody;
-import webserver.http.request.HttpRequestHeader;
-import webserver.http.request.HttpRequestLine;
+import http.request.HttpMethod;
+import http.request.HttpRequest;
+import http.request.HttpRequestBody;
+import http.request.HttpRequestHeader;
+import http.request.HttpRequestLine;
 
 public class HttpRequestParserFacade {
 

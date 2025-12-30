@@ -2,9 +2,7 @@ package webserver;
 
 import java.net.ServerSocket;
 import java.net.Socket;
-
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -15,7 +13,15 @@ import webserver.view.ViewResolver;
 
 public class WebServer {
 
-    private static final ExecutorService EXECUTOR = new ThreadPoolExecutor(10, 200, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>()); //기본 tomcat 설정
+    private static final ExecutorService EXECUTOR = new ThreadPoolExecutor(
+            10,
+            200,
+            60L,
+            TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>(),
+            new ThreadPoolExecutor.CallerRunsPolicy()
+
+    ); //기본 tomcat 설정
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
     private static final int DEFAULT_PORT = 8080;
     private static final ViewResolver VIEW_RESOLVER = new ViewResolver();
