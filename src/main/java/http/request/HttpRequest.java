@@ -25,6 +25,18 @@ public class HttpRequest {
         }
     }
 
+    public HttpRequestLine getRequestLine() {
+        return requestLine;
+    }
+
+    public HttpRequestHeader getRequestHeader() {
+        return requestHeader;
+    }
+
+    public HttpRequestBody getRequestBody() {
+        return requestBody;
+    }
+
     public String getRequestUrl() {
         return requestLine.getRequestUrl();
     }

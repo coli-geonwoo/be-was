@@ -60,6 +60,7 @@ public class HttpRequestParserFacade {
 
     private String parseRawBodyPart(String rawRequest, int headerEnd, int contentLength) {
         int startIndex = headerEnd + REQUEST_HEADER_DELIMITER.length();
+        System.out.println(headerEnd + " " +  REQUEST_HEADER_DELIMITER.length() + " " + contentLength);
         return rawRequest.substring(startIndex, startIndex + contentLength);
     }
 }

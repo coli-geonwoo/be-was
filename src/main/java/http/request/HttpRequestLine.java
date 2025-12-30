@@ -16,6 +16,10 @@ public class HttpRequestLine {
         return method;
     }
 
+    public HttpVersion getVersion() {
+        return version;
+    }
+
     public String getRequestUrl() {
         return requestUrl.getUrl();
     }
