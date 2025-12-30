@@ -7,7 +7,7 @@ public enum HttpVersion {
     HTTP_1_1(1.1),
     ;
 
-    private static final String HTTP_VERSION_PREFIX = "HTTP/";
+    public static final String HTTP_VERSION_PREFIX = "HTTP/";
 
     private final double version;
 
