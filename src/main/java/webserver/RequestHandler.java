@@ -29,6 +29,10 @@ public class RequestHandler implements Runnable {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
              OutputStream out = connection.getOutputStream()) {
             String rawRequest = getRawHttpRequest(br);
+            if(rawRequest.isBlank()) {
+                logger.info("Empty raw request");
+                return;
+            }
             HttpRequest request = requestParserFacade.parse(rawRequest);
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "<h1>Hello World</h1>".getBytes();
@@ -45,11 +49,10 @@ public class RequestHandler implements Runnable {
         String line;
 
         while ((line = br.readLine()) != null) {
-            if (line.isBlank()) {
-                rawRequest.append("\r\n");
+            rawRequest.append(line).append("\r\n");
+            if(!br.ready()) {
                 break;
             }
-            rawRequest.append(line).append("\r\n");
         }
 
         return rawRequest.toString();
