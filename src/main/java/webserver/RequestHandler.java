@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.request.HttpRequest;
@@ -15,6 +17,7 @@ import webserver.view.View;
 import webserver.view.ViewResolver;
 
 public class RequestHandler implements Runnable {
+
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
@@ -34,6 +37,7 @@ public class RequestHandler implements Runnable {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
              OutputStream out = connection.getOutputStream()) {
             String rawRequest = getRawHttpRequest(br);
+
             if(!rawRequest.isBlank()) {
                 HttpRequest request = requestParserFacade.parse(rawRequest);
                 String requestUrl = request.getRequestUrl();

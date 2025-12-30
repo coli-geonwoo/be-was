@@ -26,7 +26,7 @@ public class HttpRequestParserFacade {
         this.httpRequestBodyParser = new HttpRequestBodyParser();
     }
 
-    //TODO content-Type 만큼 더 읽기
+    //TODO content-Length 만큼 더 읽기
     public HttpRequest parse(String rawRequest) {
         int firstLineEnd = rawRequest.indexOf(REQUEST_LINE_DELIMITER);
         int headerEnd = rawRequest.indexOf(REQUEST_HEADER_DELIMITER);

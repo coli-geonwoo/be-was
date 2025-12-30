@@ -11,7 +11,6 @@ public class ViewResolver {
     public View resolveStaticFileByName(String fileName) {
         try {
             InputStream inputStream = findByPath(DEFAULT_STATIC_FILE_PATH + fileName);
-            System.out.println("path : " + DEFAULT_STATIC_FILE_PATH + fileName);
             if (inputStream == null) {
                 throw new RuntimeException("No view found for path: " + fileName);
             }
