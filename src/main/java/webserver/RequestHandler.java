@@ -23,20 +23,17 @@ public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
-    private final ViewResolver viewResolver;
     private final HttpRequestParserFacade requestParserFacade;
     private final HttpResponseResolveFacade responseResolveFacade;
     private final HandlerMapper handlerMapper;
 
     public RequestHandler(
             Socket connection,
-            ViewResolver viewResolver,
             HttpRequestParserFacade requestParserFacade,
             HttpResponseResolveFacade responseResolveFacade,
             HandlerMapper handlerMapper
     ) {
         this.connection = connection;
-        this.viewResolver = viewResolver;
         this.requestParserFacade = requestParserFacade;
         this.responseResolveFacade = responseResolveFacade;
         this.handlerMapper = handlerMapper;
@@ -50,18 +47,14 @@ public class RequestHandler implements Runnable {
              OutputStream out = connection.getOutputStream()) {
             String rawRequest = getRawHttpRequest(br);
 
-            if(!rawRequest.isBlank()) {
-                HttpRequest request = requestParserFacade.parse(rawRequest);
-                Handler handler = handlerMapper.mapByPath(request.getRequestUrl());
-                HttpResponse response = handler.handle(request);
-                responseResolveFacade.resolve(request, response, new DataOutputStream(out));
-
-//                DataOutputStream dos = new DataOutputStream(out);
-//                byte[] body = resolvedView.getContent();
-//                response200Header(ContentType.mapToType(requestUrl), dos, body.length);
-//                responseBody(dos, body);
-                logger.debug("New Client Connect Response: {}", request.getRequestUrl());
+            if(rawRequest.isBlank()) {
+               return;
             }
+            HttpRequest request = requestParserFacade.parse(rawRequest);
+            Handler handler = handlerMapper.mapByPath(request.getRequestUrl());
+            HttpResponse response = handler.handle(request);
+            responseResolveFacade.resolve(request, response, new DataOutputStream(out));
+            logger.debug("New Client Connect Response: {}", request.getRequestUrl());
 
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -80,25 +73,5 @@ public class RequestHandler implements Runnable {
             }
         }
         return rawRequest.toString();
-    }
-
-    private void response200Header(String contentType, DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: " + contentType + "\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
     }
 }

@@ -26,7 +26,6 @@ public class WebServer {
     ); //기본 tomcat 설정
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
     private static final int DEFAULT_PORT = 8080;
-    private static final ViewResolver VIEW_RESOLVER = new ViewResolver();
     private static final HttpRequestParserFacade HTTP_REQUEST_PARSER = new HttpRequestParserFacade();
 
     public static void main(String args[]) throws Exception {
@@ -46,7 +45,6 @@ public class WebServer {
             while ((connection = listenSocket.accept()) != null) {
                 RequestHandler requestHandler = new RequestHandler(
                         connection,
-                        VIEW_RESOLVER,
                         HTTP_REQUEST_PARSER,
                         new HttpResponseResolveFacade(),
                         new HandlerMapper()
