@@ -24,4 +24,8 @@ public class HttpRequest {
             throw new RuntimeException("Method " + requestLine.getMethod() + " not supported");
         }
     }
+
+    public String getRequestUrl() {
+        return requestLine.getRequestUrl();
+    }
 }

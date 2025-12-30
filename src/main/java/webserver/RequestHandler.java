@@ -9,16 +9,21 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.request.HttpRequest;
+import webserver.http.response.ContentType;
 import webserver.parse.request.HttpRequestParserFacade;
+import webserver.view.View;
+import webserver.view.ViewResolver;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
+    private final ViewResolver viewResolver;
     private final HttpRequestParserFacade requestParserFacade;
 
-    public RequestHandler(Socket connection, HttpRequestParserFacade requestParserFacade) {
+    public RequestHandler(Socket connection, ViewResolver viewResolver, HttpRequestParserFacade requestParserFacade) {
         this.connection = connection;
+        this.viewResolver = viewResolver;
         this.requestParserFacade = requestParserFacade;
     }
 
@@ -29,15 +34,17 @@ public class RequestHandler implements Runnable {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
              OutputStream out = connection.getOutputStream()) {
             String rawRequest = getRawHttpRequest(br);
-            if(rawRequest.isBlank()) {
-                logger.info("Empty raw request");
-                return;
+            if(!rawRequest.isBlank()) {
+                HttpRequest request = requestParserFacade.parse(rawRequest);
+                String requestUrl = request.getRequestUrl();
+                View resolvedView = viewResolver.resolveStaticFileByName(requestUrl);
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = resolvedView.getContent();
+                response200Header(ContentType.mapToType(requestUrl), dos, body.length);
+                responseBody(dos, body);
+                logger.debug("New Client Connect Response: {}", requestUrl);
             }
-            HttpRequest request = requestParserFacade.parse(rawRequest);
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "<h1>Hello World</h1>".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+
         } catch (IOException e) {
             logger.error(e.getMessage());
             //TODO 500에러 페이지 반환
@@ -54,14 +61,13 @@ public class RequestHandler implements Runnable {
                 break;
             }
         }
-
         return rawRequest.toString();
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void response200Header(String contentType, DataOutputStream dos, int lengthOfBodyContent) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Type: " + contentType + "\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
