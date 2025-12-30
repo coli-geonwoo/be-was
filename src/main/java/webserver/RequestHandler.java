@@ -1,5 +1,6 @@
 package webserver;
 
+import http.response.HttpResponse;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,7 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import http.request.HttpRequest;
 import http.response.ContentType;
+import webserver.handler.Handler;
+import webserver.handler.HandlerMapper;
 import webserver.parse.request.HttpRequestParserFacade;
+import webserver.resolver.HttpResponseResolveFacade;
 import webserver.view.View;
 import webserver.view.ViewResolver;
 
@@ -21,11 +25,21 @@ public class RequestHandler implements Runnable {
     private Socket connection;
     private final ViewResolver viewResolver;
     private final HttpRequestParserFacade requestParserFacade;
+    private final HttpResponseResolveFacade responseResolveFacade;
+    private final HandlerMapper handlerMapper;
 
-    public RequestHandler(Socket connection, ViewResolver viewResolver, HttpRequestParserFacade requestParserFacade) {
+    public RequestHandler(
+            Socket connection,
+            ViewResolver viewResolver,
+            HttpRequestParserFacade requestParserFacade,
+            HttpResponseResolveFacade responseResolveFacade,
+            HandlerMapper handlerMapper
+    ) {
         this.connection = connection;
         this.viewResolver = viewResolver;
         this.requestParserFacade = requestParserFacade;
+        this.responseResolveFacade = responseResolveFacade;
+        this.handlerMapper = handlerMapper;
     }
 
     public void run() {
@@ -38,13 +52,15 @@ public class RequestHandler implements Runnable {
 
             if(!rawRequest.isBlank()) {
                 HttpRequest request = requestParserFacade.parse(rawRequest);
-                String requestUrl = request.getRequestUrl();
-                View resolvedView = viewResolver.resolveStaticFileByName(requestUrl);
-                DataOutputStream dos = new DataOutputStream(out);
-                byte[] body = resolvedView.getContent();
-                response200Header(ContentType.mapToType(requestUrl), dos, body.length);
-                responseBody(dos, body);
-                logger.debug("New Client Connect Response: {}", requestUrl);
+                Handler handler = handlerMapper.mapByPath(request.getRequestUrl());
+                HttpResponse response = handler.handle(request);
+                responseResolveFacade.resolve(request, response, new DataOutputStream(out));
+
+//                DataOutputStream dos = new DataOutputStream(out);
+//                byte[] body = resolvedView.getContent();
+//                response200Header(ContentType.mapToType(requestUrl), dos, body.length);
+//                responseBody(dos, body);
+                logger.debug("New Client Connect Response: {}", request.getRequestUrl());
             }
 
         } catch (IOException e) {

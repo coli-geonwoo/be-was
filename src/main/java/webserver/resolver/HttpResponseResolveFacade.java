@@ -9,9 +9,12 @@ import http.response.HttpResponseHeader;
 import http.response.ResponseStatusLine;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HttpResponseResolveFacade {
 
+    private static final Logger logger = LoggerFactory.getLogger(HttpResponseResolveFacade.class);
     private static final String HTTP_RESPONSE_DELIMITER = "\r\n";
 
     private final HttpResponseResolver<ResponseStatusLine> statusLineResolver;
@@ -24,12 +27,19 @@ public class HttpResponseResolveFacade {
 
     public void resolve(HttpRequest request, HttpResponse response, DataOutputStream dataOutputStream) {
         String statusLine = statusLineResolver.resolve(response.getStatusLine());
+        logger.debug("statusLine: {}", statusLine);
+
         byte[] body = response.getBody();
         addHeaders(response, request.getRequestUrl());
         String headers = responseHeaderResolver.resolve(response.getHeaders());
+        logger.debug("Response Header: {}", headers);
+
         try {
             dataOutputStream.writeBytes(statusLine + HTTP_RESPONSE_DELIMITER);
-            dataOutputStream.writeBytes(headers + HTTP_RESPONSE_DELIMITER);
+            dataOutputStream.writeBytes(headers);
+            dataOutputStream.writeBytes(HTTP_RESPONSE_DELIMITER);
+            dataOutputStream.writeBytes(HTTP_RESPONSE_DELIMITER);
+
             dataOutputStream.write(body, 0, body.length);
             dataOutputStream.flush();
         } catch (IOException e) {

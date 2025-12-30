@@ -31,6 +31,6 @@ public enum ContentType {
                 }
             }
         }
-        throw new IllegalArgumentException("No content type found for path: " + path);
+        return ContentType.HTML.responseContentType;
     }
 }

@@ -6,8 +6,12 @@ public class HandlerMapper {
 
     private final List<Handler> handlers;
 
-    public HandlerMapper(List<Handler> handlers) {
-        this.handlers = handlers;
+    public HandlerMapper() {
+        this.handlers = List.of(
+                new IndexHandler(),
+                new RegisterHandler(),
+                new DefaultViewHandler()
+        );
     }
 
     public Handler mapByPath(String path) {
