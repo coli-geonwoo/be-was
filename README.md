@@ -25,14 +25,26 @@
 - [x] Java Thread 기반 프로젝트를 Concurrent 패키지를 활용하도록 변경한다
 - [x] 단위 테스트를 만들어 구현 내용을 검증한다.
 
+
+## Step2
+- [x] Response Header의 다양한 Contet-Type 지원하기 
+
 # 학습 키워드
 
 ## Step1
 - 자바 스레드 모델과 버전별 변경점
 - 자바 Concurrent 패키지
 
+# Step2
+- Response Content-Type
 
 # 고민한 부분
+- InputStreamReader vs BufferedReader vs Scanner
+- [Concurrent 패키지 뜯어보기 : 30명 동시요청 시나리오를 통한 스레드풀 의의 살펴보기](https://cheddar-parade-d79.notion.site/Concurrent-2d93b0d6b35580bea095e4fa91759e8d?source=copy_link)
+- [Http Keep Alive로 인한 Request Input Stream 단말 지점 판단 기준](https://www.notion.so/HTTP-InputStream-2d93b0d6b35580549527c3b9172c2334?source=copy_link)
+  - 스트림 전체 읽기 vs ready vs Connection : close
+
+# 고민할 부분
 
 ## Step1
 - nio vs io
