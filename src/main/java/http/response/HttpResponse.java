@@ -1,5 +1,8 @@
 package http.response;
 
+import http.request.HttpVersion;
+import java.util.HashMap;
+
 public class HttpResponse {
 
     private final ResponseStatusLine statusLine;
@@ -10,6 +13,14 @@ public class HttpResponse {
         this.statusLine = statusLine;
         this.headers = headers;
         this.body = body;
+    }
+
+    public HttpResponse(HttpResponseBody body) {
+        this(
+                new ResponseStatusLine(HttpVersion.HTTP_1_1, HttpStatusCode.OK_200),
+                new HttpResponseHeader(new HashMap<>()),
+                body
+        );
     }
 
     public void addHeader(String key, String value) {
