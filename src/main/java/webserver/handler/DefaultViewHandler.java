@@ -3,11 +3,10 @@ package webserver.handler;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.response.HttpResponseBody;
-import webserver.RequestHandler;
 import webserver.view.View;
 import webserver.view.ViewResolver;
 
-public class DefaultViewHandler implements Handler {
+class DefaultViewHandler implements Handler {
 
 
     @Override

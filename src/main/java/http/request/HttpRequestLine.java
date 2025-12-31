@@ -23,4 +23,8 @@ public class HttpRequestLine {
     public String getRequestUrl() {
         return requestUrl.getUrl();
     }
+
+    public String getRequestParam(String parameterName) {
+        return requestUrl.getParamByKey(parameterName);
+    }
 }

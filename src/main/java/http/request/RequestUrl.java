@@ -15,4 +15,8 @@ public class RequestUrl {
     public String getUrl() {
         return url;
     }
+
+    public String getParamByKey(String parameterName) {
+        return params.get(parameterName);
+    }
 }

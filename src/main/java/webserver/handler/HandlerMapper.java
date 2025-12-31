@@ -1,5 +1,8 @@
 package webserver.handler;
 
+import application.handler.IndexHandler;
+import application.handler.RegisterHandler;
+import application.handler.UserCreateHandler;
 import java.util.List;
 
 public class HandlerMapper {
@@ -10,6 +13,7 @@ public class HandlerMapper {
         this.handlers = List.of(
                 new IndexHandler(),
                 new RegisterHandler(),
+                new UserCreateHandler(),
                 new DefaultViewHandler()
         );
     }

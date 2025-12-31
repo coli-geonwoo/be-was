@@ -33,7 +33,7 @@ public class HttpRequestParserFacade {
 
         String rawRequestLine = lines[REQUEST_LINE_INDEX];
         HttpRequestLine requestLine = httpRequestLineParser.parse(rawRequestLine);
-        logger.debug("Request Line - method {} url {}", requestLine.getMethod().name(), requestLine.getRequestUrl());
+        logger.debug("Request Line - {}", rawRequestLine);
 
         String headerPart = parseRawHeaderPart(rawRequest, firstLineEnd, headerEnd);
         HttpRequestHeader requestHeader = httpRequestHeaderParser.parse(headerPart);

@@ -1,10 +1,10 @@
-package webserver.handler;
+package application.handler;
 
-import com.sun.net.httpserver.HttpHandler;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.response.HttpResponseBody;
 import java.util.List;
+import webserver.handler.Handler;
 import webserver.view.View;
 import webserver.view.ViewResolver;
 

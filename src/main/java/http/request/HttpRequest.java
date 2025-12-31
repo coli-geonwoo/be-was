@@ -25,6 +25,10 @@ public class HttpRequest {
         }
     }
 
+    public String getRequestParameter(String parameterName) {
+        return requestLine.getRequestParam(parameterName);
+    }
+
     public HttpRequestLine getRequestLine() {
         return requestLine;
     }
