@@ -21,7 +21,7 @@ public class HttpRequestParserFacade {
     private final HttpRequestParser<HttpRequestBody> httpRequestBodyParser;
 
     public HttpRequestParserFacade() {
-        this.httpRequestLineParser = new HttpRequestLineParser();
+        this.httpRequestLineParser = new HttpRequestLineParser(new RequestUrlParser());
         this.httpRequestHeaderParser = new HttpRequestHeaderParser();
         this.httpRequestBodyParser = new HttpRequestBodyParser();
     }
