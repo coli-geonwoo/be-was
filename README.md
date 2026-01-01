@@ -30,9 +30,9 @@
 - [x] Response Header의 다양한 Contet-Type 지원하기 
 
 ## Step3
-- [ ] `회원 가입` 메뉴 클릭 시 ` http://localhost:8080/register.html`로 이동한다.
-- [ ] 회원 가입 버튼을 클릭하면 쿼리 파라미터로 가입자 정보(userId, password, name, email)가 전달된다.
-- [ ] URL을 비교하고 사용자가 입력한 값을 파싱하여 model.User 클래스에 저장한다.
+- [x] `회원 가입` 메뉴 클릭 시 ` http://localhost:8080/register.html`로 이동한다.
+- [x] 회원 가입 버튼을 클릭하면 쿼리 파라미터로 가입자 정보(userId, password, name, email)가 전달된다.
+- [x] URL을 비교하고 사용자가 입력한 값을 파싱하여 model.User 클래스에 저장한다.
 - [ ] Junit & AssertJ를 활용한 테스트 코드를 작성한다.
 
 # 학습 키워드
