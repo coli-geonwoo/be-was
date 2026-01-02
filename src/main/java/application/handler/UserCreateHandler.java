@@ -11,7 +11,6 @@ public class UserCreateHandler implements Handler {
 
     private static final String HANDLING_PATHS = "/create";
 
-
     @Override
     public boolean canHandle(String path) {
         return path.startsWith(HANDLING_PATHS);

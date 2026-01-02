@@ -2,11 +2,8 @@ package application.handler;
 
 import http.request.HttpRequest;
 import http.response.HttpResponse;
-import http.response.HttpResponseBody;
 import java.util.List;
 import webserver.handler.Handler;
-import webserver.view.View;
-import webserver.view.ViewResolver;
 
 public class IndexHandler implements Handler {
 
@@ -19,9 +16,6 @@ public class IndexHandler implements Handler {
 
     @Override
     public HttpResponse handle(HttpRequest request) {
-        ViewResolver viewResolver = new ViewResolver();
-        View view = viewResolver.resolveStaticFileByName("/index.html");
-        HttpResponseBody responseBody = new HttpResponseBody(view.getContent());
-        return new HttpResponse(responseBody);
+        return new HttpResponse("/index.html");
     }
 }
