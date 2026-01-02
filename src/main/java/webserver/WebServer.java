@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.handler.HandlerMapper;
+import webserver.handler.ViewHandler;
 import webserver.parse.request.HttpRequestParserFacade;
 import webserver.resolver.HttpResponseResolveFacade;
 import webserver.view.ViewResolver;
@@ -48,7 +49,7 @@ public class WebServer {
                         HTTP_REQUEST_PARSER,
                         new HttpResponseResolveFacade(),
                         new HandlerMapper(),
-                        new ViewResolver()
+                        new ViewHandler(new ViewResolver())
                 );
                 EXECUTOR.submit(requestHandler);
             }

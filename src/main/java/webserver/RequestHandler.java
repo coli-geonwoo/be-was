@@ -15,6 +15,7 @@ import http.request.HttpRequest;
 import http.response.ContentType;
 import webserver.handler.Handler;
 import webserver.handler.HandlerMapper;
+import webserver.handler.ViewHandler;
 import webserver.parse.request.HttpRequestParserFacade;
 import webserver.resolver.HttpResponseResolveFacade;
 import webserver.view.View;
@@ -28,20 +29,20 @@ public class RequestHandler implements Runnable {
     private final HttpRequestParserFacade requestParserFacade;
     private final HttpResponseResolveFacade responseResolveFacade;
     private final HandlerMapper handlerMapper;
-    private final ViewResolver viewResolver;
+    private final ViewHandler viewHandler;
 
     public RequestHandler(
             Socket connection,
             HttpRequestParserFacade requestParserFacade,
             HttpResponseResolveFacade responseResolveFacade,
             HandlerMapper handlerMapper,
-            ViewResolver viewResolver
+            ViewHandler viewHandler
     ) {
         this.connection = connection;
         this.requestParserFacade = requestParserFacade;
         this.responseResolveFacade = responseResolveFacade;
         this.handlerMapper = handlerMapper;
-        this.viewResolver = viewResolver;
+        this.viewHandler = viewHandler;
     }
 
     public void run() {
@@ -56,32 +57,23 @@ public class RequestHandler implements Runnable {
                return;
             }
             HttpRequest request = requestParserFacade.parse(rawRequest);
-            Optional<Handler> mappedHandler = handlerMapper.mapByPath(request.getRequestUrl());
-
-            HttpResponse response;
-
-            if(mappedHandler.isPresent()) {
-                response = mappedHandler.get().handle(request);
-                if(response.hasViewName()) {
-                    response = resolveStaticFileResponse(response.getViewName());
-                }
-            } else {
-                response = resolveStaticFileResponse(request.getRequestUrl());
-            }
-
+            Handler mappedHandler = handlerMapper.mapByPath(request.getRequestUrl())
+                    .orElse(viewHandler);
+            HttpResponse response = handleRequest(request, mappedHandler);
             responseResolveFacade.resolve(request, response, new DataOutputStream(out));
             logger.debug("New Client Connect Response: {}", request.getRequestUrl());
-
         } catch (IOException e) {
             logger.error(e.getMessage());
             //TODO 500에러 페이지 반환
         }
     }
 
-    private HttpResponse resolveStaticFileResponse(String fileName) {
-        View view = viewResolver.resolveStaticFileByName(fileName);
-        HttpResponseBody body = new HttpResponseBody(view.getContent());
-        return new HttpResponse(body);
+    private HttpResponse handleRequest(HttpRequest request, Handler handler) {
+        HttpResponse response = handler.handle(request);
+        if(response.hasViewName()) {
+            return viewHandler.handleByFileName(response.getViewName());
+        }
+        return response;
     }
 
     private String getRawHttpRequest(BufferedReader br) throws IOException {
