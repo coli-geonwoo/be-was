@@ -1,27 +1,32 @@
 package webserver.handler;
 
-import application.handler.IndexHandler;
-import application.handler.RegisterHandler;
-import application.handler.UserCreateHandler;
 import java.util.List;
+import java.util.Optional;
+import org.reflections.Reflections;
 
 public class HandlerMapper {
 
     private final List<Handler> handlers;
 
     public HandlerMapper() {
-        this.handlers = List.of(
-                new IndexHandler(),
-                new RegisterHandler(),
-                new UserCreateHandler(),
-                new DefaultViewHandler()
-        );
+        Reflections reflections = new Reflections("application");
+        this.handlers = reflections.getSubTypesOf(Handler.class)
+                .stream()
+                .map(this::makeHandlerInstance)
+                .toList();
     }
 
-    public Handler mapByPath(String path) {
+    private Handler makeHandlerInstance(Class<? extends Handler> clazz) {
+        try {
+            return clazz.getConstructor().newInstance();
+        } catch (Exception exception) {
+            throw new RuntimeException("Can't instantiate " + clazz.getName(), exception);
+        }
+    }
+
+    public Optional<Handler> mapByPath(String path) {
         return handlers.stream()
                 .filter(handler -> handler.canHandle(path))
-                .findAny()
-                .orElseThrow(() -> new RuntimeException("No handler found for path: " + path));
+                .findAny();
     }
 }

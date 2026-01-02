@@ -1,12 +1,14 @@
 package webserver;
 
 import http.response.HttpResponse;
+import http.response.HttpResponseBody;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import http.request.HttpRequest;
@@ -26,17 +28,20 @@ public class RequestHandler implements Runnable {
     private final HttpRequestParserFacade requestParserFacade;
     private final HttpResponseResolveFacade responseResolveFacade;
     private final HandlerMapper handlerMapper;
+    private final ViewResolver viewResolver;
 
     public RequestHandler(
             Socket connection,
             HttpRequestParserFacade requestParserFacade,
             HttpResponseResolveFacade responseResolveFacade,
-            HandlerMapper handlerMapper
+            HandlerMapper handlerMapper,
+            ViewResolver viewResolver
     ) {
         this.connection = connection;
         this.requestParserFacade = requestParserFacade;
         this.responseResolveFacade = responseResolveFacade;
         this.handlerMapper = handlerMapper;
+        this.viewResolver = viewResolver;
     }
 
     public void run() {
@@ -51,8 +56,19 @@ public class RequestHandler implements Runnable {
                return;
             }
             HttpRequest request = requestParserFacade.parse(rawRequest);
-            Handler handler = handlerMapper.mapByPath(request.getRequestUrl());
-            HttpResponse response = handler.handle(request);
+            Optional<Handler> mappedHandler = handlerMapper.mapByPath(request.getRequestUrl());
+
+            HttpResponse response;
+
+            if(mappedHandler.isPresent()) {
+                response = mappedHandler.get().handle(request);
+                if(response.hasViewName()) {
+                    response = resolveStaticFileResponse(response.getViewName());
+                }
+            } else {
+                response = resolveStaticFileResponse(request.getRequestUrl());
+            }
+
             responseResolveFacade.resolve(request, response, new DataOutputStream(out));
             logger.debug("New Client Connect Response: {}", request.getRequestUrl());
 
@@ -60,6 +76,12 @@ public class RequestHandler implements Runnable {
             logger.error(e.getMessage());
             //TODO 500에러 페이지 반환
         }
+    }
+
+    private HttpResponse resolveStaticFileResponse(String fileName) {
+        View view = viewResolver.resolveStaticFileByName(fileName);
+        HttpResponseBody body = new HttpResponseBody(view.getContent());
+        return new HttpResponse(body);
     }
 
     private String getRawHttpRequest(BufferedReader br) throws IOException {

@@ -47,10 +47,13 @@ public class WebServer {
                         connection,
                         HTTP_REQUEST_PARSER,
                         new HttpResponseResolveFacade(),
-                        new HandlerMapper()
+                        new HandlerMapper(),
+                        new ViewResolver()
                 );
                 EXECUTOR.submit(requestHandler);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

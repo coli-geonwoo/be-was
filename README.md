@@ -57,3 +57,6 @@
 - nio 패키지를 쓰지 않고 파일 읽는 법
 - BufferedReader가 스트림의 끝을 어떻게 판단하는가 : 스트림이 모두 소모되면 null or empty 반환
 - BufferedReader vs InputStreamReader
+
+## Step3
+- 의존성을 어떻게 분리할까? - WebServer vs Application
