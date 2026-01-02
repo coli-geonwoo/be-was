@@ -9,6 +9,7 @@ class HttpRequestHeaderParser implements HttpRequestParser<HttpRequestHeader> {
 
     private static final String HTTP_REQUEST_HEADER_DELIMITER = ":";
 
+    //TODO 과연 key: value가 제대로 파싱될까?
     @Override
     public HttpRequestHeader parse(String input) {
         Map<String, String> headers = new HashMap<>();
