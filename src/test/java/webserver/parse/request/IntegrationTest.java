@@ -1,13 +1,12 @@
 package webserver.parse.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import http.response.HttpStatusCode;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,7 @@ public class IntegrationTest {
 
     @BeforeAll
     public static void beforeAll() throws Exception {
-        String [] port = {"8081"};
+        String[] port = {"8081"};
         new Thread(() -> {
             try {
                 WebServer.main(port);
@@ -41,6 +40,6 @@ public class IntegrationTest {
         HttpResponse<String> response =
                 client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+        assertThat(response.statusCode()).isEqualTo(HttpStatusCode.OK_200.getCode());
     }
 }
