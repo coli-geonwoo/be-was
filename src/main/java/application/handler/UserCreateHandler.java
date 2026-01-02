@@ -22,7 +22,7 @@ public class UserCreateHandler implements Handler {
         String password = request.getRequestParameter("password");
         String email = request.getRequestParameter("email");
         String name = request.getRequestParameter("name");
-        User user = new User(userId, password, email, name);
+        User user = new User(userId, password, name, email);
         Database.addUser(user);
         return new HttpResponse(HttpResponseBody.EMPTY_RESPONSE_BODY); //201 수정 고민
     }
