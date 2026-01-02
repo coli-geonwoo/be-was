@@ -48,7 +48,7 @@ public class WebServer {
                         connection,
                         HTTP_REQUEST_PARSER,
                         new HttpResponseResolveFacade(),
-                        new HandlerMapper(),
+                        HandlerMapper.fromApplicationHandlers(),
                         new ViewHandler(new ViewResolver())
                 );
                 EXECUTOR.submit(requestHandler);

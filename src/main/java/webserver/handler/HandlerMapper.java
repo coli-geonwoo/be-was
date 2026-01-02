@@ -2,26 +2,21 @@ package webserver.handler;
 
 import java.util.List;
 import java.util.Optional;
-import org.reflections.Reflections;
+import util.ClassScanUtils;
 
 public class HandlerMapper {
 
+    private static final ClassScanUtils<Handler> APPLICATION_HANDLER_SCANNER = new ClassScanUtils<>();
+
     private final List<Handler> handlers;
 
-    public HandlerMapper() {
-        Reflections reflections = new Reflections("application");
-        this.handlers = reflections.getSubTypesOf(Handler.class)
-                .stream()
-                .map(this::makeHandlerInstance)
-                .toList();
+    public static HandlerMapper fromApplicationHandlers() {
+        List<Handler> handlers = APPLICATION_HANDLER_SCANNER.scan("application", Handler.class);
+        return new HandlerMapper(handlers);
     }
 
-    private Handler makeHandlerInstance(Class<? extends Handler> clazz) {
-        try {
-            return clazz.getConstructor().newInstance();
-        } catch (Exception exception) {
-            throw new RuntimeException("Can't instantiate " + clazz.getName(), exception);
-        }
+    public HandlerMapper(List<Handler> handlers) {
+        this.handlers = handlers;
     }
 
     public Optional<Handler> mapByPath(String path) {
