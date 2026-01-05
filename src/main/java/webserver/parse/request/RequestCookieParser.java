@@ -1,6 +1,7 @@
 package webserver.parse.request;
 
 import http.request.RequestCookie;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,9 +15,9 @@ public class RequestCookieParser implements HttpRequestParser<RequestCookie> {
     @Override
     public RequestCookie parse(String input) {
         Map<String, String> contents = new HashMap<>();
-        String[] tokens = input.split(COOKIE_KEY_VALUE_DELIMITER);
+        String[] tokens = input.split(COOKIE_TOKEN_DELIMITER);
         for (String token : tokens) {
-            String[] splitToken = token.trim().split(COOKIE_TOKEN_DELIMITER);
+            String[] splitToken = token.trim().split(COOKIE_KEY_VALUE_DELIMITER);
             String key = splitToken[COOKIE_KEY_INDEX];
             String value = splitToken[COOKIE_VALUE_INDEX];
             contents.put(key, value);

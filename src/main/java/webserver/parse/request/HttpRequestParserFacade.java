@@ -50,6 +50,7 @@ public class HttpRequestParserFacade {
         if(requestHeader.containsHeader("Cookie")) {
             String rawCookie = requestHeader.getHeaderContent("Cookie");
             requestCookie = cookieParser.parse(rawCookie);
+            logger.debug("Request Cookie - {}", rawCookie);
         }
 
         if(requestLine.getMethod() == HttpMethod.POST) {
