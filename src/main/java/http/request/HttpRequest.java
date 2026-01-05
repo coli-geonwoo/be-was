@@ -40,8 +40,8 @@ public class HttpRequest {
         return requestLine.isPost();
     }
 
-    public boolean hasCookie() {
-        return requestCookie != RequestCookie.EMPTY_COOKIE;
+    public boolean hasCookie(String key) {
+        return requestCookie.containsKey(key);
     }
 
     public String getRequestParameter(String parameterName) {

@@ -61,7 +61,10 @@ public class RequestHandler implements Runnable {
     private HttpResponse handleRequest(HttpRequest request, Handler handler) {
         HttpResponse response = handler.handle(request);
         if(response.hasViewName()) {
-            return viewHandler.handleByFileName(response.getViewName());
+            return viewHandler.handleByFileNameAndModelAttributes(
+                    response.getViewName(),
+                    response.getModelAttributes()
+            );
         }
         return response;
     }

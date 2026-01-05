@@ -23,7 +23,7 @@ public class LogoutHandler extends AbstractHandler {
 
     @Override
     public HttpResponse doPost(HttpRequest request) {
-        if(!request.hasCookie()) {
+        if(!request.hasCookie("sid")) {
             throw new RuntimeException("Cookie not set");
         }
         RequestCookie requestCookie = request.getRequestCookie();

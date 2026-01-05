@@ -23,10 +23,12 @@ public class IndexHandler extends AbstractHandler {
     @Override
     public HttpResponse doGet(HttpRequest request) {
         try {
-            if (request.hasCookie()) {
+            if (request.hasCookie("sid")) {
                 RequestCookie requestCookie = request.getRequestCookie();
                 User user = authService.authroize(requestCookie.get("sid"));
-                return new HttpResponse(("/main/index.html"));
+                HttpResponse httpResponse = new HttpResponse("/main/index.html");
+                httpResponse.addModelAttributes("account", user.getName());
+                return httpResponse;
             }
             return new HttpResponse("/index.html");
         }catch(Exception exception) {

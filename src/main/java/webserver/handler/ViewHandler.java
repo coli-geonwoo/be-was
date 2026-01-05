@@ -3,6 +3,7 @@ package webserver.handler;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.response.HttpResponseBody;
+import http.response.ModelAttributes;
 import webserver.view.View;
 import webserver.view.ViewResolver;
 
@@ -26,6 +27,12 @@ public class ViewHandler implements Handler {
 
     public HttpResponse handleByFileName(String fileName) {
         View view = viewResolver.resolveStaticFileByName(fileName);
+        HttpResponseBody body = new HttpResponseBody(view.getContent());
+        return new HttpResponse(body);
+    }
+
+    public HttpResponse handleByFileNameAndModelAttributes(String fileName, ModelAttributes modelAttributes) {
+        View view = viewResolver.resolveStaticFileWithModelAttributes(fileName, modelAttributes);
         HttpResponseBody body = new HttpResponseBody(view.getContent());
         return new HttpResponse(body);
     }

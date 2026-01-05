@@ -12,6 +12,10 @@ public class RequestCookie {
         this.content = content;
     }
 
+    public boolean containsKey(String key) {
+        return content.containsKey(key);
+    }
+
     public String get(String key) {
         return content.get(key);
     }

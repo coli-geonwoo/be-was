@@ -9,6 +9,7 @@ public class HttpResponse {
     private final ResponseStatusLine statusLine;
     private final HttpResponseHeader headers;
     private final String viewName;
+    private final ModelAttributes modelAttributes;
     private final HttpResponseBody body;
     private ResponseCookie responseCookie;
 
@@ -22,6 +23,7 @@ public class HttpResponse {
         this.statusLine = statusLine;
         this.headers = headers;
         this.viewName = viewName;
+        this.modelAttributes = new ModelAttributes(new HashMap<>());
         this.body = body;
     }
 
@@ -65,8 +67,8 @@ public class HttpResponse {
         return responseCookie != null;
     }
 
-    public boolean isRedirect() {
-        return statusLine.getStatusCode() == HttpStatusCode.REDIRECTED;
+    public void addModelAttributes(String key, String value) {
+        modelAttributes.put(key, value);
     }
 
     public void addHeader(String key, String value) {
@@ -95,5 +97,9 @@ public class HttpResponse {
 
     public ResponseCookie getCookie() {
         return responseCookie;
+    }
+
+    public ModelAttributes getModelAttributes() {
+        return modelAttributes;
     }
 }
