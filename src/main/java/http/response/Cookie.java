@@ -4,6 +4,8 @@ import java.util.Map;
 
 public class Cookie {
 
+    public static final Cookie EXPIRED_COOKIE = new Cookie(Map.of(), "/", 0);
+
     private final Map<String, String> contents;
     private final String path;
     private final int maxAge;

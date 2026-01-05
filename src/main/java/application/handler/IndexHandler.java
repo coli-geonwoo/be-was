@@ -4,7 +4,6 @@ import http.request.HttpRequest;
 import http.response.HttpResponse;
 import java.util.List;
 import webserver.handler.AbstractHandler;
-import webserver.handler.Handler;
 
 public class IndexHandler extends AbstractHandler {
 
