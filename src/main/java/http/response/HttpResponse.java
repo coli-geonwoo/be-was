@@ -46,14 +46,15 @@ public class HttpResponse {
     }
 
     public static HttpResponse redirect(String viewName) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Location", viewName);
         return new HttpResponse(
         new ResponseStatusLine(HttpVersion.HTTP_1_1, HttpStatusCode.REDIRECTED),
-                new HttpResponseHeader(Map.of("Location", viewName)),
+                new HttpResponseHeader(headers),
                 null,
                 HttpResponseBody.EMPTY_RESPONSE_BODY,
                 null
         );
-
     }
 
     public void setCookie(Cookie cookie) {

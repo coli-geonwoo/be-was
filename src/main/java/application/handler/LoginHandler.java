@@ -42,8 +42,8 @@ public class LoginHandler extends AbstractHandler {
         if(foundUser.isPresent()) {
             String sessionId = UUID.randomUUID().toString();
             saveSessionData(foundUser.get(), sessionId);
-            HttpResponse response = new HttpResponse("/login/index.html");
-            response.setCookie(new Cookie(Map.of("sid", sessionId), "/"));
+            HttpResponse response = HttpResponse.redirect("/index.html");
+            response.setCookie(new Cookie(Map.of("sid", sessionId), "/", 3600));
             return response;
         }
         throw new RuntimeException("Login failed");

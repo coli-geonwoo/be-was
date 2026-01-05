@@ -6,10 +6,12 @@ public class Cookie {
 
     private final Map<String, String> contents;
     private final String path;
+    private final int maxAge;
 
-    public Cookie(Map<String, String> contents, String path) {
+    public Cookie(Map<String, String> contents, String path, int maxAge) {
         this.contents = contents;
         this.path = path;
+        this.maxAge = maxAge;
     }
 
     public Map<String, String> getContents() {
@@ -18,5 +20,9 @@ public class Cookie {
 
     public String getPath() {
         return path;
+    }
+
+    public int getMaxAge() {
+        return maxAge;
     }
 }

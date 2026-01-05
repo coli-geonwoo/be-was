@@ -18,6 +18,6 @@ class HttpResponseHeaderResolver implements HttpResponseResolver<HttpResponseHea
                 + RESPONSE_HEADER_KEY_VALUE_DELIMITER
                 + value
         ));
-        return joiner + RESPONSE_HEADER_CONTENT_DELIMITER;
+        return joiner.toString();
     }
 }
