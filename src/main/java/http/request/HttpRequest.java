@@ -5,16 +5,23 @@ public class HttpRequest {
     private final HttpRequestLine requestLine;
     private final HttpRequestHeader requestHeader;
     private final HttpRequestBody requestBody;
+    private final RequestCookie requestCookie;
 
-    public HttpRequest(HttpRequestLine requestLine, HttpRequestHeader requestHeader, HttpRequestBody requestBody) {
+    public HttpRequest(
+            HttpRequestLine requestLine,
+            HttpRequestHeader requestHeader,
+            HttpRequestBody requestBody,
+            RequestCookie requestCookie
+    ) {
         validateMethodAndBody(requestLine, requestBody);
         this.requestLine = requestLine;
         this.requestHeader = requestHeader;
         this.requestBody = requestBody;
+        this.requestCookie = requestCookie;
     }
 
-    public HttpRequest(HttpRequestLine requestLine, HttpRequestHeader requestHeader) {
-        this(requestLine, requestHeader, HttpRequestBody.EMPTY_REQUEST_BODY);
+    public HttpRequest(HttpRequestLine requestLine, HttpRequestHeader requestHeader, RequestCookie requestCookie) {
+        this(requestLine, requestHeader, HttpRequestBody.EMPTY_REQUEST_BODY, requestCookie);
     }
 
     //TODO 테스트 추가
@@ -31,6 +38,10 @@ public class HttpRequest {
 
     public boolean isPost() {
         return requestLine.isPost();
+    }
+
+    public boolean hasCookie() {
+        return requestCookie != RequestCookie.EMPTY_COOKIE;
     }
 
     public String getRequestParameter(String parameterName) {
@@ -51,5 +62,9 @@ public class HttpRequest {
 
     public String getRequestUrl() {
         return requestLine.getRequestUrl();
+    }
+
+    public RequestCookie getRequestCookie() {
+        return requestCookie;
     }
 }
