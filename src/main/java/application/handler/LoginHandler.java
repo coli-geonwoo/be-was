@@ -5,8 +5,13 @@ import application.db.SessionDataBase;
 import application.dto.request.LoginRequest;
 import http.request.HttpRequest;
 import http.request.HttpRequestBody;
+import http.request.HttpVersion;
 import http.response.Cookie;
 import http.response.HttpResponse;
+import http.response.HttpResponseBody;
+import http.response.HttpResponseHeader;
+import http.response.HttpStatusCode;
+import http.response.ResponseStatusLine;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -46,7 +51,14 @@ public class LoginHandler extends AbstractHandler {
             response.setCookie(new Cookie(Map.of("sid", sessionId), "/", 3600));
             return response;
         }
-        throw new RuntimeException("Login failed");
+        //로그인 실패 시
+        return new HttpResponse(
+                new ResponseStatusLine(HttpVersion.HTTP_1_1, HttpStatusCode.UNAUTHORIZED_401),
+                new HttpResponseHeader(Map.of()),
+                null,
+                HttpResponseBody.EMPTY_RESPONSE_BODY,
+                null
+        );
     }
 
     private void saveSessionData(User user, String sessionId) {
