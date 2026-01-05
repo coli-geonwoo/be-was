@@ -12,6 +12,7 @@ import http.response.HttpResponseBody;
 import http.response.HttpResponseHeader;
 import http.response.HttpStatusCode;
 import http.response.ResponseStatusLine;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -54,7 +55,7 @@ public class LoginHandler extends AbstractHandler {
         //로그인 실패 시
         return new HttpResponse(
                 new ResponseStatusLine(HttpVersion.HTTP_1_1, HttpStatusCode.UNAUTHORIZED_401),
-                new HttpResponseHeader(Map.of()),
+                new HttpResponseHeader(new HashMap<>()),
                 null,
                 HttpResponseBody.EMPTY_RESPONSE_BODY,
                 null
