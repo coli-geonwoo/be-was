@@ -1,5 +1,6 @@
 package application.db;
 
+import java.util.Optional;
 import model.User;
 
 import java.util.Collection;
@@ -14,6 +15,10 @@ public class Database {
 
     private static Map<String, User> users = new HashMap<>();
 
+    static {
+        users.put("gw",new User("gw", "gw", "gw", "gw"));
+    }
+
     public static void addUser(User user) {
         users.put(user.getUserId(), user);
         log.debug("User {} has been added", user);
@@ -21,6 +26,12 @@ public class Database {
 
     public static User findUserById(String userId) {
         return users.get(userId);
+    }
+
+    public static Optional<User> findByUserIdAndPassword(String userId, String password) {
+        return users.values().stream()
+                .filter(user -> user.getPassword().equals(password) && user.getUserId().equals(userId))
+                .findAny();
     }
 
     public static Collection<User> findAll() {

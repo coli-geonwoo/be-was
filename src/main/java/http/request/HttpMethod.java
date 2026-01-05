@@ -9,4 +9,12 @@ public enum HttpMethod {
     HEAD,
     PATCH,
     ;
+
+    public boolean isGet() {
+        return this == HttpMethod.GET;
+    }
+
+    public boolean isPost() {
+        return this == HttpMethod.POST;
+    }
 }

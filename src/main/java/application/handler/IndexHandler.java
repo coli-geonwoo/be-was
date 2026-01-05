@@ -3,9 +3,9 @@ package application.handler;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import java.util.List;
-import webserver.handler.Handler;
+import webserver.handler.AbstractHandler;
 
-public class IndexHandler implements Handler {
+public class IndexHandler extends AbstractHandler {
 
     private static final List<String> HANDLING_PATHS = List.of("/", "/index", "/index.html");
 
@@ -15,7 +15,7 @@ public class IndexHandler implements Handler {
     }
 
     @Override
-    public HttpResponse handle(HttpRequest request) {
+    public HttpResponse doGet(HttpRequest request) {
         return new HttpResponse("/index.html");
     }
 }

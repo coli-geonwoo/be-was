@@ -25,6 +25,14 @@ public class HttpRequest {
         }
     }
 
+    public boolean isGet() {
+        return requestLine.isGet();
+    }
+
+    public boolean isPost() {
+        return requestLine.isPost();
+    }
+
     public String getRequestParameter(String parameterName) {
         return requestLine.getRequestParam(parameterName);
     }

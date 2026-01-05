@@ -3,6 +3,7 @@ package webserver.resolver;
 import http.request.HttpRequest;
 import http.request.RequestUrl;
 import http.response.ContentType;
+import http.response.Cookie;
 import http.response.HttpResponse;
 import http.response.HttpResponseBody;
 import http.response.HttpResponseHeader;
@@ -16,13 +17,16 @@ public class HttpResponseResolveFacade {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpResponseResolveFacade.class);
     private static final String HTTP_RESPONSE_DELIMITER = "\r\n";
+    private static final String HTTP_END_HEAD_PART_DELIMITER = "\r\n\r\n";
 
     private final HttpResponseResolver<ResponseStatusLine> statusLineResolver;
     private final HttpResponseResolver<HttpResponseHeader> responseHeaderResolver;
+    private final HttpResponseResolver<Cookie> responseCookieResolver;
 
     public HttpResponseResolveFacade() {
         this.statusLineResolver = new ResponseStatusLineResolver();
         this.responseHeaderResolver = new HttpResponseHeaderResolver();
+        this.responseCookieResolver = new HttpResponseCookieResolver();
     }
 
     public void resolve(HttpRequest request, HttpResponse response, DataOutputStream dataOutputStream) {
@@ -31,16 +35,17 @@ public class HttpResponseResolveFacade {
 
         byte[] body = response.getBody();
         addHeaders(response, request.getRequestUrl());
+        setCookie(response);
         String headers = responseHeaderResolver.resolve(response.getHeaders());
         logger.debug("Response Header: {}", headers);
 
         try {
             dataOutputStream.writeBytes(statusLine + HTTP_RESPONSE_DELIMITER);
             dataOutputStream.writeBytes(headers);
-            dataOutputStream.writeBytes(HTTP_RESPONSE_DELIMITER);
-            dataOutputStream.writeBytes(HTTP_RESPONSE_DELIMITER);
-
-            dataOutputStream.write(body, 0, body.length);
+            dataOutputStream.writeBytes(HTTP_END_HEAD_PART_DELIMITER);
+            if (body != null && body.length > 0) {
+                dataOutputStream.write(body, 0, body.length);
+            }
             dataOutputStream.flush();
         } catch (IOException e) {
             throw new RuntimeException("Failed to resolve http response", e);
@@ -48,7 +53,16 @@ public class HttpResponseResolveFacade {
     }
 
     private void addHeaders(HttpResponse response, String requestUrl) {
+        byte[] body = response.getBody();
         response.addHeader(ContentType.CONTENT_TYPE_HEADER_KEY, ContentType.mapToType(requestUrl));
-        response.addHeader("Content-Length", String.valueOf(response.getBody().length));
+        response.addHeader("Content-Length", String.valueOf(body.length));
+    }
+
+    private void setCookie(HttpResponse response) {
+        if(response.hasCookie()) {
+            String cookieContent = responseCookieResolver.resolve(response.getCookie());
+            logger.debug("Cookie content: {}", cookieContent);
+            response.addHeader("Set-Cookie", cookieContent);
+        }
     }
 }

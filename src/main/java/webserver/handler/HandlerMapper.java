@@ -6,16 +6,21 @@ import util.ClassScanUtils;
 
 public class HandlerMapper {
 
-    private static final ClassScanUtils<Handler> APPLICATION_HANDLER_SCANNER = new ClassScanUtils<>();
+    private static final HandlerMapper APPLICATION_HANDLER_MAPPER;
+
+    static {
+        ClassScanUtils<Handler> classScanUtils = new ClassScanUtils<>();
+        List<Handler> handlers = classScanUtils.scan("application", AbstractHandler.class);
+        APPLICATION_HANDLER_MAPPER = new HandlerMapper(handlers);
+    }
 
     private final List<Handler> handlers;
 
-    public static HandlerMapper fromApplicationHandlers() {
-        List<Handler> handlers = APPLICATION_HANDLER_SCANNER.scan("application", Handler.class);
-        return new HandlerMapper(handlers);
+    public static HandlerMapper getInstance() {
+        return APPLICATION_HANDLER_MAPPER;
     }
 
-    public HandlerMapper(List<Handler> handlers) {
+    private HandlerMapper(List<Handler> handlers) {
         this.handlers = handlers;
     }
 

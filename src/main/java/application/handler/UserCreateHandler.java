@@ -1,15 +1,20 @@
 package application.handler;
 
 import application.db.Database;
+import application.dto.request.CreateUserRequest;
 import http.request.HttpRequest;
+import http.request.HttpRequestBody;
 import http.response.HttpResponse;
-import http.response.HttpResponseBody;
 import model.User;
-import webserver.handler.Handler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import webserver.handler.AbstractHandler;
 
-public class UserCreateHandler implements Handler {
+public class UserCreateHandler extends AbstractHandler {
 
-    private static final String HANDLING_PATHS = "/create";
+    private static final Logger logger = LoggerFactory.getLogger(UserCreateHandler.class);
+
+    private static final String HANDLING_PATHS = "/user/create";
 
     @Override
     public boolean canHandle(String path) {
@@ -17,13 +22,17 @@ public class UserCreateHandler implements Handler {
     }
 
     @Override
-    public HttpResponse handle(HttpRequest request) {
-        String userId = request.getRequestParameter("userId");
-        String password = request.getRequestParameter("password");
-        String email = request.getRequestParameter("email");
-        String name = request.getRequestParameter("name");
-        User user = new User(userId, password, name, email);
+    public HttpResponse doPost(HttpRequest request) {
+        HttpRequestBody requestBody = request.getRequestBody();
+        String rawValue = requestBody.getValue();
+        CreateUserRequest createUserRequest = CreateUserRequest.fromFormRequest(rawValue);
+        User user = new User(
+                createUserRequest.userId(),
+                createUserRequest.password(),
+                createUserRequest.password(),
+                createUserRequest.email()
+        );
         Database.addUser(user);
-        return new HttpResponse(HttpResponseBody.EMPTY_RESPONSE_BODY); //201 수정 고민
+        return HttpResponse.redirect("/index.html");
     }
 }
