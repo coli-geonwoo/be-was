@@ -1,12 +1,10 @@
 package application.handler;
 
 import application.db.Database;
-import application.dto.convertor.CreateUserRequestConvertor;
 import application.dto.request.CreateUserRequest;
 import http.request.HttpRequest;
 import http.request.HttpRequestBody;
 import http.response.HttpResponse;
-import http.response.HttpResponseBody;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +23,9 @@ public class UserCreateHandler extends AbstractHandler {
 
     @Override
     public HttpResponse doPost(HttpRequest request) {
-        CreateUserRequestConvertor convertor = new CreateUserRequestConvertor();
         HttpRequestBody requestBody = request.getRequestBody();
         String rawValue = requestBody.getValue();
-        CreateUserRequest createUserRequest = convertor.convert(rawValue);
+        CreateUserRequest createUserRequest = CreateUserRequest.fromFormRequest(rawValue);
         User user = new User(
                 createUserRequest.userId(),
                 createUserRequest.password(),

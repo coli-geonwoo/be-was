@@ -1,5 +1,6 @@
 package application.db;
 
+import java.util.Optional;
 import model.User;
 
 import java.util.Collection;
@@ -21,6 +22,12 @@ public class Database {
 
     public static User findUserById(String userId) {
         return users.get(userId);
+    }
+
+    public static Optional<User> findByUserIdAndPassword(String userId, String password) {
+        return users.values().stream()
+                .filter(user -> user.getPassword().equals(password) && user.getUserId().equals(userId))
+                .findAny();
     }
 
     public static Collection<User> findAll() {
