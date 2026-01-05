@@ -1,11 +1,9 @@
 package webserver.resolver;
 
 import http.request.HttpRequest;
-import http.request.RequestUrl;
 import http.response.ContentType;
-import http.response.Cookie;
+import http.response.ResponseCookie;
 import http.response.HttpResponse;
-import http.response.HttpResponseBody;
 import http.response.HttpResponseHeader;
 import http.response.ResponseStatusLine;
 import java.io.DataOutputStream;
@@ -21,7 +19,7 @@ public class HttpResponseResolveFacade {
 
     private final HttpResponseResolver<ResponseStatusLine> statusLineResolver;
     private final HttpResponseResolver<HttpResponseHeader> responseHeaderResolver;
-    private final HttpResponseResolver<Cookie> responseCookieResolver;
+    private final HttpResponseResolver<ResponseCookie> responseCookieResolver;
 
     public HttpResponseResolveFacade() {
         this.statusLineResolver = new ResponseStatusLineResolver();

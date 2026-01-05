@@ -6,7 +6,7 @@ import application.dto.request.LoginRequest;
 import http.request.HttpRequest;
 import http.request.HttpRequestBody;
 import http.request.HttpVersion;
-import http.response.Cookie;
+import http.response.ResponseCookie;
 import http.response.HttpResponse;
 import http.response.HttpResponseBody;
 import http.response.HttpResponseHeader;
@@ -49,7 +49,7 @@ public class LoginHandler extends AbstractHandler {
             String sessionId = UUID.randomUUID().toString();
             saveSessionData(foundUser.get(), sessionId);
             HttpResponse response = HttpResponse.redirect("/index.html");
-            response.setCookie(new Cookie(Map.of("sid", sessionId), "/", 3600));
+            response.setCookie(new ResponseCookie(Map.of("sid", sessionId), "/", 3600));
             return response;
         }
         //로그인 실패 시
