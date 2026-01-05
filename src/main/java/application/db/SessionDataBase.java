@@ -15,6 +15,10 @@ public class SessionDataBase {
         return Optional.of(sessionData.get(sessionId));
     }
 
+    public static void removeData(String sessionId) {
+        sessionData.remove(sessionId);
+    }
+
     public static void saveData(String sessionId, String data) {
         sessionData.put(sessionId, data);
     }
