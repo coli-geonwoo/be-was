@@ -9,6 +9,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -36,6 +37,7 @@ public class IntegrationTest {
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
+                .timeout(Duration.ofSeconds(3L))
                 .uri(URI.create("http://localhost:8081/index.html"))
                 .GET()
                 .build();
@@ -52,6 +54,7 @@ public class IntegrationTest {
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
+                .timeout(Duration.ofSeconds(3L))
                 .uri(URI.create("http://localhost:8081/registration"))
                 .GET()
                 .build();
@@ -66,14 +69,16 @@ public class IntegrationTest {
     @Test
     void create() throws Exception {
         HttpClient client = HttpClient.newHttpClient();
+        String body = "userId=javajigi&password=password&name=coli&email=email@email.com";
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8081/create?userId=javajigi&password=password&name=coli&email=email@email.com"))
-                .GET()
+                .uri(URI.create("http://localhost:8081/user/create"))
+//                .timeout(Duration.ofSeconds(3))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
 
-        HttpResponse<String> response =
-                client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         User foundUser = Database.findUserById("javajigi");
 
         assertAll(

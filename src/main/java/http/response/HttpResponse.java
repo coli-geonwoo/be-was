@@ -2,6 +2,7 @@ package http.response;
 
 import http.request.HttpVersion;
 import java.util.HashMap;
+import java.util.Map;
 
 public class HttpResponse {
 
@@ -38,6 +39,20 @@ public class HttpResponse {
                 null,
                 body
         );
+    }
+
+    public static HttpResponse redirect(String viewName) {
+        return new HttpResponse(
+        new ResponseStatusLine(HttpVersion.HTTP_1_1, HttpStatusCode.REDIRECTED),
+                new HttpResponseHeader(Map.of("Location", viewName)),
+                null,
+                HttpResponseBody.EMPTY_RESPONSE_BODY
+        );
+
+    }
+
+    public boolean isRedirect() {
+        return statusLine.getStatusCode() == HttpStatusCode.REDIRECTED;
     }
 
     public void addHeader(String key, String value) {

@@ -9,12 +9,16 @@ import http.request.HttpRequestBody;
 import http.request.HttpRequestHeader;
 import http.request.HttpRequestLine;
 import http.request.HttpVersion;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import org.junit.jupiter.api.Test;
 
 class HttpRequestParserFacadeTest {
 
     @Test
-    void parseGetRequest() {
+    void parseGetRequest() throws IOException {
         String rawRequest = "GET /index.html HTTP/1.1\r\n" +
                         "User-Agent: PostmanRuntime/7.51.0\r\n" +
                         "Accept: */*\r\n" +
@@ -23,8 +27,9 @@ class HttpRequestParserFacadeTest {
                         "Connection: keep-alive\r\n" +
                         "\r\n";
 
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(rawRequest.getBytes())));
         HttpRequestParserFacade requestParserFacade = new HttpRequestParserFacade();
-        HttpRequest request = requestParserFacade.parse(rawRequest);
+        HttpRequest request = requestParserFacade.parse(bufferedReader);
 
         HttpRequestLine requestLine = request.getRequestLine();
         HttpRequestHeader requestHeader = request.getRequestHeader();
@@ -44,7 +49,7 @@ class HttpRequestParserFacadeTest {
     }
 
     @Test
-    void parsePostRequest() {
+    void parsePostRequest() throws IOException {
         String rawRequest = "POST /user/create HTTP/1.1\r\n" +
                 "Host: localhost:8080\r\n" +
                 "Content-Type: application/x-www-form-urlencoded\r\n" +
@@ -53,8 +58,10 @@ class HttpRequestParserFacadeTest {
                 "\r\n" +
                 "userId=coli&password=password&name=GeonWoo&email=email@email.com";
 
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(rawRequest.getBytes())));
+
         HttpRequestParserFacade requestParserFacade = new HttpRequestParserFacade();
-        HttpRequest request = requestParserFacade.parse(rawRequest);
+        HttpRequest request = requestParserFacade.parse(bufferedReader);
 
         HttpRequestLine requestLine = request.getRequestLine();
         HttpRequestHeader requestHeader = request.getRequestHeader();

@@ -38,9 +38,9 @@ public class HttpResponseResolveFacade {
             dataOutputStream.writeBytes(statusLine + HTTP_RESPONSE_DELIMITER);
             dataOutputStream.writeBytes(headers);
             dataOutputStream.writeBytes(HTTP_RESPONSE_DELIMITER);
-            dataOutputStream.writeBytes(HTTP_RESPONSE_DELIMITER);
-
-            dataOutputStream.write(body, 0, body.length);
+            if (body != null && body.length > 0) {
+                dataOutputStream.write(body, 0, body.length);
+            }
             dataOutputStream.flush();
         } catch (IOException e) {
             throw new RuntimeException("Failed to resolve http response", e);
@@ -48,7 +48,11 @@ public class HttpResponseResolveFacade {
     }
 
     private void addHeaders(HttpResponse response, String requestUrl) {
+        if (response.isRedirect()) {
+            return;
+        }
+        byte[] body = response.getBody();
         response.addHeader(ContentType.CONTENT_TYPE_HEADER_KEY, ContentType.mapToType(requestUrl));
-        response.addHeader("Content-Length", String.valueOf(response.getBody().length));
+        response.addHeader("Content-Length", String.valueOf(body.length));
     }
 }

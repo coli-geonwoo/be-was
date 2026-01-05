@@ -1,5 +1,7 @@
 package webserver.parse.request;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import http.request.HttpMethod;
@@ -26,7 +28,9 @@ public class HttpRequestParserFacade {
         this.httpRequestBodyParser = new HttpRequestBodyParser();
     }
 
-    public HttpRequest parse(String rawRequest) {
+    public HttpRequest parse(BufferedReader bufferedReader) throws IOException {
+        String rawRequest = getRawHttpRequest(bufferedReader);
+
         int firstLineEnd = rawRequest.indexOf(REQUEST_LINE_DELIMITER);
         int headerEnd = rawRequest.indexOf(REQUEST_HEADER_DELIMITER);
         String[] lines = rawRequest.split(REQUEST_LINE_DELIMITER);
@@ -40,18 +44,48 @@ public class HttpRequestParserFacade {
         logger.debug("Request Header : {}", headerPart);
 
         if(requestLine.getMethod() == HttpMethod.POST) {
-            int cotentLength = Integer.parseInt(requestHeader.getHeaderContent("Content-Length"));
-            String rawBodyPart = parseRawBodyPart(rawRequest, headerEnd, cotentLength);
-            logger.debug("Request Header : {}", rawBodyPart);
+            int contentLength = Integer.parseInt(requestHeader.getHeaderContent("Content-Length"));
+            String rawBodyPart = parseRawBodyPart(rawRequest, headerEnd, contentLength);
+            logger.debug("Request body : {}", rawBodyPart);
             HttpRequestBody requestBody = httpRequestBodyParser.parse(rawBodyPart);
-
             return new HttpRequest(requestLine, requestHeader, requestBody);
         }
         return new HttpRequest(requestLine, requestHeader);
     }
 
-    private String parseRawHeaderPart(String rawRequest, int firstLineEnd, int headerEnd) {
+    private String getRawHttpRequest(BufferedReader br) throws IOException {
+        StringBuilder rawRequest = new StringBuilder();
+        String line;
+        int contentLength = 0;
 
+        while ((line = br.readLine()) != null) {
+            rawRequest.append(line).append("\r\n");
+            if (line.isEmpty()) {
+                break;
+            }
+
+            if (line.startsWith("Content-Length:")) {
+                contentLength = Integer.parseInt(line.substring("Content-Length:".length()).trim());
+            }
+        }
+
+        if (contentLength > 0) {
+            char[] bodyBuffer = new char[contentLength];
+            int totalRead = 0;
+
+            while (totalRead < contentLength) {
+                int read = br.read(bodyBuffer, totalRead, contentLength - totalRead);;
+                if (read == -1) {
+                    break;
+                }
+                totalRead += read;
+            }
+            rawRequest.append(new String(bodyBuffer, 0, totalRead));
+        }
+        return rawRequest.toString();
+    }
+
+    private String parseRawHeaderPart(String rawRequest, int firstLineEnd, int headerEnd) {
         return rawRequest.substring(
                 firstLineEnd + 2,
                 headerEnd
@@ -60,7 +94,6 @@ public class HttpRequestParserFacade {
 
     private String parseRawBodyPart(String rawRequest, int headerEnd, int contentLength) {
         int startIndex = headerEnd + REQUEST_HEADER_DELIMITER.length();
-        System.out.println(headerEnd + " " +  REQUEST_HEADER_DELIMITER.length() + " " + contentLength);
         return rawRequest.substring(startIndex, startIndex + contentLength);
     }
 }

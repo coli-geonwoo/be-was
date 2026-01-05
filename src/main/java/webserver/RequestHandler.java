@@ -1,25 +1,20 @@
 package webserver;
 
 import http.response.HttpResponse;
-import http.response.HttpResponseBody;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import http.request.HttpRequest;
-import http.response.ContentType;
 import webserver.handler.Handler;
 import webserver.handler.HandlerMapper;
 import webserver.handler.ViewHandler;
 import webserver.parse.request.HttpRequestParserFacade;
 import webserver.resolver.HttpResponseResolveFacade;
-import webserver.view.View;
-import webserver.view.ViewResolver;
 
 public class RequestHandler implements Runnable {
 
@@ -51,12 +46,7 @@ public class RequestHandler implements Runnable {
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
              OutputStream out = connection.getOutputStream()) {
-            String rawRequest = getRawHttpRequest(br);
-
-            if(rawRequest.isBlank()) {
-               return;
-            }
-            HttpRequest request = requestParserFacade.parse(rawRequest);
+            HttpRequest request = requestParserFacade.parse(br);
             Handler mappedHandler = handlerMapper.mapByPath(request.getRequestUrl())
                     .orElse(viewHandler);
             HttpResponse response = handleRequest(request, mappedHandler);
@@ -74,18 +64,5 @@ public class RequestHandler implements Runnable {
             return viewHandler.handleByFileName(response.getViewName());
         }
         return response;
-    }
-
-    private String getRawHttpRequest(BufferedReader br) throws IOException {
-        StringBuilder rawRequest = new StringBuilder();
-        String line;
-
-        while ((line = br.readLine()) != null) {
-            rawRequest.append(line).append("\r\n");
-            if(!br.ready()) {
-                break;
-            }
-        }
-        return rawRequest.toString();
     }
 }

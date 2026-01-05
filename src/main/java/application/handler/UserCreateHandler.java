@@ -8,11 +8,15 @@ import http.request.HttpRequestBody;
 import http.response.HttpResponse;
 import http.response.HttpResponseBody;
 import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import webserver.handler.AbstractHandler;
 
 public class UserCreateHandler extends AbstractHandler {
 
-    private static final String HANDLING_PATHS = "/create";
+    private static final Logger logger = LoggerFactory.getLogger(UserCreateHandler.class);
+
+    private static final String HANDLING_PATHS = "/user/create";
 
     @Override
     public boolean canHandle(String path) {
@@ -32,6 +36,6 @@ public class UserCreateHandler extends AbstractHandler {
                 createUserRequest.email()
         );
         Database.addUser(user);
-        return new HttpResponse(HttpResponseBody.EMPTY_RESPONSE_BODY); //201 수정 고민
+        return HttpResponse.redirect("/index.html");
     }
 }
