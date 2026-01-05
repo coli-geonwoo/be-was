@@ -27,4 +27,12 @@ public class HttpRequestLine {
     public String getRequestParam(String parameterName) {
         return requestUrl.getParamByKey(parameterName);
     }
+
+    public boolean isGet() {
+        return method.isGet();
+    }
+
+    public boolean isPost() {
+        return method.isPost();
+    }
 }

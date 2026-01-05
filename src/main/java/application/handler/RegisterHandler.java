@@ -3,9 +3,10 @@ package application.handler;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import java.util.List;
+import webserver.handler.AbstractHandler;
 import webserver.handler.Handler;
 
-public class RegisterHandler implements Handler {
+public class RegisterHandler extends AbstractHandler {
 
     private static final List<String> HANDLING_PATHS = List.of("/registration");
     private static final String REGISTRATION_VIEW_FILE_PATH = "/registration/index.html";
@@ -16,7 +17,7 @@ public class RegisterHandler implements Handler {
     }
 
     @Override
-    public HttpResponse handle(HttpRequest request) {
+    public HttpResponse doGet(HttpRequest request) {
         return new HttpResponse(REGISTRATION_VIEW_FILE_PATH);
     }
 }

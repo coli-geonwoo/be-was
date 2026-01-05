@@ -5,9 +5,10 @@ import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.response.HttpResponseBody;
 import model.User;
+import webserver.handler.AbstractHandler;
 import webserver.handler.Handler;
 
-public class UserCreateHandler implements Handler {
+public class UserCreateHandler extends AbstractHandler {
 
     private static final String HANDLING_PATHS = "/create";
 
@@ -17,7 +18,7 @@ public class UserCreateHandler implements Handler {
     }
 
     @Override
-    public HttpResponse handle(HttpRequest request) {
+    public HttpResponse doPost(HttpRequest request) {
         String userId = request.getRequestParameter("userId");
         String password = request.getRequestParameter("password");
         String email = request.getRequestParameter("email");
