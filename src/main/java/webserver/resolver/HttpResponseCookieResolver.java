@@ -8,7 +8,7 @@ public class HttpResponseCookieResolver implements HttpResponseResolver<Cookie> 
 
     private static final String COOKIE_CONTENT_DELIMITER = "=";
     private static final String END_COOKIE_CONTENT_DELIMITER = "; ";
-    private static final String MAX_AGE_CONTENT_DELIMITER = "max-age=";
+    private static final String MAX_AGE_CONTENT_DELIMITER = "Max-Age";
     private static final String PATH_PREFIX = "Path=";
 
     @Override
