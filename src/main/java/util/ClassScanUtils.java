@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
+import org.reflections.util.ConfigurationBuilder;
 
 public class ClassScanUtils<T> {
 
@@ -20,7 +22,11 @@ public class ClassScanUtils<T> {
             String packageName,
             Class<? extends Annotation> annotationClass
     ) {
-        Reflections reflections = new Reflections(packageName);
+        Reflections reflections = new Reflections(
+                new ConfigurationBuilder()
+                        .forPackages(packageName)
+                        .addScanners(Scanners.MethodsAnnotated)
+        );
         return reflections.getMethodsAnnotatedWith(annotationClass);
     }
 

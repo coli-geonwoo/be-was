@@ -6,6 +6,7 @@ import http.response.HttpResponseBody;
 import http.response.HttpResponseHeader;
 import http.response.HttpStatusCode;
 import http.response.ResponseStatusLine;
+import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ public class GlobalExceptionHandler {
 
         return new HttpResponse(
                 new ResponseStatusLine(HttpVersion.HTTP_1_1, errorCode.getCode()),
-                new HttpResponseHeader(Map.of()),
+                new HttpResponseHeader(new HashMap<>()),
                 null,
                 new HttpResponseBody(errorCode.getMessage().getBytes()),
                 null
