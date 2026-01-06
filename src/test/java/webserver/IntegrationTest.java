@@ -11,6 +11,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -95,6 +98,81 @@ public class IntegrationTest {
                 () -> assertThat(foundUser.getPassword()).isEqualTo("password"),
                 () -> assertThat(foundUser.getName()).isEqualTo("coli"),
                 () -> assertThat(foundUser.getEmail()).isEqualTo("email@email.com")
+        );
+    }
+
+    @DisplayName("로그인에 성공하면 세션 쿠키를 세팅하고 /index.html로 리다이렉션 한다")
+    @Test
+    void loginSuccess() throws Exception {
+        User user = new User("userId", "password", "name", "email@email.com");
+        Database.addUser(user);
+        HttpClient client = HttpClient.newHttpClient();
+        String body = "userId=" +  user.getUserId() + "&password=" + user.getPassword();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8081/login"))
+                .timeout(Duration.ofSeconds(3))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        Map<String, List<String>> responseHeader = response.headers().map();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatusCode.REDIRECTED.getCode()),
+                () -> assertThat(responseHeader.get("location")).contains("/index.html"),
+                () -> assertThat(responseHeader.get("set-cookie")).anyMatch(
+                        value -> value.contains("sid=")
+                )
+        );
+    }
+
+    @DisplayName("로그인에 실패하면 401에러를 반환한다")
+    @Test
+    void loginFail() throws Exception {
+        HttpClient client = HttpClient.newHttpClient();
+        String body = "userId=userId&password=password";
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8081/login"))
+                .timeout(Duration.ofSeconds(3))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatusCode.UNAUTHORIZED_401.getCode());
+    }
+
+    @DisplayName("로그아웃 하면 /index.html로 리다이렉션한다")
+    @Test
+    void logOut() throws Exception {
+        String sessionId = UUID.randomUUID().toString();
+        User user = new User("userId", "password", "name", "email@email.com");
+        Database.addUser(user);
+        SessionDataBase.saveData(sessionId, user.getUserId());
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8081/logout"))
+                .timeout(Duration.ofSeconds(3))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .setHeader("Cookie", "sid=" + sessionId)
+                .POST(HttpRequest.BodyPublishers.ofString(""))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        Map<String, List<String>> responseHeader = response.headers().map();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatusCode.REDIRECTED.getCode()),
+                () -> assertThat(responseHeader.get("location")).contains("/index.html"),
+                () -> assertThat(responseHeader.get("set-cookie")).anyMatch(
+                        value -> value.contains("Max-Age=0")
+                ),
+                () -> assertThat(SessionDataBase.getData(sessionId)).isNotPresent()
         );
     }
 }

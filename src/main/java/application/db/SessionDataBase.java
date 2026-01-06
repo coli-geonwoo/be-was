@@ -12,7 +12,7 @@ public class SessionDataBase {
     }
 
     public static Optional<String> getData(String sessionId) {
-        return Optional.of(sessionData.get(sessionId));
+        return Optional.ofNullable(sessionData.get(sessionId));
     }
 
     public static void removeData(String sessionId) {
