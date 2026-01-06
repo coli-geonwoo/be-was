@@ -22,4 +22,8 @@ public class SessionDataBase {
     public static void saveData(String sessionId, String data) {
         sessionData.put(sessionId, data);
     }
+
+    public static void clear() {
+        sessionData.clear();
+    }
 }

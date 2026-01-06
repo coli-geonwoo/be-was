@@ -1,9 +1,10 @@
-package webserver.parse.request;
+package webserver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import application.db.Database;
+import application.db.SessionDataBase;
 import http.response.HttpStatusCode;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -12,9 +13,9 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import model.User;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.WebServer;
 
 public class IntegrationTest {
 
@@ -29,6 +30,12 @@ public class IntegrationTest {
             }
         }).start();
         Thread.sleep(500);
+    }
+
+    @BeforeEach
+    public void beforeEach() {
+        Database.clear();
+        SessionDataBase.clear();
     }
 
     @DisplayName("index.html을 반환할 수 있다")
@@ -65,7 +72,7 @@ public class IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatusCode.OK_200.getCode());
     }
 
-    @DisplayName("create로 유저를 생성할 수 있다")
+    @DisplayName("create로 유저를 생성하면 /index.html로 리다이렉션 한다")
     @Test
     void create() throws Exception {
         HttpClient client = HttpClient.newHttpClient();
@@ -73,7 +80,7 @@ public class IntegrationTest {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8081/user/create"))
-//                .timeout(Duration.ofSeconds(3))
+                .timeout(Duration.ofSeconds(3))
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
@@ -82,7 +89,8 @@ public class IntegrationTest {
         User foundUser = Database.findUserById("javajigi");
 
         assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatusCode.OK_200.getCode()),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatusCode.REDIRECTED.getCode()),
+                () -> assertThat(response.headers().map().get("location")).contains("/index.html"),
                 () -> assertThat(foundUser.getUserId()).isEqualTo("javajigi"),
                 () -> assertThat(foundUser.getPassword()).isEqualTo("password"),
                 () -> assertThat(foundUser.getName()).isEqualTo("coli"),

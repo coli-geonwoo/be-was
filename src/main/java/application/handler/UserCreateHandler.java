@@ -29,7 +29,7 @@ public class UserCreateHandler extends AbstractHandler {
         User user = new User(
                 createUserRequest.userId(),
                 createUserRequest.password(),
-                createUserRequest.password(),
+                createUserRequest.name(),
                 createUserRequest.email()
         );
         Database.addUser(user);
