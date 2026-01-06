@@ -4,6 +4,8 @@ import http.response.HttpStatusCode;
 
 public enum ErrorCode {
 
+
+    LOGIN_FAILED(HttpStatusCode.UNAUTHORIZED_401, "Login failed"),
     INTERNAL_SERVER_ERROR(HttpStatusCode.INTERNAL_SERVER_ERROR_500, "Internal Server Error"),
     ;
 

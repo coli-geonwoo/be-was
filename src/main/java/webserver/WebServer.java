@@ -8,6 +8,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.exception.ExceptionHandlerRegistry;
 import webserver.handler.HandlerMapper;
 import webserver.handler.ViewHandler;
 import webserver.parse.request.HttpRequestParserFacade;
@@ -49,7 +50,8 @@ public class WebServer {
                         HTTP_REQUEST_PARSER,
                         new HttpResponseResolveFacade(),
                         HandlerMapper.getInstance(),
-                        new ViewHandler(new ViewResolver())
+                        new ViewHandler(new ViewResolver()),
+                        ExceptionHandlerRegistry.fromApplication()
                 );
                 EXECUTOR.submit(requestHandler);
             }

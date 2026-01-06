@@ -3,6 +3,8 @@ package application.handler;
 import application.db.Database;
 import application.db.SessionDataBase;
 import application.dto.request.LoginRequest;
+import application.exception.CustomException;
+import application.exception.ErrorCode;
 import http.request.HttpRequest;
 import http.request.HttpRequestBody;
 import http.request.HttpVersion;
@@ -52,14 +54,7 @@ public class LoginHandler extends AbstractHandler {
             response.setCookie(new ResponseCookie(Map.of("sid", sessionId), "/", 3600));
             return response;
         }
-        //로그인 실패 시
-        return new HttpResponse(
-                new ResponseStatusLine(HttpVersion.HTTP_1_1, HttpStatusCode.UNAUTHORIZED_401),
-                new HttpResponseHeader(new HashMap<>()),
-                null,
-                HttpResponseBody.EMPTY_RESPONSE_BODY,
-                null
-        );
+        throw new CustomException(ErrorCode.LOGIN_FAILED);
     }
 
     private void saveSessionData(User user, String sessionId) {

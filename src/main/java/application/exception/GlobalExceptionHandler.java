@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(value = CustomException.class)
+    @ExceptionHandler(value = Exception.class)
     public HttpResponse handleException(Exception exception) {
         logger.error(exception.getMessage(), exception);
 
