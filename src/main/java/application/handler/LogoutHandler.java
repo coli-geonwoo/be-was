@@ -1,6 +1,8 @@
 package application.handler;
 
 import application.db.SessionDataBase;
+import application.exception.CustomException;
+import application.exception.ErrorCode;
 import application.service.AuthService;
 import http.request.HttpRequest;
 import http.request.RequestCookie;
@@ -24,7 +26,7 @@ public class LogoutHandler extends AbstractHandler {
     @Override
     public HttpResponse doPost(HttpRequest request) {
         if(!request.hasCookie("sid")) {
-            throw new RuntimeException("Cookie not set");
+            throw new CustomException(ErrorCode.REQUEST_SESSION_ID);
         }
         RequestCookie requestCookie = request.getRequestCookie();
         String sessionId = requestCookie.get("sid");

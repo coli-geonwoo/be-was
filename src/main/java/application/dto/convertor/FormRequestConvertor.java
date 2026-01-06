@@ -20,12 +20,4 @@ public class FormRequestConvertor {
         }
         return parameters;
     }
-
-    private String getNonNullValue(String key, Map<String, String> parameters) {
-        String value = parameters.get(key);
-        if (value == null) {
-            throw new RuntimeException("Missing required parameter: " + key);
-        }
-        return value;
-    }
 }
