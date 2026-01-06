@@ -1,6 +1,7 @@
 package webserver;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import application.db.Database;
@@ -10,6 +11,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
@@ -41,9 +43,31 @@ public class IntegrationTest {
         SessionDataBase.clear();
     }
 
-    @DisplayName("index.html을 반환할 수 있다")
+    @DisplayName("로그인 상황에서 index.html을 반환한다")
     @Test
-    void index() throws Exception {
+    void indexWhenLogin() throws Exception {
+        String sessionId = UUID.randomUUID().toString();
+        User user = new User("userId", "password", "name", "email@email.com");
+        Database.addUser(user);
+        SessionDataBase.saveData(sessionId, user.getUserId());
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .timeout(Duration.ofSeconds(3L))
+                .uri(URI.create("http://localhost:8081/index.html"))
+                .setHeader("Cookie", "sid=" + sessionId)
+                .GET()
+                .build();
+
+        HttpResponse<String> response =
+                client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatusCode.OK_200.getCode());
+    }
+
+    @DisplayName("로그인되어 있지 않은 상황에서 index.html을 반환한다")
+    @Test
+    void indexWhenLogOut() throws Exception {
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -173,6 +197,65 @@ public class IntegrationTest {
                         value -> value.contains("Max-Age=0")
                 ),
                 () -> assertThat(SessionDataBase.getData(sessionId)).isNotPresent()
+        );
+    }
+
+    @DisplayName("로그인이 되어 있지 않은 상태에서 로그아웃 하면 에러가 발생한다")
+    @Test
+    void logOutFail() throws Exception {
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8081/logout"))
+                .timeout(Duration.ofSeconds(3))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .POST(HttpRequest.BodyPublishers.ofString(""))
+                .build();
+
+        //예외 타입 구체화하기
+        assertThatThrownBy(() -> client.send(request, HttpResponse.BodyHandlers.ofString()))
+            .isInstanceOf(Exception.class);
+    }
+
+    @DisplayName("로그인이 되어 있는 상황에서 /mypage를 조회할 수 있다")
+    @Test
+    void myPageSuccess() throws Exception {
+        String sessionId = UUID.randomUUID().toString();
+        User user = new User("userId", "password", "name", "email@email.com");
+        Database.addUser(user);
+        SessionDataBase.saveData(sessionId, user.getUserId());
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8081/mypage"))
+                .timeout(Duration.ofSeconds(3))
+                .setHeader("Cookie", "sid=" + sessionId)
+                .GET()
+                .build();
+
+        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatusCode.OK_200.getCode());
+    }
+
+    @DisplayName("로그인이 되어 있지 않은 상황에서는 /로 리다이렉션한다")
+    @Test
+    void myPageFail() throws Exception {
+
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8081/mypage"))
+                .timeout(Duration.ofSeconds(3))
+                .GET()
+                .build();
+
+        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+        Map<String, List<String>> responseHeader = response.headers().map();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatusCode.REDIRECTED.getCode()),
+                () -> assertThat(responseHeader.get("location")).contains("/")
         );
     }
 }
