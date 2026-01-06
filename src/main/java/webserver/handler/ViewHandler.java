@@ -1,6 +1,7 @@
 package webserver.handler;
 
 import http.request.HttpRequest;
+import http.response.ContentType;
 import http.response.HttpResponse;
 import http.response.HttpResponseBody;
 import http.response.ModelAttributes;
@@ -17,12 +18,23 @@ public class ViewHandler implements Handler {
 
     @Override
     public boolean canHandle(String path) {
-        return true;
+        return ContentType.mapToType(path)
+                .isPresent();
     }
 
     @Override
     public HttpResponse handle(HttpRequest request) {
         return handleByFileName(request.getRequestUrl());
+    }
+
+    public HttpResponse handleWithResponse(HttpRequest request, HttpResponse response) {
+        if(response.hasViewName()) {
+            return handleByFileNameAndModelAttributes(
+                    response.getViewName(),
+                    response.getModelAttributes()
+            );
+        }
+        return response;
     }
 
     public HttpResponse handleByFileName(String fileName) {

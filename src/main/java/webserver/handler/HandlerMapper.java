@@ -24,9 +24,10 @@ public class HandlerMapper {
         this.handlers = handlers;
     }
 
-    public Optional<Handler> mapByPath(String path) {
+    public Handler mapByPath(String path) {
         return handlers.stream()
                 .filter(handler -> handler.canHandle(path))
-                .findAny();
+                .findAny()
+                .orElseThrow(() -> new RuntimeException("Not Matched Handler: " +  path));
     }
 }

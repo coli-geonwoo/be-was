@@ -1,5 +1,6 @@
 package webserver;
 
+import http.request.HttpRequest;
 import http.response.HttpResponse;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -9,7 +10,6 @@ import java.io.OutputStream;
 import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import http.request.HttpRequest;
 import webserver.handler.Handler;
 import webserver.handler.HandlerMapper;
 import webserver.handler.ViewHandler;
@@ -46,10 +46,10 @@ public class RequestHandler implements Runnable {
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
              OutputStream out = connection.getOutputStream()) {
+
             HttpRequest request = requestParserFacade.parse(br);
-            Handler mappedHandler = handlerMapper.mapByPath(request.getRequestUrl())
-                    .orElse(viewHandler);
-            HttpResponse response = handleRequest(request, mappedHandler);
+            HttpResponse response = handleByViewHandlerOrApplicationHandler(request);
+            response = viewHandler.handleWithResponse(request, response);
             responseResolveFacade.resolve(request, response, new DataOutputStream(out));
             logger.debug("New Client Connect Response: {}", request.getRequestUrl());
         } catch (IOException e) {
@@ -58,14 +58,11 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private HttpResponse handleRequest(HttpRequest request, Handler handler) {
-        HttpResponse response = handler.handle(request);
-        if(response.hasViewName()) {
-            return viewHandler.handleByFileNameAndModelAttributes(
-                    response.getViewName(),
-                    response.getModelAttributes()
-            );
+    private HttpResponse handleByViewHandlerOrApplicationHandler(HttpRequest request) {
+        if (viewHandler.canHandle(request.getRequestUrl())) {
+            return viewHandler.handleByFileName(request.getRequestUrl());
         }
-        return response;
+        Handler mappedHandler = handlerMapper.mapByPath(request.getRequestUrl());
+        return mappedHandler.handle(request);
     }
 }
