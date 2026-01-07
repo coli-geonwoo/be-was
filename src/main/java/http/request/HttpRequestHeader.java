@@ -10,6 +10,10 @@ public class HttpRequestHeader {
         this.headers = headers;
     }
 
+    public boolean containsHeader(String headerName) {
+        return headers.containsKey(headerName);
+    }
+
     public String getHeaderContent(String headerKey) {
         return headers.get(headerKey);
     }

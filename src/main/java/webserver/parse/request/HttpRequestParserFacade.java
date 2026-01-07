@@ -1,5 +1,6 @@
 package webserver.parse.request;
 
+import http.request.RequestCookie;
 import java.io.BufferedReader;
 import java.io.IOException;
 import org.slf4j.Logger;
@@ -21,11 +22,13 @@ public class HttpRequestParserFacade {
     private final HttpRequestParser<HttpRequestLine> httpRequestLineParser;
     private final HttpRequestParser<HttpRequestHeader> httpRequestHeaderParser;
     private final HttpRequestParser<HttpRequestBody> httpRequestBodyParser;
+    private final HttpRequestParser<RequestCookie> cookieParser;
 
     public HttpRequestParserFacade() {
         this.httpRequestLineParser = new HttpRequestLineParser(new RequestUrlParser());
         this.httpRequestHeaderParser = new HttpRequestHeaderParser();
         this.httpRequestBodyParser = new HttpRequestBodyParser();
+        this.cookieParser = new RequestCookieParser();
     }
 
     public HttpRequest parse(BufferedReader bufferedReader) throws IOException {
@@ -43,14 +46,21 @@ public class HttpRequestParserFacade {
         HttpRequestHeader requestHeader = httpRequestHeaderParser.parse(headerPart);
         logger.debug("Request Header : {}", headerPart);
 
+        RequestCookie requestCookie = RequestCookie.EMPTY_COOKIE;
+        if(requestHeader.containsHeader("Cookie")) {
+            String rawCookie = requestHeader.getHeaderContent("Cookie");
+            requestCookie = cookieParser.parse(rawCookie);
+            logger.debug("Request Cookie - {}", rawCookie);
+        }
+
         if(requestLine.getMethod() == HttpMethod.POST) {
             int contentLength = Integer.parseInt(requestHeader.getHeaderContent("Content-Length"));
             String rawBodyPart = parseRawBodyPart(rawRequest, headerEnd, contentLength);
             logger.debug("Request body : {}", rawBodyPart);
             HttpRequestBody requestBody = httpRequestBodyParser.parse(rawBodyPart);
-            return new HttpRequest(requestLine, requestHeader, requestBody);
+            return new HttpRequest(requestLine, requestHeader, requestBody, requestCookie);
         }
-        return new HttpRequest(requestLine, requestHeader);
+        return new HttpRequest(requestLine, requestHeader, requestCookie);
     }
 
     private String getRawHttpRequest(BufferedReader br) throws IOException {

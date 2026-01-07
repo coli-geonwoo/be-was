@@ -1,6 +1,7 @@
 package http.response;
 
 import java.util.List;
+import java.util.Optional;
 
 public enum ContentType {
 
@@ -23,14 +24,18 @@ public enum ContentType {
         this.responseContentType = responseContentType;
     }
 
-    public static String mapToType(String path) {
+    public static Optional<String> mapToType(String path) {
         for(ContentType contentType : ContentType.values()) {
             for(String extension : contentType.extensions) {
                 if(path.endsWith(extension)) {
-                    return contentType.responseContentType;
+                    return Optional.of(contentType.responseContentType);
                 }
             }
         }
-        return ContentType.HTML.responseContentType;
+        return Optional.empty();
+    }
+
+    public String getResponseContentType() {
+        return responseContentType;
     }
 }

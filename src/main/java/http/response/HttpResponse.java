@@ -9,19 +9,21 @@ public class HttpResponse {
     private final ResponseStatusLine statusLine;
     private final HttpResponseHeader headers;
     private final String viewName;
+    private final ModelAttributes modelAttributes;
     private final HttpResponseBody body;
-    private Cookie cookie;
+    private ResponseCookie responseCookie;
 
     public HttpResponse(
             ResponseStatusLine statusLine,
             HttpResponseHeader headers,
             String viewName,
             HttpResponseBody body,
-            Cookie cookie
+            ResponseCookie responseCookie
     ) {
         this.statusLine = statusLine;
         this.headers = headers;
         this.viewName = viewName;
+        this.modelAttributes = new ModelAttributes(new HashMap<>());
         this.body = body;
     }
 
@@ -57,16 +59,16 @@ public class HttpResponse {
         );
     }
 
-    public void setCookie(Cookie cookie) {
-        this.cookie = cookie;
+    public void setCookie(ResponseCookie responseCookie) {
+        this.responseCookie = responseCookie;
     }
 
     public boolean hasCookie() {
-        return cookie != null;
+        return responseCookie != null;
     }
 
-    public boolean isRedirect() {
-        return statusLine.getStatusCode() == HttpStatusCode.REDIRECTED;
+    public void addModelAttributes(String key, String value) {
+        modelAttributes.put(key, value);
     }
 
     public void addHeader(String key, String value) {
@@ -93,7 +95,11 @@ public class HttpResponse {
         return viewName;
     }
 
-    public Cookie getCookie() {
-        return cookie;
+    public ResponseCookie getCookie() {
+        return responseCookie;
+    }
+
+    public ModelAttributes getModelAttributes() {
+        return modelAttributes;
     }
 }

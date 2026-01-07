@@ -1,7 +1,12 @@
 package util;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Set;
 import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
+import org.reflections.util.ConfigurationBuilder;
 
 public class ClassScanUtils<T> {
 
@@ -11,6 +16,18 @@ public class ClassScanUtils<T> {
                 .stream()
                 .map(this::makeHandlerInstance)
                 .toList();
+    }
+
+    public Set<Method> scanAnnotatedMethods(
+            String packageName,
+            Class<? extends Annotation> annotationClass
+    ) {
+        Reflections reflections = new Reflections(
+                new ConfigurationBuilder()
+                        .forPackages(packageName)
+                        .addScanners(Scanners.MethodsAnnotated)
+        );
+        return reflections.getMethodsAnnotatedWith(annotationClass);
     }
 
     private T makeHandlerInstance(Class<? extends T> clazz) {

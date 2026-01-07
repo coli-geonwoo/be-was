@@ -3,10 +3,18 @@ package application.handler;
 import application.db.Database;
 import application.db.SessionDataBase;
 import application.dto.request.LoginRequest;
+import application.exception.CustomException;
+import application.exception.ErrorCode;
 import http.request.HttpRequest;
 import http.request.HttpRequestBody;
-import http.response.Cookie;
+import http.request.HttpVersion;
+import http.response.ResponseCookie;
 import http.response.HttpResponse;
+import http.response.HttpResponseBody;
+import http.response.HttpResponseHeader;
+import http.response.HttpStatusCode;
+import http.response.ResponseStatusLine;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -43,10 +51,10 @@ public class LoginHandler extends AbstractHandler {
             String sessionId = UUID.randomUUID().toString();
             saveSessionData(foundUser.get(), sessionId);
             HttpResponse response = HttpResponse.redirect("/index.html");
-            response.setCookie(new Cookie(Map.of("sid", sessionId), "/", 3600));
+            response.setCookie(new ResponseCookie(Map.of("sid", sessionId), "/", 3600));
             return response;
         }
-        throw new RuntimeException("Login failed");
+        throw new CustomException(ErrorCode.LOGIN_FAILED);
     }
 
     private void saveSessionData(User user, String sessionId) {

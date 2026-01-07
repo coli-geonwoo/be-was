@@ -35,6 +35,27 @@
 - [x] URL을 비교하고 사용자가 입력한 값을 파싱하여 model.User 클래스에 저장한다.
 - [ ] Junit & AssertJ를 활용한 테스트 코드를 작성한다.
 
+## Step4
+- [x] 로그인을 POST API로 변경한다.
+- [x] 회원 가입 완료 후 /index.html 페이지로 이동한다
+
+## Step5
+- [x] 로그인 
+  - [x] GET /login 요청 시 로그인 페이지를 반환한다.
+  - [x] 로그인이 성공하면 /index.html로 이동한다.
+  - [x] 로그인이 실패하면 사용자에게 알려주고 로그인 화면에 머무른다.
+- [x] 로그아웃
+  - [x] 로그인인 상태의 유저만 로그아웃을 시도할 수 있다.
+  - [x] 로그아웃에 성공하면 index.html로 이동한다.
+
+## Step6
+- [x] 유저가 로그인 상태일 경우 /index.html에서 유저 이름을 표기해준다.
+- [x] 유저가 로그인 상태가 아닌 경우에는 /index.html에서 `로그인` 버튼을 표시해준다
+- [x] 유저 개인정보 수정 페이지
+  - [x] 로그인 상태에서 사용자 이름을 클릭하는 경우 이동가능하다
+  - [x] 로그인 상태가 아닐 경우 메인 페이지로 리다이렉션한다
+- [x] ExceptionHandler를 통해 한곳에서 에러를 통합관리한다.
+
 # 학습 키워드
 
 ## Step1
@@ -43,6 +64,13 @@
 
 # Step2
 - Response Content-Type
+
+# Step4
+- Redirect : 301 vs 302 vs 303
+
+# Step5
+- Cookie : Path, Secure 옵션
+
 
 # 고민한 부분
 - InputStreamReader vs BufferedReader vs Scanner
