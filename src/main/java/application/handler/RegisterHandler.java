@@ -1,10 +1,12 @@
 package application.handler;
 
+import http.request.HttpMethod;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import java.util.List;
 import webserver.handler.AbstractHandler;
 import webserver.handler.Handler;
+import webserver.handler.RequestMapping;
 
 public class RegisterHandler extends AbstractHandler {
 
@@ -20,4 +22,10 @@ public class RegisterHandler extends AbstractHandler {
     public HttpResponse doGet(HttpRequest request) {
         return new HttpResponse(REGISTRATION_VIEW_FILE_PATH);
     }
+
+    @RequestMapping(method = HttpMethod.GET, path = "/registration")
+    public HttpResponse registration(HttpRequest request) {
+        return new HttpResponse(REGISTRATION_VIEW_FILE_PATH);
+    }
+
 }
