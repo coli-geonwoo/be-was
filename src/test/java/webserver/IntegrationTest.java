@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import application.db.Database;
 import application.db.SessionDataBase;
-import http.response.HttpStatusCode;
+import http.HttpStatusCode;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;

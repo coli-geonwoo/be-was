@@ -1,7 +1,7 @@
 package webserver.handler;
 
 import http.request.HttpRequest;
-import http.response.ContentType;
+import http.ContentType;
 import http.response.HttpResponse;
 import http.response.HttpResponseBody;
 import http.response.ModelAttributes;

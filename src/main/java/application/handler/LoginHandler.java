@@ -5,25 +5,21 @@ import application.db.SessionDataBase;
 import application.dto.request.LoginRequest;
 import application.exception.CustomException;
 import application.exception.ErrorCode;
-import http.request.HttpMethod;
+import http.HttpMethod;
 import http.request.HttpRequest;
 import http.request.HttpRequestBody;
-import http.request.HttpVersion;
 import http.response.ResponseCookie;
 import http.response.HttpResponse;
-import http.response.HttpResponseBody;
-import http.response.HttpResponseHeader;
-import http.response.HttpStatusCode;
-import http.response.ResponseStatusLine;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import model.User;
 import webserver.handler.AbstractHandler;
+import webserver.handler.HttpHandler;
 import webserver.handler.RequestMapping;
 
+@HttpHandler
 public class LoginHandler extends AbstractHandler {
 
     private static List<String> HANDLING_PATHS = List.of("/login");

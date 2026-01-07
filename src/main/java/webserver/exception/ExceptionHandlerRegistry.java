@@ -15,7 +15,7 @@ public class ExceptionHandlerRegistry {
     private final Map<Class<? extends Exception>, Method> exceptionHandlers;
 
     public static final ExceptionHandlerRegistry fromApplication() {
-        ClassScanUtils<Method> classScanUtils = new ClassScanUtils<>();
+        ClassScanUtils classScanUtils = new ClassScanUtils();
         Set<Method> exceptionHandlers = classScanUtils.scanAnnotatedMethods("application.exception", ExceptionHandler.class);
 
         Map<Class<? extends Exception>, Method> mappedExceptionHandlers = exceptionHandlers.stream()

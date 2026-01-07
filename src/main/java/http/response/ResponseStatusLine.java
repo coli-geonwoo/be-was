@@ -1,6 +1,7 @@
 package http.response;
 
-import http.request.HttpVersion;
+import http.HttpStatusCode;
+import http.HttpVersion;
 
 public class ResponseStatusLine {
 

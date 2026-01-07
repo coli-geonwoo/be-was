@@ -1,6 +1,6 @@
 package webserver.handler;
 
-import http.request.HttpMethod;
+import http.HttpMethod;
 import java.util.Arrays;
 
 public class HandlerKey {

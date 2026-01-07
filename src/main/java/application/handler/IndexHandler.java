@@ -1,7 +1,7 @@
 package application.handler;
 
 import application.service.AuthService;
-import http.request.HttpMethod;
+import http.HttpMethod;
 import http.request.HttpRequest;
 import http.request.RequestCookie;
 import http.response.HttpResponse;
@@ -9,8 +9,10 @@ import http.response.ResponseCookie;
 import java.util.List;
 import model.User;
 import webserver.handler.AbstractHandler;
+import webserver.handler.HttpHandler;
 import webserver.handler.RequestMapping;
 
+@HttpHandler
 public class IndexHandler extends AbstractHandler {
 
     private static final List<String> HANDLING_PATHS = List.of("/", "/index", "/index.html");

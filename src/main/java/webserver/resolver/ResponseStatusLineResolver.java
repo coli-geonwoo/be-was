@@ -1,7 +1,7 @@
 package webserver.resolver;
 
-import http.request.HttpVersion;
-import http.response.HttpStatusCode;
+import http.HttpVersion;
+import http.HttpStatusCode;
 import http.response.ResponseStatusLine;
 import java.util.StringJoiner;
 

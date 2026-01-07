@@ -2,6 +2,7 @@ package webserver;
 
 import http.request.HttpRequest;
 import http.response.HttpResponse;
+import java.lang.reflect.Method;
 import webserver.exception.ExceptionHandlerRegistry;
 import webserver.handler.Handler;
 import webserver.handler.HandlerMapper;
@@ -32,11 +33,13 @@ public class HttpServlet {
         }
     }
 
+    //TODO method
     private HttpResponse handleByViewHandlerOrApplicationHandler(HttpRequest request) {
         if (viewHandler.canHandle(request.getRequestUrl())) {
             return viewHandler.handleByFileName(request.getRequestUrl());
         }
-        Handler mappedHandler = handlerMapper.mapByPath(request.getRequestUrl());
-        return mappedHandler.handle(request);
+        Method mappedHandler = handlerMapper.mapByPath(request.getRequestMethod(), request.getRequestUrl());
+        return null;
+//        return mappedHandler.handle(request);
     }
 }

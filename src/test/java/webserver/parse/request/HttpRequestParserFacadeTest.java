@@ -3,12 +3,12 @@ package webserver.parse.request;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import http.request.HttpMethod;
+import http.HttpMethod;
 import http.request.HttpRequest;
 import http.request.HttpRequestBody;
 import http.request.HttpRequestHeader;
 import http.request.HttpRequestLine;
-import http.request.HttpVersion;
+import http.HttpVersion;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

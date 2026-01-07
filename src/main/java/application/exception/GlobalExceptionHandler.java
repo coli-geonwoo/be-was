@@ -1,10 +1,10 @@
 package application.exception;
 
-import http.request.HttpVersion;
+import http.HttpVersion;
 import http.response.HttpResponse;
 import http.response.HttpResponseBody;
 import http.response.HttpResponseHeader;
-import http.response.HttpStatusCode;
+import http.HttpStatusCode;
 import http.response.ResponseStatusLine;
 import java.util.HashMap;
 import java.util.Map;

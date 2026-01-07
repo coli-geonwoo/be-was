@@ -1,14 +1,16 @@
 package application.handler;
 
 import application.service.AuthService;
-import http.request.HttpMethod;
+import http.HttpMethod;
 import http.request.HttpRequest;
 import http.request.RequestCookie;
 import http.response.HttpResponse;
 import java.util.List;
 import webserver.handler.AbstractHandler;
+import webserver.handler.HttpHandler;
 import webserver.handler.RequestMapping;
 
+@HttpHandler
 public class MyPageHandler extends AbstractHandler {
 
     private static List<String> HANDLING_PATHS = List.of("/mypage");

@@ -1,5 +1,8 @@
 package http.request;
 
+import http.HttpMethod;
+import http.HttpVersion;
+
 public class HttpRequestLine {
 
     private final HttpMethod method;

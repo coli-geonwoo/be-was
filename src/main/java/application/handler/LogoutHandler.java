@@ -4,7 +4,7 @@ import application.db.SessionDataBase;
 import application.exception.CustomException;
 import application.exception.ErrorCode;
 import application.service.AuthService;
-import http.request.HttpMethod;
+import http.HttpMethod;
 import http.request.HttpRequest;
 import http.request.RequestCookie;
 import http.response.ResponseCookie;
@@ -12,8 +12,10 @@ import http.response.HttpResponse;
 import java.util.List;
 import model.User;
 import webserver.handler.AbstractHandler;
+import webserver.handler.HttpHandler;
 import webserver.handler.RequestMapping;
 
+@HttpHandler
 public class LogoutHandler extends AbstractHandler {
 
     private static List<String> HANDLING_PATHS = List.of("/logout");
