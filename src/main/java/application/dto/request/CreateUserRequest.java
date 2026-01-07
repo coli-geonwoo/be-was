@@ -1,24 +1,34 @@
 package application.dto.request;
 
-import application.dto.convertor.FormRequestConvertor;
-import java.util.Map;
-import model.User;
+public class CreateUserRequest {
 
-public record CreateUserRequest(
-        String userId,
-        String password,
-        String name,
-        String email
-) {
+    private String userId;
+    private String password;
+    private String name;
+    private String email;
 
-    public static CreateUserRequest fromFormRequest(String rawValue) {
-        FormRequestConvertor formRequestConvertor = new FormRequestConvertor();
-        Map<String, String> parameters = formRequestConvertor.convert(rawValue);
-        return new CreateUserRequest(
-                parameters.get("userId"),
-                parameters.get("password"),
-                parameters.get("name"),
-                parameters.get("email")
-        );
+    public CreateUserRequest(String userId, String password, String name, String email) {
+        this.userId = userId;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+    }
+
+    private CreateUserRequest() {}
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }

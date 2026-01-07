@@ -3,7 +3,7 @@ package webserver.convertor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import application.dto.request.LoginRequest2;
+import application.dto.request.LoginRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +15,7 @@ class FormDataConvertorTest {
     void resolve() {
         FormDataConvertor convertor = new FormDataConvertor();
 
-        LoginRequest2 result = (LoginRequest2) convertor.resolve("userId=coli&password=pass1234", LoginRequest2.class);
+        LoginRequest result = (LoginRequest) convertor.resolveBody("userId=coli&password=pass1234", LoginRequest.class);
 
         assertAll(
                 () -> assertThat(result.getPassword()).isEqualTo("pass1234"),

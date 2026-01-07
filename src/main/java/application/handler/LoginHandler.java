@@ -2,7 +2,7 @@ package application.handler;
 
 import application.db.Database;
 import application.db.SessionDataBase;
-import application.dto.request.LoginRequest2;
+import application.dto.request.LoginRequest;
 import application.exception.CustomException;
 import application.exception.ErrorCode;
 import http.HttpMethod;
@@ -24,10 +24,10 @@ public class LoginHandler {
     }
 
     @RequestMapping(method = HttpMethod.POST, path = "/login")
-    public HttpResponse login(@RequestBody LoginRequest2 loginRequest2) {
+    public HttpResponse login(@RequestBody LoginRequest loginRequest) {
         User foundUser = Database.findByUserIdAndPassword(
-                loginRequest2.getUserId(),
-                loginRequest2.getPassword()
+                loginRequest.getUserId(),
+                loginRequest.getPassword()
         ).orElseThrow(() -> new CustomException(ErrorCode.LOGIN_FAILED));
 
         String sessionId = UUID.randomUUID().toString();
