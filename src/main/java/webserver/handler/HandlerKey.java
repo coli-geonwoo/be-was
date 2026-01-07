@@ -14,8 +14,6 @@ public class HandlerKey {
     }
 
     public boolean matches(HttpMethod method, String path) {
-        return method.equals(this.method)
-                && Arrays.asList(paths)
-                .contains(path);
+        return method == this.method && Arrays.asList(paths).contains(path);
     }
 }

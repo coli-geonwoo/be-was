@@ -13,7 +13,7 @@ public class HandlerMapper {
     private static final HandlerMapper APPLICATION_HANDLER_MAPPER;
 
     static {
-        ClassScanUtils classScanUtils = new ClassScanUtils();
+        ClassScanUtils<?> classScanUtils = new ClassScanUtils<>();
         Map<HandlerKey, Method> map = new HashMap<>();
         List<Method> handlerMethod = classScanUtils.scanAnnotatedClasses("application", HttpHandler.class)
                 .stream()
@@ -25,36 +25,28 @@ public class HandlerMapper {
             RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
             map.put(new HandlerKey(requestMapping.method(), requestMapping.path()), method);
         }
+        for (Map.Entry<HandlerKey, Method> entry : map.entrySet()) {
+            HandlerKey handlerKey = entry.getKey();
+            Method method = entry.getValue();
+        }
         APPLICATION_HANDLER_MAPPER = new HandlerMapper(map);
     }
 
-    private List<Handler> handlers;
     private Map<HandlerKey, Method> handlerMethods;
 
     public static HandlerMapper getInstance() {
         return APPLICATION_HANDLER_MAPPER;
     }
 
-    private HandlerMapper(List<Handler> handlers) {
-        this.handlers = handlers;
-    }
-
     private HandlerMapper(Map<HandlerKey, Method> handlerMethods) {
         this.handlerMethods = handlerMethods;
     }
 
-    public Handler mapByPath(String path) {
-        return handlers.stream()
-                .filter(handler -> handler.canHandle(path))
-                .findAny()
-                .orElseThrow(() -> new RuntimeException("Not Matched Handler: " + path));
-    }
-
-    public Method mapByPath(HttpMethod method, String path) {
+    public HandlerExecution mapByPath(HttpMethod method, String path) {
         return handlerMethods.entrySet().stream()
                 .filter(entry -> entry.getKey().matches(method, path))
-                .findAny()
-                .orElseThrow(() -> new RuntimeException("Not Matched Handler: " + path))
-                .getValue();
+                .findFirst()
+                .map(entry -> new HandlerExecution(entry.getValue()))
+                .orElseThrow(() -> new RuntimeException("Not Matched Handler: " + path));
     }
 }

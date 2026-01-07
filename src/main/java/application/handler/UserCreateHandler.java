@@ -2,6 +2,7 @@ package application.handler;
 
 import application.db.Database;
 import application.dto.request.CreateUserRequest;
+import application.dto.request.CreateUserRequest2;
 import http.HttpMethod;
 import http.request.HttpRequest;
 import http.request.HttpRequestBody;
@@ -9,6 +10,7 @@ import http.response.HttpResponse;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.convertor.RequestBody;
 import webserver.handler.AbstractHandler;
 import webserver.handler.HttpHandler;
 import webserver.handler.RequestMapping;
@@ -41,15 +43,12 @@ public class UserCreateHandler extends AbstractHandler {
     }
 
     @RequestMapping(method = HttpMethod.POST, path = "/user/create")
-    public HttpResponse save(HttpRequest request) {
-        HttpRequestBody requestBody = request.getRequestBody();
-        String rawValue = requestBody.getValue();
-        CreateUserRequest createUserRequest = CreateUserRequest.fromFormRequest(rawValue);
+    public HttpResponse save(@RequestBody CreateUserRequest2 createUserRequest2) {
         User user = new User(
-                createUserRequest.userId(),
-                createUserRequest.password(),
-                createUserRequest.name(),
-                createUserRequest.email()
+                createUserRequest2.getUserId(),
+                createUserRequest2.getPassword(),
+                createUserRequest2.getName(),
+                createUserRequest2.getEmail()
         );
         Database.addUser(user);
         return HttpResponse.redirect("/index.html");

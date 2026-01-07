@@ -14,16 +14,16 @@ public class FormDataConvertor extends RequestBodyArgumentResolver {
     private static final String KEY_VALUE_DELIMITER = "=";
 
     @Override
-    boolean resolvableType(String contentType) {
+    public boolean resolvableType(String contentType) {
         return ContentType.FORM_URLENCODED
                 .getResponseContentType()
                 .equals(contentType);
     }
 
     @Override
-    public Object resolve(String body, Class<?> clazz) {
+    public Object resolveBody(String body, Class<?> clazz) {
         Map<String, String> dataMap = convertToMap(body);
-        Object object = new ClassScanUtils().makeHandlerInstance(clazz);
+        Object object = new ClassScanUtils<>().makeHandlerInstance(clazz);
         for (Map.Entry<String, String> entry : dataMap.entrySet()) {
             String fieldName = entry.getKey();
             String value = entry.getValue();

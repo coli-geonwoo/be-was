@@ -3,20 +3,34 @@ package util;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.reflections.util.ConfigurationBuilder;
 
-public class ClassScanUtils {
+public class ClassScanUtils <T> {
 
-    public List<Object> scan(String packageName, Class<?> clazz) {
+    public List<T> scan(String packageName, Class<T> clazz) {
         Reflections reflections = new Reflections(packageName);
-        return reflections.getSubTypesOf(clazz)
+        return getSpecificClassTypes(reflections, reflections.getSubTypesOf(clazz))
                 .stream()
-                .map(this::makeHandlerInstance)
+                .map(streamClazz -> (T) makeHandlerInstance(streamClazz))
                 .toList();
+    }
+
+    private Set<Class<? extends T>> getSpecificClassTypes(Reflections reflections, Set<Class<? extends T>> types) {
+        //인터페이스나 추상클래스이면 구체클래스 재귀 탐색
+        for (Class<? extends T> type : types) {
+            if (type.isInterface() || Modifier.isAbstract(type.getModifiers())) {
+                types.remove(type);
+                types.addAll(reflections.getSubTypesOf(type));
+                return getSpecificClassTypes(reflections, types);
+            }
+        }
+        return types;
     }
 
     public Object makeHandlerInstance(Class<?> clazz) {

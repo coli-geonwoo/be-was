@@ -7,5 +7,5 @@ public interface ArgumentResolver {
 
     boolean canConvert(HttpRequest request, Parameter parameter);
 
-    Object resolve(String body, Class<?> clazz) throws NoSuchFieldException;
+    Object resolve(HttpRequest request, Class<?> clazz);
 }
