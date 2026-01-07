@@ -2,6 +2,7 @@ package webserver.handler;
 
 import http.request.HttpRequest;
 import http.response.HttpResponse;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -44,8 +45,9 @@ public class HandlerExecution {
                 }
             }
             return (HttpResponse) method.invoke(handler, args);
-        } catch (Exception e) {
-            throw new RuntimeException("Error executing " + method, e);
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            System.out.println(e.getCause().getClass().getName());
+            throw new RuntimeException(e.getCause());
         }
     }
 

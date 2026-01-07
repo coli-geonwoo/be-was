@@ -18,6 +18,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = CustomException.class)
     public HttpResponse handleCustomException(CustomException customException) {
+        System.out.println("CustomException: " + customException.getMessage());
         logger.error(customException.getMessage(), customException);
         ErrorCode errorCode = customException.getErrorCode();
 
