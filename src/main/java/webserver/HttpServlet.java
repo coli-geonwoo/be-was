@@ -2,8 +2,11 @@ package webserver;
 
 import http.request.HttpRequest;
 import http.response.HttpResponse;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import webserver.exception.ExceptionHandlerRegistry;
 import webserver.handler.Handler;
+import webserver.handler.HandlerExecution;
 import webserver.handler.HandlerMapper;
 import webserver.handler.ViewHandler;
 
@@ -28,15 +31,17 @@ public class HttpServlet {
             HttpResponse response = handleByViewHandlerOrApplicationHandler(request);
             return viewHandler.handleWithResponse(request, response);
         }catch (Exception e) {
-            return exceptionHandlerRegistry.handleByExceptionHandler(e);
+            //method invoke로 가져오므로 getCause
+            return exceptionHandlerRegistry.handleByExceptionHandler((Exception) e.getCause());
         }
     }
 
-    private HttpResponse handleByViewHandlerOrApplicationHandler(HttpRequest request) {
+    private HttpResponse handleByViewHandlerOrApplicationHandler(HttpRequest request)
+    {
         if (viewHandler.canHandle(request.getRequestUrl())) {
             return viewHandler.handleByFileName(request.getRequestUrl());
         }
-        Handler mappedHandler = handlerMapper.mapByPath(request.getRequestUrl());
-        return mappedHandler.handle(request);
+        HandlerExecution handlerExecution = handlerMapper.mapByPath(request.getRequestMethod(), request.getRequestUrl());
+        return handlerExecution.invoke(request);
     }
 }

@@ -1,4 +1,4 @@
-package http.response;
+package http;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +12,9 @@ public enum ContentType {
     JPG(List.of(".jpg"), "jpeg"),
     SVG(List.of(".svg"), "image/svg+xml"),
     GIF(List.of(".gif"), "image/gif"),
-    ICO(List.of(".ico"), "image/x-icon");
+    ICO(List.of(".ico"), "image/x-icon"),
+    FORM_URLENCODED(List.of(), "application/x-www-form-urlencoded");
+    ;
 
     public static final String CONTENT_TYPE_HEADER_KEY = "Content-Type";
 

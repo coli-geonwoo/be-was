@@ -1,5 +1,7 @@
 package http.request;
 
+import http.HttpMethod;
+
 public class HttpRequest {
 
     private final HttpRequestLine requestLine;
@@ -46,6 +48,10 @@ public class HttpRequest {
 
     public String getRequestParameter(String parameterName) {
         return requestLine.getRequestParam(parameterName);
+    }
+
+    public HttpMethod getRequestMethod() {
+        return requestLine.getMethod();
     }
 
     public HttpRequestLine getRequestLine() {

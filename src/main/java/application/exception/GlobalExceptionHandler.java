@@ -1,10 +1,10 @@
 package application.exception;
 
-import http.request.HttpVersion;
+import http.HttpVersion;
 import http.response.HttpResponse;
 import http.response.HttpResponseBody;
 import http.response.HttpResponseHeader;
-import http.response.HttpStatusCode;
+import http.HttpStatusCode;
 import http.response.ResponseStatusLine;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +18,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = CustomException.class)
     public HttpResponse handleCustomException(CustomException customException) {
+        System.out.println("CustomException: " + customException.getMessage());
         logger.error(customException.getMessage(), customException);
         ErrorCode errorCode = customException.getErrorCode();
 

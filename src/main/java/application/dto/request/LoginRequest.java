@@ -1,19 +1,22 @@
 package application.dto.request;
 
-import application.dto.convertor.FormRequestConvertor;
-import java.util.Map;
+public class LoginRequest {
 
-public record LoginRequest(
-        String userId,
-        String password
-) {
+    private String userId;
+    private String password;
 
-    public static LoginRequest fromFormRequest(String rawValue) {
-        FormRequestConvertor formRequestConvertor = new FormRequestConvertor();
-        Map<String, String> parameters = formRequestConvertor.convert(rawValue);
-        return new LoginRequest(
-                parameters.get("userId"),
-                parameters.get("password")
-        );
+    public LoginRequest(String userId, String password) {
+        this.userId = userId;
+        this.password = password;
+    }
+
+    private LoginRequest() {}
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 }

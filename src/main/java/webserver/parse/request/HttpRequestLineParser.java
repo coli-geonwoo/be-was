@@ -1,9 +1,9 @@
 package webserver.parse.request;
 
 import java.util.StringTokenizer;
-import http.request.HttpMethod;
+import http.HttpMethod;
 import http.request.HttpRequestLine;
-import http.request.HttpVersion;
+import http.HttpVersion;
 import http.request.RequestUrl;
 
 class HttpRequestLineParser implements HttpRequestParser<HttpRequestLine> {

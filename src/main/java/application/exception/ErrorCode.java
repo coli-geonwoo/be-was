@@ -1,6 +1,6 @@
 package application.exception;
 
-import http.response.HttpStatusCode;
+import http.HttpStatusCode;
 
 public enum ErrorCode {
 

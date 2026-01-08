@@ -1,7 +1,7 @@
 package webserver.resolver;
 
 import http.request.HttpRequest;
-import http.response.ContentType;
+import http.ContentType;
 import http.response.ResponseCookie;
 import http.response.HttpResponse;
 import http.response.HttpResponseHeader;

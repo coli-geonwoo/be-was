@@ -1,6 +1,7 @@
 package application.handler;
 
 import application.service.AuthService;
+import http.HttpMethod;
 import http.request.HttpRequest;
 import http.request.RequestCookie;
 import http.response.HttpResponse;
@@ -8,20 +9,16 @@ import http.response.ResponseCookie;
 import java.util.List;
 import model.User;
 import webserver.handler.AbstractHandler;
+import webserver.handler.HttpHandler;
+import webserver.handler.RequestMapping;
 
-public class IndexHandler extends AbstractHandler {
-
-    private static final List<String> HANDLING_PATHS = List.of("/", "/index", "/index.html");
+@HttpHandler
+public class IndexHandler {
 
     private final AuthService authService = new AuthService();
 
-    @Override
-    public boolean canHandle(String path) {
-        return HANDLING_PATHS.contains(path);
-    }
-
-    @Override
-    public HttpResponse doGet(HttpRequest request) {
+    @RequestMapping(method = HttpMethod.GET, path = {"/", "/index.html", "/index"})
+    public HttpResponse index(HttpRequest request) {
         try {
             if (request.hasCookie("sid")) {
                 RequestCookie requestCookie = request.getRequestCookie();

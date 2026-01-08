@@ -5,56 +5,36 @@ import application.db.SessionDataBase;
 import application.dto.request.LoginRequest;
 import application.exception.CustomException;
 import application.exception.ErrorCode;
-import http.request.HttpRequest;
-import http.request.HttpRequestBody;
-import http.request.HttpVersion;
-import http.response.ResponseCookie;
+import http.HttpMethod;
 import http.response.HttpResponse;
-import http.response.HttpResponseBody;
-import http.response.HttpResponseHeader;
-import http.response.HttpStatusCode;
-import http.response.ResponseStatusLine;
-import java.util.HashMap;
-import java.util.List;
+import http.response.ResponseCookie;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import model.User;
-import webserver.handler.AbstractHandler;
+import webserver.convertor.RequestBody;
+import webserver.handler.HttpHandler;
+import webserver.handler.RequestMapping;
 
-public class LoginHandler extends AbstractHandler {
+@HttpHandler
+public class LoginHandler {
 
-    private static List<String> HANDLING_PATHS = List.of("/login");
-
-    @Override
-    public boolean canHandle(String path) {
-        return HANDLING_PATHS.contains(path);
-    }
-
-    @Override
-    public HttpResponse doGet(HttpRequest request) {
+    @RequestMapping(method = HttpMethod.GET, path = "/login")
+    public HttpResponse loginPage() {
         return new HttpResponse("/login/index.html");
     }
 
-    @Override
-    public HttpResponse doPost(HttpRequest request) {
-        HttpRequestBody requestBody = request.getRequestBody();
-        String rawValue = requestBody.getValue();
-        LoginRequest loginRequest = LoginRequest.fromFormRequest(rawValue);
+    @RequestMapping(method = HttpMethod.POST, path = "/login")
+    public HttpResponse login(@RequestBody LoginRequest loginRequest) {
+        User foundUser = Database.findByUserIdAndPassword(
+                loginRequest.getUserId(),
+                loginRequest.getPassword()
+        ).orElseThrow(() -> new CustomException(ErrorCode.LOGIN_FAILED));
 
-        Optional<User> foundUser = Database.findByUserIdAndPassword(
-                loginRequest.userId(),
-                loginRequest.password()
-        );
-
-        if(foundUser.isPresent()) {
-            String sessionId = UUID.randomUUID().toString();
-            saveSessionData(foundUser.get(), sessionId);
-            HttpResponse response = HttpResponse.redirect("/index.html");
-            response.setCookie(new ResponseCookie(Map.of("sid", sessionId), "/", 3600));
-            return response;
-        }
-        throw new CustomException(ErrorCode.LOGIN_FAILED);
+        String sessionId = UUID.randomUUID().toString();
+        saveSessionData(foundUser, sessionId);
+        HttpResponse response = HttpResponse.redirect("/index.html");
+        response.setCookie(new ResponseCookie(Map.of("sid", sessionId), "/", 3600));
+        return response;
     }
 
     private void saveSessionData(User user, String sessionId) {

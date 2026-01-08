@@ -2,35 +2,23 @@ package application.handler;
 
 import application.db.Database;
 import application.dto.request.CreateUserRequest;
-import http.request.HttpRequest;
-import http.request.HttpRequestBody;
+import http.HttpMethod;
 import http.response.HttpResponse;
 import model.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import webserver.handler.AbstractHandler;
+import webserver.convertor.RequestBody;
+import webserver.handler.HttpHandler;
+import webserver.handler.RequestMapping;
 
-public class UserCreateHandler extends AbstractHandler {
+@HttpHandler
+public class UserCreateHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserCreateHandler.class);
-
-    private static final String HANDLING_PATHS = "/user/create";
-
-    @Override
-    public boolean canHandle(String path) {
-        return path.startsWith(HANDLING_PATHS);
-    }
-
-    @Override
-    public HttpResponse doPost(HttpRequest request) {
-        HttpRequestBody requestBody = request.getRequestBody();
-        String rawValue = requestBody.getValue();
-        CreateUserRequest createUserRequest = CreateUserRequest.fromFormRequest(rawValue);
+    @RequestMapping(method = HttpMethod.POST, path = "/user/create")
+    public HttpResponse save(@RequestBody CreateUserRequest createUserRequest) {
         User user = new User(
-                createUserRequest.userId(),
-                createUserRequest.password(),
-                createUserRequest.name(),
-                createUserRequest.email()
+                createUserRequest.getUserId(),
+                createUserRequest.getPassword(),
+                createUserRequest.getName(),
+                createUserRequest.getEmail()
         );
         Database.addUser(user);
         return HttpResponse.redirect("/index.html");
