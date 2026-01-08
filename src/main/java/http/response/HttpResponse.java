@@ -26,6 +26,7 @@ public class HttpResponse {
         this.viewName = viewName;
         this.modelAttributes = new ModelAttributes(new HashMap<>());
         this.body = body;
+        this.responseCookie = responseCookie;
     }
 
     public HttpResponse(String viewName) {
@@ -33,7 +34,7 @@ public class HttpResponse {
                 new ResponseStatusLine(HttpVersion.HTTP_1_1, HttpStatusCode.OK_200),
                 new HttpResponseHeader(new HashMap<>()),
                 viewName,
-                null,
+                HttpResponseBody.EMPTY_RESPONSE_BODY,
                 null
         );
     }
@@ -89,6 +90,9 @@ public class HttpResponse {
     }
 
     public byte[] getBody() {
+        if(body == null) {
+            return new byte[0];
+        }
         return body.getBody();
     }
 

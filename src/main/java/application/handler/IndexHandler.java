@@ -1,5 +1,6 @@
 package application.handler;
 
+import application.config.argumentresolver.AuthMember;
 import application.service.AuthService;
 import http.HttpMethod;
 import http.request.HttpRequest;
@@ -15,24 +16,10 @@ import webserver.handler.RequestMapping;
 @HttpHandler
 public class IndexHandler {
 
-    private final AuthService authService = new AuthService();
-
     @RequestMapping(method = HttpMethod.GET, path = {"/", "/index.html", "/index"})
-    public HttpResponse index(HttpRequest request) {
-        try {
-            if (request.hasCookie("sid")) {
-                RequestCookie requestCookie = request.getRequestCookie();
-                User user = authService.authroize(requestCookie.get("sid"));
-                HttpResponse httpResponse = new HttpResponse("/main/index.html");
-                httpResponse.addModelAttributes("account", user.getName());
-                return httpResponse;
-            }
-            return new HttpResponse("/index.html");
-        }catch(Exception exception) {
-            //쿠키가 있는데 인증에 실패한 경우 > 자동 로그아웃
-            HttpResponse response = new HttpResponse("/index.html");
-            response.setCookie(ResponseCookie.EXPIRED_RESPONSE_COOKIE);
-            return response;
-        }
+    public HttpResponse index(@AuthMember User user) {
+        HttpResponse httpResponse = new HttpResponse("/main/index.html");
+        httpResponse.addModelAttributes("account", user.getName());
+        return httpResponse;
     }
 }
