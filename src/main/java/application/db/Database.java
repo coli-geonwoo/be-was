@@ -15,9 +15,7 @@ public class Database {
 
     private static Map<String, User> users = new HashMap<>();
 
-    static {
-        users.put("gw",new User("gw", "gw", "gw", "gw"));
-    }
+    private Database() {}
 
     public static void addUser(User user) {
         users.put(user.getUserId(), user);
