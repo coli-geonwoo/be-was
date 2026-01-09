@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import util.ClassScanUtils;
+import webserver.util.ClassScanUtils;
 
 public class ExceptionHandlerRegistry {
 

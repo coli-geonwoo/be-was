@@ -5,7 +5,7 @@ import application.db.SessionDataBase;
 import application.exception.CustomException;
 import application.exception.ErrorCode;
 import java.util.Optional;
-import model.User;
+import application.model.User;
 
 public class AuthService {
 

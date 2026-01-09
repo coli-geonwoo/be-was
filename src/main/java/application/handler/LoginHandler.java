@@ -10,7 +10,7 @@ import http.response.HttpResponse;
 import http.response.ResponseCookie;
 import java.util.Map;
 import java.util.UUID;
-import model.User;
+import application.model.User;
 import webserver.convertor.RequestBody;
 import webserver.handler.HttpHandler;
 import webserver.handler.RequestMapping;

@@ -4,7 +4,7 @@ import application.db.Database;
 import application.dto.request.CreateUserRequest;
 import http.HttpMethod;
 import http.response.HttpResponse;
-import model.User;
+import application.model.User;
 import webserver.convertor.RequestBody;
 import webserver.handler.HttpHandler;
 import webserver.handler.RequestMapping;

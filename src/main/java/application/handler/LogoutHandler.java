@@ -2,14 +2,12 @@ package application.handler;
 
 import application.config.argumentresolver.AuthMember;
 import application.db.SessionDataBase;
-import application.exception.CustomAuthException;
-import application.service.AuthService;
 import http.HttpMethod;
 import http.request.HttpRequest;
 import http.request.RequestCookie;
 import http.response.HttpResponse;
 import http.response.ResponseCookie;
-import model.User;
+import application.model.User;
 import webserver.handler.HttpHandler;
 import webserver.handler.RequestMapping;
 

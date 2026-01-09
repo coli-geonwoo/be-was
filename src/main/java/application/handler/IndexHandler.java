@@ -1,15 +1,9 @@
 package application.handler;
 
 import application.config.argumentresolver.AuthMember;
-import application.service.AuthService;
 import http.HttpMethod;
-import http.request.HttpRequest;
-import http.request.RequestCookie;
 import http.response.HttpResponse;
-import http.response.ResponseCookie;
-import java.util.List;
-import model.User;
-import webserver.handler.AbstractHandler;
+import application.model.User;
 import webserver.handler.HttpHandler;
 import webserver.handler.RequestMapping;
 

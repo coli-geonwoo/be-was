@@ -46,8 +46,7 @@ public class HttpServlet {
         if (viewHandler.canHandle(request.getRequestUrl())) {
             return viewHandler.handleByFileName(request.getRequestUrl());
         }
-        HandlerExecution handlerExecution = handlerMapper.mapByPath(request.getRequestMethod(),
-                request.getRequestUrl());
+        HandlerExecution handlerExecution = handlerMapper.mapByPath(request.getRequestMethod(), request.getRequestUrl());
         return handlerExecution.invoke(request);
     }
 }

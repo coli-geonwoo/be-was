@@ -1,7 +1,7 @@
 package application.db;
 
 import java.util.Optional;
-import model.User;
+import application.model.User;
 
 import java.util.Collection;
 import java.util.HashMap;
