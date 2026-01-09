@@ -1,8 +1,8 @@
 package application.handler;
 
+import application.config.argumentresolver.AuthMember;
 import application.db.SessionDataBase;
-import application.exception.CustomException;
-import application.exception.ErrorCode;
+import application.exception.CustomAuthException;
 import application.service.AuthService;
 import http.HttpMethod;
 import http.request.HttpRequest;
@@ -16,16 +16,13 @@ import webserver.handler.RequestMapping;
 @HttpHandler
 public class LogoutHandler {
 
-    private final AuthService authService = new AuthService();
-
     @RequestMapping(method = HttpMethod.POST, path = "/logout")
-    public HttpResponse logOut(HttpRequest request) {
-        if (!request.hasCookie("sid")) {
-            throw new CustomException(ErrorCode.REQUEST_SESSION_ID);
-        }
+    public HttpResponse logOut(
+            HttpRequest request,
+            @AuthMember User user
+    ) {
         RequestCookie requestCookie = request.getRequestCookie();
         String sessionId = requestCookie.get("sid");
-        User user = authService.authroize(sessionId);
         SessionDataBase.removeData(sessionId);
         HttpResponse response = HttpResponse.redirect("/index.html");
         response.setCookie(ResponseCookie.EXPIRED_RESPONSE_COOKIE);

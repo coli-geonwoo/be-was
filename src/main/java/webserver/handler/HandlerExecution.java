@@ -6,8 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import util.ClassScanUtils;
 import webserver.convertor.ArgumentResolver;
@@ -33,7 +31,7 @@ public class HandlerExecution {
         this.handler = classscanUtils.makeHandlerInstance(method.getDeclaringClass());
     }
 
-    public HttpResponse invoke(HttpRequest request) {
+    public HttpResponse invoke(HttpRequest request) throws InvocationTargetException {
         try {
             Parameter[] parameters = method.getParameters();
             Object[] args = new Object[parameters.length];
@@ -46,11 +44,8 @@ public class HandlerExecution {
                 }
             }
             return (HttpResponse) method.invoke(handler, args);
-        } catch (InvocationTargetException | IllegalAccessException e) {
-            System.out.println(e.getCause().getClass().getName());
-            throw new RuntimeException(e.getCause());
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
-
-
 }

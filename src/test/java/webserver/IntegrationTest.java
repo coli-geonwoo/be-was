@@ -200,7 +200,7 @@ public class IntegrationTest {
         );
     }
 
-    @DisplayName("로그인이 되어 있지 않은 상태에서 로그아웃 하면 에러가 발생한다")
+    @DisplayName("로그인이 되어 있지 않은 상태에서 로그아웃 하면 index.html로 리다이렉션 한다")
     @Test
     void logOutFail() throws Exception {
         HttpClient client = HttpClient.newHttpClient();
@@ -212,9 +212,16 @@ public class IntegrationTest {
                 .POST(HttpRequest.BodyPublishers.ofString(""))
                 .build();
 
-        //예외 타입 구체화하기
-        assertThatThrownBy(() -> client.send(request, HttpResponse.BodyHandlers.ofString()))
-            .isInstanceOf(Exception.class);
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        Map<String, List<String>> responseHeader = response.headers().map();
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatusCode.REDIRECTED.getCode()),
+                () -> assertThat(responseHeader.get("location")).contains("/index.html"),
+                () -> assertThat(responseHeader.get("set-cookie")).anyMatch(
+                        value -> value.contains("Max-Age=0")
+                )
+        );
     }
 
     @DisplayName("로그인이 되어 있는 상황에서 /mypage를 조회할 수 있다")
@@ -255,7 +262,7 @@ public class IntegrationTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatusCode.REDIRECTED.getCode()),
-                () -> assertThat(responseHeader.get("location")).contains("/")
+                () -> assertThat(responseHeader.get("location")).contains("/index.html")
         );
     }
 }
