@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import application.db.Database;
-import application.db.SessionDataBase;
+import db.Database;
+import db.SessionDataBase;
 import http.HttpStatusCode;
 import java.net.URI;
 import java.net.http.HttpClient;

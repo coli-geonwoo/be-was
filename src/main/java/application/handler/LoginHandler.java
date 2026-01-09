@@ -1,7 +1,7 @@
 package application.handler;
 
-import application.db.Database;
-import application.db.SessionDataBase;
+import db.Database;
+import db.SessionDataBase;
 import application.dto.request.LoginRequest;
 import application.exception.CustomException;
 import application.exception.ErrorCode;

@@ -1,4 +1,4 @@
-package application.db;
+package db;
 
 import java.util.Optional;
 import application.model.User;

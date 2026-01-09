@@ -1,7 +1,7 @@
 package application.service;
 
-import application.db.Database;
-import application.db.SessionDataBase;
+import db.Database;
+import db.SessionDataBase;
 import application.exception.CustomException;
 import application.exception.ErrorCode;
 import java.util.Optional;

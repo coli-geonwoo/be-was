@@ -1,6 +1,6 @@
 package application.handler;
 
-import application.db.Database;
+import db.Database;
 import application.dto.request.CreateUserRequest;
 import http.HttpMethod;
 import http.response.HttpResponse;

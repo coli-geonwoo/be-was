@@ -1,7 +1,7 @@
 package application.handler;
 
 import application.config.argumentresolver.AuthMember;
-import application.db.SessionDataBase;
+import db.SessionDataBase;
 import http.HttpMethod;
 import http.request.HttpRequest;
 import http.request.RequestCookie;
