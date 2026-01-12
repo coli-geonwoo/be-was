@@ -1,4 +1,4 @@
-package db;
+package db.memory;
 
 import application.model.Article;
 import application.repository.ArticleRepository;

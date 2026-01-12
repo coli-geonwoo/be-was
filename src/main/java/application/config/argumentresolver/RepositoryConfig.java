@@ -3,9 +3,9 @@ package application.config.argumentresolver;
 import application.repository.ArticleRepository;
 import application.repository.SessionRepository;
 import application.repository.UserRepository;
-import db.ArticleMemoryDatabase;
-import db.UserMemoryDatabase;
-import db.SessionMemoryDatabase;
+import db.memory.ArticleMemoryDatabase;
+import db.memory.UserMemoryDatabase;
+import db.memory.SessionMemoryDatabase;
 
 public class RepositoryConfig {
 
