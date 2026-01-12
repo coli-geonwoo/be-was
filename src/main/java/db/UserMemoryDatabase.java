@@ -9,9 +9,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Database implements UserRepository {
+public class UserMemoryDatabase implements UserRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(Database.class);
+    private static final Logger log = LoggerFactory.getLogger(UserMemoryDatabase.class);
 
     private static Map<String, User> users = new ConcurrentHashMap<>();
 

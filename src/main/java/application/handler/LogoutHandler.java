@@ -1,10 +1,7 @@
 package application.handler;
 
 import application.config.argumentresolver.AuthMember;
-import application.config.argumentresolver.RepositoryConfig;
-import application.repository.SessionRepository;
 import application.service.AuthService;
-import db.SessionDataBase;
 import http.HttpMethod;
 import http.request.HttpRequest;
 import http.request.RequestCookie;

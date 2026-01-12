@@ -3,23 +3,23 @@ package application.config.argumentresolver;
 import application.repository.ArticleRepository;
 import application.repository.SessionRepository;
 import application.repository.UserRepository;
-import db.ArticleDatabase;
-import db.Database;
-import db.SessionDataBase;
+import db.ArticleMemoryDatabase;
+import db.UserMemoryDatabase;
+import db.SessionMemoryDatabase;
 
 public class RepositoryConfig {
 
     private RepositoryConfig() {}
 
     public static ArticleRepository articleRepository() {
-        return new ArticleDatabase();
+        return new ArticleMemoryDatabase();
     }
 
     public static UserRepository userRepository() {
-        return new Database();
+        return new UserMemoryDatabase();
     }
 
     public static SessionRepository sessionRepository() {
-        return new SessionDataBase();
+        return new SessionMemoryDatabase();
     }
 }

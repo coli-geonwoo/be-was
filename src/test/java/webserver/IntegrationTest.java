@@ -8,9 +8,9 @@ import application.model.User;
 import application.repository.ArticleRepository;
 import application.repository.SessionRepository;
 import application.repository.UserRepository;
-import db.ArticleDatabase;
-import db.Database;
-import db.SessionDataBase;
+import db.ArticleMemoryDatabase;
+import db.UserMemoryDatabase;
+import db.SessionMemoryDatabase;
 import http.HttpStatusCode;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -28,9 +28,9 @@ import org.junit.jupiter.api.Test;
 
 public class IntegrationTest {
 
-    private ArticleRepository articleRepository = new ArticleDatabase();
-    private SessionRepository sessionRepository = new SessionDataBase();
-    private UserRepository userRepository = new Database();
+    private ArticleRepository articleRepository = new ArticleMemoryDatabase();
+    private SessionRepository sessionRepository = new SessionMemoryDatabase();
+    private UserRepository userRepository = new UserMemoryDatabase();
 
     @BeforeAll
     public static void beforeAll() throws Exception {

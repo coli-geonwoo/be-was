@@ -9,9 +9,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ArticleDatabase implements ArticleRepository {
+public class ArticleMemoryDatabase implements ArticleRepository {
 
-    private static final Logger logger = LoggerFactory.getLogger(ArticleDatabase.class);
+    private static final Logger logger = LoggerFactory.getLogger(ArticleMemoryDatabase.class);
     private static final AtomicLong counter = new AtomicLong();
     private static final Map<Long, Article> articleData = new ConcurrentHashMap<>();
 

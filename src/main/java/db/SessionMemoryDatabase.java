@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SessionDataBase implements SessionRepository {
+public class SessionMemoryDatabase implements SessionRepository {
 
     private static final Map<String, String> sessionData = new ConcurrentHashMap<>();
 
