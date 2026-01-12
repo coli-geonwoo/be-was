@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import webserver.exception.NoMatchedHandlerException;
 import webserver.util.ClassScanUtils;
 
 public class HandlerMapper {
@@ -25,10 +26,6 @@ public class HandlerMapper {
             RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
             map.put(new HandlerKey(requestMapping.method(), requestMapping.path()), method);
         }
-        for (Map.Entry<HandlerKey, Method> entry : map.entrySet()) {
-            HandlerKey handlerKey = entry.getKey();
-            Method method = entry.getValue();
-        }
         APPLICATION_HANDLER_MAPPER = new HandlerMapper(map);
     }
 
@@ -47,6 +44,6 @@ public class HandlerMapper {
                 .filter(entry -> entry.getKey().matches(method, path))
                 .findFirst()
                 .map(entry -> new HandlerExecution(entry.getValue()))
-                .orElseThrow(() -> new RuntimeException("Not Matched Handler: " + path));
+                .orElseThrow(() -> new NoMatchedHandlerException("Not Matched Handler: " + path));
     }
 }

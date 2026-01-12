@@ -27,6 +27,17 @@ public class DefaultExceptionHandler {
     }
 
     @ExceptionHandler(value = Exception.class)
+    public HttpResponse handleNoMatchedException(NoMatchedHandlerException exception) {
+        logger.error(exception.getMessage(), exception);
+        return makeErrorResponse(
+                exception.getClass(),
+                HttpStatusCode.INTERNAL_SERVER_ERROR_500,
+                exception.getMessage(),
+                ""
+        );
+    }
+
+    @ExceptionHandler(value = Exception.class)
     public HttpResponse handleException(Exception exception) {
         logger.error(exception.getMessage(), exception);
         return makeErrorResponse(
