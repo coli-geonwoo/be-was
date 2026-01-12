@@ -34,7 +34,7 @@ public class HttpServlet {
         }
     }
 
-    public HttpResponse handleException(Exception exception) {
+    private HttpResponse handleException(Exception exception) {
         Exception handleException = exception;
         //method invoke로 가져오므로 getCause
         if (exception instanceof InvocationTargetException) {

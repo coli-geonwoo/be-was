@@ -40,7 +40,7 @@ public class FormDataConvertor extends RequestBodyArgumentResolver {
             field.set(object, value);
             field.setAccessible(false);
         } catch (NoSuchFieldException | IllegalAccessException exception) {
-            throw new ArgumentResolvingException("Can't find field " + fieldName + " in class " + clazz.getName(), exception);
+            throw new ArgumentResolvingException("Can't find field " + fieldName + " in class " + clazz.getName());
         }
     }
 
