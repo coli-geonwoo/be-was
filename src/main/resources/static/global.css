@@ -109,6 +109,27 @@
   height: 320px;
 }
 
+.textfield_size_title {
+  gap: 4px;
+  padding: 8px 16px;
+  width: 680px;
+  /* height 제거 */
+}
+
+.input_textfield {
+  height: 40px;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 20px;
+  resize: none;
+}
+
+textarea.input_textfield {
+  height: 240px;
+}
+
+
+
 .title_textfield {
   height: 14px;
   font-weight: 500;
