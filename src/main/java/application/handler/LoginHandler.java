@@ -1,7 +1,7 @@
 package application.handler;
 
-import application.db.Database;
-import application.db.SessionDataBase;
+import db.Database;
+import db.SessionDataBase;
 import application.dto.request.LoginRequest;
 import application.exception.CustomException;
 import application.exception.ErrorCode;
@@ -10,7 +10,7 @@ import http.response.HttpResponse;
 import http.response.ResponseCookie;
 import java.util.Map;
 import java.util.UUID;
-import model.User;
+import application.model.User;
 import webserver.convertor.RequestBody;
 import webserver.handler.HttpHandler;
 import webserver.handler.RequestMapping;

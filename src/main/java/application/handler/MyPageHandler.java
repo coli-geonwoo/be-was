@@ -3,7 +3,7 @@ package application.handler;
 import application.config.argumentresolver.AuthMember;
 import http.HttpMethod;
 import http.response.HttpResponse;
-import model.User;
+import application.model.User;
 import webserver.handler.HttpHandler;
 import webserver.handler.RequestMapping;
 

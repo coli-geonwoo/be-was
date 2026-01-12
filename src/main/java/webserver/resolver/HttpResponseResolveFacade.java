@@ -16,6 +16,8 @@ public class HttpResponseResolveFacade {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponseResolveFacade.class);
     private static final String HTTP_RESPONSE_DELIMITER = "\r\n";
     private static final String HTTP_END_HEAD_PART_DELIMITER = "\r\n\r\n";
+    private static final String CONTENT_LENGTH_HEADER = "Content-Length".toLowerCase();
+    private static final String SET_COOKIE_HEADER = "Set-Cookie".toLowerCase();
 
     private final HttpResponseResolver<ResponseStatusLine> statusLineResolver;
     private final HttpResponseResolver<HttpResponseHeader> responseHeaderResolver;
@@ -55,14 +57,14 @@ public class HttpResponseResolveFacade {
         String contentType = ContentType.mapToType(requestUrl)
                         .orElse(ContentType.HTML.getResponseContentType());
         response.addHeader(ContentType.CONTENT_TYPE_HEADER_KEY, contentType);
-        response.addHeader("Content-Length", String.valueOf(body.length));
+        response.addHeader(CONTENT_LENGTH_HEADER, String.valueOf(body.length));
     }
 
     private void setCookie(HttpResponse response) {
         if(response.hasCookie()) {
             String cookieContent = responseCookieResolver.resolve(response.getCookie());
             logger.debug("Cookie content: {}", cookieContent);
-            response.addHeader("Set-Cookie", cookieContent);
+            response.addHeader(SET_COOKIE_HEADER, cookieContent);
         }
     }
 }
