@@ -9,6 +9,7 @@ public enum ErrorCode {
     AUTHENTICATION_FAILED(HttpStatusCode.UNAUTHORIZED_401, "Authentication failed"),
     USER_NOT_FOUND(HttpStatusCode.NOT_FOUND_404, "User not found"),
 
+    INVALID_VIEW_NAME_ERROR(HttpStatusCode.INTERNAL_SERVER_ERROR_500, "Wrong View Name : View Name is Null Or Empty"),
     INTERNAL_SERVER_ERROR(HttpStatusCode.INTERNAL_SERVER_ERROR_500, "Internal Server Error"),
     ;
 

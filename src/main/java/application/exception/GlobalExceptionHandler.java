@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = CustomAuthException.class)
     public HttpResponse handleCustomAuthException(CustomAuthException authException) {
         logger.error(authException.getMessage(), authException);
-        HttpResponse response = HttpResponse.redirect("/index.html");
+        HttpResponse response = HttpResponse.redirect(authException.getRedirectViewName());
         response.setCookie(ResponseCookie.EXPIRED_RESPONSE_COOKIE);
         return response;
     }
