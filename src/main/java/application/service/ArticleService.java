@@ -10,7 +10,6 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository = RepositoryConfig.articleRepository();
 
-
     public Article save(User user, ArticleCreateRequest articleCreateRequest) {
         Article article = new Article(
                 articleCreateRequest.getTitle(),
