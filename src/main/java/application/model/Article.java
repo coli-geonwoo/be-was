@@ -30,6 +30,10 @@ public class Article {
         }
     }
 
+    public boolean isOwn(String userId) {
+        return userId.equals(this.userId);
+    }
+
     public String getUserId() {
         return userId;
     }
