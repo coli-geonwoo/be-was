@@ -49,6 +49,10 @@ public class HttpResponse {
         );
     }
 
+    public static HttpResponse ok() {
+        return new HttpResponse(HttpResponseBody.EMPTY_RESPONSE_BODY);
+    }
+
     public static HttpResponse redirect(String viewName) {
         Map<String, String> headers = new HashMap<>();
         headers.put("Location", viewName);
