@@ -27,15 +27,10 @@ public class HttpServlet {
     public HttpResponse doDispatch(HttpRequest request) {
         try {
             HttpResponse response = handleByViewHandlerOrApplicationHandler(request);
-            if(response.hasViewName()) {
-                return viewHandler.handleByFileNameAndModelAttributes(
-                        response.getViewName(),
-                        response.getModelAttributes()
-                );
-            }
-            return response;
+            return viewHandler.handleWithResponse(response);
         } catch (Exception e) {
-            return handleException(e);
+            HttpResponse exceptionHandledException = handleException(e);
+            return viewHandler.handleWithResponse(exceptionHandledException);
         }
     }
 

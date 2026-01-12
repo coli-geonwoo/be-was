@@ -5,7 +5,7 @@ import http.response.ModelAttributes;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-import webserver.exception.ViewNotFoundException;
+import webserver.exception.ResourceNotFoundException;
 
 public class ViewResolver {
 
@@ -16,11 +16,11 @@ public class ViewResolver {
     public View resolveStaticFileByName(String fileName) {
         try (InputStream inputStream = findByPath(DEFAULT_STATIC_FILE_PATH + fileName)) {
             if (inputStream == null) {
-                throw new ViewNotFoundException(fileName);
+                throw new ResourceNotFoundException(fileName);
             }
             return new View(inputStream.readAllBytes());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ResourceNotFoundException(fileName);
         }
     }
 
@@ -36,8 +36,9 @@ public class ViewResolver {
         for (Map.Entry<String, String> entry : attributes.entrySet()) {
             String key = ATTRIBUTES_PREFIX + entry.getKey() + ATTRIBUTES_SUFFIX;
             String value = entry.getValue();
-            int startIndex = builder.indexOf(key);
-            builder.replace(startIndex, startIndex + key.length(), value);
+            while(builder.indexOf(key) != -1) {
+                builder.replace(builder.indexOf(key), builder.indexOf(key) + key.length(), value);
+            }
         }
         return builder.toString();
     }

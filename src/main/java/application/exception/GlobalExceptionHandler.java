@@ -4,11 +4,9 @@ import http.HttpVersion;
 import http.response.HttpResponse;
 import http.response.HttpResponseBody;
 import http.response.HttpResponseHeader;
-import http.HttpStatusCode;
 import http.response.ResponseCookie;
 import http.response.ResponseStatusLine;
 import java.util.HashMap;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.exception.ExceptionHandler;
@@ -35,19 +33,6 @@ public class GlobalExceptionHandler {
                 new HttpResponseHeader(new HashMap<>()),
                 null,
                 new HttpResponseBody(errorCode.getMessage().getBytes()),
-                null
-        );
-    }
-
-    @ExceptionHandler(value = Exception.class)
-    public HttpResponse handleException(Exception exception) {
-        logger.error(exception.getMessage(), exception);
-
-        return new HttpResponse(
-                new ResponseStatusLine(HttpVersion.HTTP_1_1, HttpStatusCode.INTERNAL_SERVER_ERROR_500),
-                new HttpResponseHeader(Map.of()),
-                null,
-                new HttpResponseBody(exception.getMessage().getBytes()),
                 null
         );
     }

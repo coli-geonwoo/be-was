@@ -2,6 +2,7 @@ package webserver.exception;
 
 import http.response.HttpResponse;
 import java.lang.reflect.Method;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -13,7 +14,9 @@ public class ExceptionHandlerRegistry {
 
     public static final ExceptionHandlerRegistry fromApplication() {
         ClassScanUtils<?> classScanUtils = new ClassScanUtils<>();
-        Set<Method> exceptionHandlers = classScanUtils.scanAnnotatedMethods("application.exception", ExceptionHandler.class);
+        Set<Method> exceptionHandlers = new HashSet<>();
+        exceptionHandlers.addAll(classScanUtils.scanAnnotatedMethods("application.exception", ExceptionHandler.class));
+        exceptionHandlers.addAll(classScanUtils.scanAnnotatedMethods("webserver.exception", ExceptionHandler.class));
         Map<Class<? extends Exception>, Method> mappedExceptionHandlers = exceptionHandlers.stream()
                 .collect(Collectors.toMap(
                         method -> method.getAnnotation(ExceptionHandler.class).value(),

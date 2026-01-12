@@ -15,6 +15,10 @@ public class Database {
 
     private static Map<String, User> users = new HashMap<>();
 
+    static {
+        users.put("gw", new User("gw", "gw", "gw", "email@email.com"));
+    }
+
     private Database() {}
 
     public static void addUser(User user) {

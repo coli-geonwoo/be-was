@@ -2,17 +2,52 @@ package webserver.exception;
 
 import http.HttpStatusCode;
 import http.response.HttpResponse;
-import http.response.ModelAttributes;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DefaultExceptionHandler {
 
-    @ExceptionHandler(value = ViewNotFoundException.class)
-    public HttpResponse handle(ViewNotFoundException exception) {
+    private static final Logger logger = LoggerFactory.getLogger(DefaultExceptionHandler.class);
+
+    @ExceptionHandler(value = ResourceNotFoundException.class)
+    public HttpResponse handleResourceNotFoundException(ResourceNotFoundException exception) {
+        logger.error(exception.getMessage(), exception);
+        return makeErrorResponse(exception.getClass(), HttpStatusCode.NOT_FOUND_404, exception.getMessage(), exception.getPath());
+    }
+
+    @ExceptionHandler(value = ViewResolveFailException.class)
+    public HttpResponse handleViewResolveFailException(ViewResolveFailException exception) {
+        logger.error(exception.getMessage(), exception);
+        return makeErrorResponse(
+                exception.getClass(),
+                HttpStatusCode.NOT_FOUND_404,
+                exception.getMessage(),
+                exception.getFileName()
+        );
+    }
+
+    @ExceptionHandler(value = Exception.class)
+    public HttpResponse handleException(Exception exception) {
+        logger.error(exception.getMessage(), exception);
+        return makeErrorResponse(
+                exception.getClass(),
+                HttpStatusCode.INTERNAL_SERVER_ERROR_500,
+                exception.getMessage(),
+                ""
+        );
+    }
+
+    private HttpResponse makeErrorResponse(
+            Class<? extends Exception> exceptionType,
+            HttpStatusCode httpStatusCode,
+            String message,
+            String path
+    ) {
         HttpResponse httpResponse = new HttpResponse("/error/error.html");
-        httpResponse.addModelAttributes("status", String.valueOf(HttpStatusCode.NOT_FOUND_404));
-        httpResponse.addModelAttributes("message", String.valueOf(exception.getMessage()));
-        httpResponse.addModelAttributes("path", exception.getPath());
+        httpResponse.addModelAttributes("status", String.valueOf(httpStatusCode.getCode()));
+        httpResponse.addModelAttributes("message", message);
+        httpResponse.addModelAttributes("error", exceptionType.getSimpleName());
+        httpResponse.addModelAttributes("path", path);
         return httpResponse;
     }
 }

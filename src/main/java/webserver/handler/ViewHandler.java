@@ -27,6 +27,16 @@ public class ViewHandler implements Handler {
         return handleByFileName(request.getRequestUrl());
     }
 
+    public HttpResponse handleWithResponse(HttpResponse response) {
+        if(response.hasViewName()) {
+            return handleByFileNameAndModelAttributes(
+                    response.getViewName(),
+                    response.getModelAttributes()
+            );
+        }
+        return response;
+    }
+
     public HttpResponse handleByFileName(String fileName) {
         View view = viewResolver.resolveStaticFileByName(fileName);
         HttpResponseBody body = new HttpResponseBody(view.getContent());
