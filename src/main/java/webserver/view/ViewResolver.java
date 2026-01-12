@@ -5,6 +5,7 @@ import http.response.ModelAttributes;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import webserver.exception.ViewNotFoundException;
 
 public class ViewResolver {
 
@@ -15,7 +16,7 @@ public class ViewResolver {
     public View resolveStaticFileByName(String fileName) {
         try (InputStream inputStream = findByPath(DEFAULT_STATIC_FILE_PATH + fileName)) {
             if (inputStream == null) {
-                throw new RuntimeException("No view found for path: " + fileName);
+                throw new ViewNotFoundException(fileName);
             }
             return new View(inputStream.readAllBytes());
         } catch (IOException e) {

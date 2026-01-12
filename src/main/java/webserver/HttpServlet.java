@@ -27,7 +27,13 @@ public class HttpServlet {
     public HttpResponse doDispatch(HttpRequest request) {
         try {
             HttpResponse response = handleByViewHandlerOrApplicationHandler(request);
-            return viewHandler.handleWithResponse(request, response);
+            if(response.hasViewName()) {
+                return viewHandler.handleByFileNameAndModelAttributes(
+                        response.getViewName(),
+                        response.getModelAttributes()
+                );
+            }
+            return response;
         } catch (Exception e) {
             return handleException(e);
         }

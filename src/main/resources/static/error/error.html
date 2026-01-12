@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Error {{status}}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f6f8;
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+        .error-box {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            width: 420px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            font-size: 72px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .error {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .message {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .path {
+            font-size: 12px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+<div class="error-box">
+    <div class="status">{{status}}</div>
+    <div class="error">{{error}}</div>
+    <div class="message">
+        {{message}}
+    </div>
+    <div class="path">
+        Path: {{path}}
+    </div>
+</div>
+</body>
+</html>
