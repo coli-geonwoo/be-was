@@ -1,6 +1,8 @@
 package application.handler;
 
 import application.config.argumentresolver.AuthMember;
+import application.config.argumentresolver.RepositoryConfig;
+import application.repository.SessionRepository;
 import db.SessionDataBase;
 import http.HttpMethod;
 import http.request.HttpRequest;
@@ -14,6 +16,8 @@ import webserver.handler.RequestMapping;
 @HttpHandler
 public class LogoutHandler {
 
+    private final SessionRepository sessionRepository = RepositoryConfig.sessionRepository();
+
     @RequestMapping(method = HttpMethod.POST, path = "/logout")
     public HttpResponse logOut(
             HttpRequest request,
@@ -21,7 +25,7 @@ public class LogoutHandler {
     ) {
         RequestCookie requestCookie = request.getRequestCookie();
         String sessionId = requestCookie.get("sid");
-        SessionDataBase.removeData(sessionId);
+        sessionRepository.removeData(sessionId);
         HttpResponse response = HttpResponse.redirect("/index.html");
         response.setCookie(ResponseCookie.EXPIRED_RESPONSE_COOKIE);
         return response;

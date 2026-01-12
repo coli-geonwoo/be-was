@@ -1,5 +1,8 @@
 package application.handler;
 
+import application.config.argumentresolver.RepositoryConfig;
+import application.repository.SessionRepository;
+import application.repository.UserRepository;
 import db.Database;
 import db.SessionDataBase;
 import application.dto.request.LoginRequest;
@@ -18,6 +21,9 @@ import webserver.handler.RequestMapping;
 @HttpHandler
 public class LoginHandler {
 
+    private final UserRepository userRepository = RepositoryConfig.userRepository();
+    private final SessionRepository sessionRepository = RepositoryConfig.sessionRepository();
+
     @RequestMapping(method = HttpMethod.GET, path = "/login")
     public HttpResponse loginPage() {
         return new HttpResponse("/login/index.html");
@@ -25,7 +31,7 @@ public class LoginHandler {
 
     @RequestMapping(method = HttpMethod.POST, path = "/login")
     public HttpResponse login(@RequestBody LoginRequest loginRequest) {
-        User foundUser = Database.findByUserIdAndPassword(
+        User foundUser = userRepository.findByUserIdAndPassword(
                 loginRequest.getUserId(),
                 loginRequest.getPassword()
         ).orElseThrow(() -> new CustomException(ErrorCode.LOGIN_FAILED));
@@ -39,6 +45,6 @@ public class LoginHandler {
 
     private void saveSessionData(User user, String sessionId) {
         String userId = user.getUserId();
-        SessionDataBase.saveData(sessionId, userId);
+        sessionRepository.saveData(sessionId, userId);
     }
 }

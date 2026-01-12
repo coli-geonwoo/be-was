@@ -1,11 +1,15 @@
 package application.service;
 
+import application.config.argumentresolver.RepositoryConfig;
 import application.dto.request.ArticleCreateRequest;
 import application.model.Article;
 import application.model.User;
-import db.ArticleDatabase;
+import application.repository.ArticleRepository;
 
 public class ArticleService {
+
+    private final ArticleRepository articleRepository = RepositoryConfig.articleRepository();
+
 
     public Article save(User user, ArticleCreateRequest articleCreateRequest) {
         Article article = new Article(
@@ -13,6 +17,6 @@ public class ArticleService {
                 articleCreateRequest.getContent(),
                 user.getUserId()
         );
-        return ArticleDatabase.save(article);
+        return articleRepository.save(article);
     }
 }

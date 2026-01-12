@@ -1,29 +1,31 @@
 package db;
 
-import java.util.HashMap;
+import application.repository.SessionRepository;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class SessionDataBase {
+public class SessionDataBase implements SessionRepository {
 
-    private static final Map<String, String> sessionData = new HashMap<>();
+    private static final Map<String, String> sessionData = new ConcurrentHashMap<>();
 
-    private SessionDataBase() {
-    }
-
-    public static Optional<String> getData(String sessionId) {
+    @Override
+    public Optional<String> getData(String sessionId) {
         return Optional.ofNullable(sessionData.get(sessionId));
     }
 
-    public static void removeData(String sessionId) {
+    @Override
+    public void removeData(String sessionId) {
         sessionData.remove(sessionId);
     }
 
-    public static void saveData(String sessionId, String data) {
+    @Override
+    public void saveData(String sessionId, String data) {
         sessionData.put(sessionId, data);
     }
 
-    public static void clear() {
+    @Override
+    public void clear() {
         sessionData.clear();
     }
 }

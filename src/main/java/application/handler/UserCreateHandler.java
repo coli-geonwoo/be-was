@@ -1,5 +1,7 @@
 package application.handler;
 
+import application.config.argumentresolver.RepositoryConfig;
+import application.repository.UserRepository;
 import db.Database;
 import application.dto.request.CreateUserRequest;
 import http.HttpMethod;
@@ -12,6 +14,8 @@ import webserver.handler.RequestMapping;
 @HttpHandler
 public class UserCreateHandler {
 
+    private final UserRepository userRepository = RepositoryConfig.userRepository();
+
     @RequestMapping(method = HttpMethod.POST, path = "/user/create")
     public HttpResponse save(@RequestBody CreateUserRequest createUserRequest) {
         User user = new User(
@@ -20,7 +24,7 @@ public class UserCreateHandler {
                 createUserRequest.getName(),
                 createUserRequest.getEmail()
         );
-        Database.addUser(user);
+        userRepository.save(user);
         return HttpResponse.redirect("/index.html");
     }
 }

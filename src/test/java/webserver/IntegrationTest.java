@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import application.model.Article;
 import application.model.User;
+import application.repository.ArticleRepository;
+import application.repository.SessionRepository;
+import application.repository.UserRepository;
 import db.ArticleDatabase;
 import db.Database;
 import db.SessionDataBase;
@@ -25,6 +28,10 @@ import org.junit.jupiter.api.Test;
 
 public class IntegrationTest {
 
+    private ArticleRepository articleRepository = new ArticleDatabase();
+    private SessionRepository sessionRepository = new SessionDataBase();
+    private UserRepository userRepository = new Database();
+
     @BeforeAll
     public static void beforeAll() throws Exception {
         String[] port = {"8081"};
@@ -40,8 +47,9 @@ public class IntegrationTest {
 
     @BeforeEach
     public void beforeEach() {
-        Database.clear();
-        SessionDataBase.clear();
+        userRepository.clear();
+        sessionRepository.clear();
+        articleRepository.clear();
     }
 
     @DisplayName("로그인 상황에서 index.html을 반환한다")
@@ -49,8 +57,8 @@ public class IntegrationTest {
     void indexWhenLogin() throws Exception {
         String sessionId = UUID.randomUUID().toString();
         User user = new User("userId", "password", "name", "email@email.com");
-        Database.addUser(user);
-        SessionDataBase.saveData(sessionId, user.getUserId());
+        userRepository.save(user);
+        sessionRepository.saveData(sessionId, user.getUserId());
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -114,7 +122,7 @@ public class IntegrationTest {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        User foundUser = Database.findUserById("javajigi");
+        User foundUser = userRepository.findById("javajigi");
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatusCode.REDIRECTED.getCode()),
@@ -130,7 +138,7 @@ public class IntegrationTest {
     @Test
     void loginSuccess() throws Exception {
         User user = new User("userId", "password", "name", "email@email.com");
-        Database.addUser(user);
+        userRepository.save(user);
         HttpClient client = HttpClient.newHttpClient();
         String body = "userId=" + user.getUserId() + "&password=" + user.getPassword();
 
@@ -176,8 +184,8 @@ public class IntegrationTest {
     void logOut() throws Exception {
         String sessionId = UUID.randomUUID().toString();
         User user = new User("userId", "password", "name", "email@email.com");
-        Database.addUser(user);
-        SessionDataBase.saveData(sessionId, user.getUserId());
+        userRepository.save(user);
+        sessionRepository.saveData(sessionId, user.getUserId());
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -197,7 +205,7 @@ public class IntegrationTest {
                 () -> assertThat(responseHeader.get("set-cookie")).anyMatch(
                         value -> value.contains("Max-Age=0")
                 ),
-                () -> assertThat(SessionDataBase.getData(sessionId)).isNotPresent()
+                () -> assertThat(sessionRepository.getData(sessionId)).isNotPresent()
         );
     }
 
@@ -229,8 +237,8 @@ public class IntegrationTest {
     void myPageSuccess() throws Exception {
         String sessionId = UUID.randomUUID().toString();
         User user = new User("userId", "password", "name", "email@email.com");
-        Database.addUser(user);
-        SessionDataBase.saveData(sessionId, user.getUserId());
+        userRepository.save(user);
+        sessionRepository.saveData(sessionId, user.getUserId());
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -271,8 +279,8 @@ public class IntegrationTest {
     void articleLogin() throws Exception {
         String sessionId = UUID.randomUUID().toString();
         User user = new User("userId", "password", "name", "email@email.com");
-        Database.addUser(user);
-        SessionDataBase.saveData(sessionId, user.getUserId());
+        userRepository.save(user);
+        sessionRepository.saveData(sessionId, user.getUserId());
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -314,8 +322,8 @@ public class IntegrationTest {
         HttpClient client = HttpClient.newHttpClient();
         String sessionId = UUID.randomUUID().toString();
         User user = new User("userId", "password", "name", "email@email.com");
-        Database.addUser(user);
-        SessionDataBase.saveData(sessionId, user.getUserId());
+        userRepository.save(user);
+        sessionRepository.saveData(sessionId, user.getUserId());
         String body = "title=aa&content=bb";
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -327,7 +335,7 @@ public class IntegrationTest {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        Article articles = ArticleDatabase.findUserById("userId").get(0);
+        Article articles = articleRepository.findUserById("userId").get(0);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatusCode.OK_200.getCode()),
