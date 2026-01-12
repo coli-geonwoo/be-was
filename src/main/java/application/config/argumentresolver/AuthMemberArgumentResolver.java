@@ -2,7 +2,6 @@ package application.config.argumentresolver;
 
 import application.exception.CustomAuthException;
 import application.exception.CustomException;
-import application.exception.ErrorCode;
 import application.service.AuthService;
 import http.request.HttpRequest;
 import http.request.RequestCookie;
@@ -11,7 +10,7 @@ import webserver.convertor.ArgumentResolver;
 
 public class AuthMemberArgumentResolver implements ArgumentResolver {
 
-    private static final String SESSION_ID_COOKIE_KEY = "sid";
+    public static final String SESSION_ID_COOKIE_KEY = "sid";
 
     private final AuthService authService = new AuthService();
 

@@ -245,7 +245,7 @@ public class IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatusCode.OK_200.getCode());
     }
 
-    @DisplayName("로그인이 되어 있지 않은 상황에서는 /로 리다이렉션한다")
+    @DisplayName("로그인이 되어 있지 않은 상황에서 mypage 요청은 /로 리다이렉션한다")
     @Test
     void myPageFail() throws Exception {
 
@@ -263,6 +263,48 @@ public class IntegrationTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatusCode.REDIRECTED.getCode()),
                 () -> assertThat(responseHeader.get("location")).contains("/index.html")
+        );
+    }
+
+    @DisplayName("GET /article - 로그인 상황에서 /article/index.html 응답")
+    @Test
+    void articleLogin() throws Exception {
+        String sessionId = UUID.randomUUID().toString();
+        User user = new User("userId", "password", "name", "email@email.com");
+        Database.addUser(user);
+        SessionDataBase.saveData(sessionId, user.getUserId());
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8081/article"))
+                .setHeader("Cookie", "sid=" + sessionId)
+                .timeout(Duration.ofSeconds(3))
+                .GET()
+                .build();
+
+        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatusCode.OK_200.getCode());
+    }
+
+    @DisplayName("GET /article - 비로그인 상황에서 /login/index.html로 리다이렉트")
+    @Test
+    void articleUnLogin() throws Exception {
+
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8081/article"))
+                .timeout(Duration.ofSeconds(3))
+                .GET()
+                .build();
+
+        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+        Map<String, List<String>> responseHeader = response.headers().map();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatusCode.REDIRECTED.getCode()),
+                () -> assertThat(responseHeader.get("location")).contains("/login/index.html")
         );
     }
 }
