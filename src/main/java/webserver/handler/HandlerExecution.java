@@ -45,7 +45,7 @@ public class HandlerExecution {
             }
             return (HttpResponse) method.invoke(handler, args);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't Access Handler Method" + e);
         }
     }
 }

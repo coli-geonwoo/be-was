@@ -4,6 +4,7 @@ import http.ContentType;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import webserver.exception.ArgumentResolvingException;
 import webserver.util.ClassScanUtils;
 
 public class FormDataConvertor extends RequestBodyArgumentResolver {
@@ -39,7 +40,7 @@ public class FormDataConvertor extends RequestBodyArgumentResolver {
             field.set(object, value);
             field.setAccessible(false);
         } catch (NoSuchFieldException | IllegalAccessException exception) {
-            throw new RuntimeException("Can't find field " + fieldName + " in class " + clazz.getName(), exception);
+            throw new ArgumentResolvingException("Can't find field " + fieldName + " in class " + clazz.getName(), exception);
         }
     }
 

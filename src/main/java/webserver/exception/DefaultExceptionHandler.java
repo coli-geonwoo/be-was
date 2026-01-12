@@ -20,14 +20,47 @@ public class DefaultExceptionHandler {
         logger.error(exception.getMessage(), exception);
         return makeErrorResponse(
                 exception.getClass(),
-                HttpStatusCode.NOT_FOUND_404,
+                HttpStatusCode.INTERNAL_SERVER_ERROR_500,
                 exception.getMessage(),
                 exception.getFileName()
         );
     }
 
-    @ExceptionHandler(value = Exception.class)
+    @ExceptionHandler(value = RequestProcessingException.class)
+    public HttpResponse handleRequestProcessingException(RequestProcessingException exception) {
+        logger.error(exception.getMessage(), exception);
+        return makeErrorResponse(
+                exception.getClass(),
+                HttpStatusCode.INTERNAL_SERVER_ERROR_500,
+                exception.getMessage(),
+                ""
+        );
+    }
+
+    @ExceptionHandler(value = ArgumentResolvingException.class)
+    public HttpResponse handleArgumentResolvingException(ArgumentResolvingException exception) {
+        logger.error(exception.getMessage(), exception);
+        return makeErrorResponse(
+                exception.getClass(),
+                HttpStatusCode.INTERNAL_SERVER_ERROR_500,
+                exception.getMessage(),
+                ""
+        );
+    }
+
+    @ExceptionHandler(value = NoMatchedHandlerException.class)
     public HttpResponse handleNoMatchedException(NoMatchedHandlerException exception) {
+        logger.error(exception.getMessage(), exception);
+        return makeErrorResponse(
+                exception.getClass(),
+                HttpStatusCode.INTERNAL_SERVER_ERROR_500,
+                exception.getMessage(),
+                ""
+        );
+    }
+
+    @ExceptionHandler(value = ExceptionHandlerProcessingException.class)
+    public HttpResponse handleExceptionHandlingProcessingException(ExceptionHandlerProcessingException exception) {
         logger.error(exception.getMessage(), exception);
         return makeErrorResponse(
                 exception.getClass(),

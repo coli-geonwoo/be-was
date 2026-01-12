@@ -1,6 +1,7 @@
 package http.request;
 
 import http.HttpMethod;
+import webserver.exception.RequestProcessingException;
 
 public class HttpRequest {
 
@@ -26,11 +27,10 @@ public class HttpRequest {
         this(requestLine, requestHeader, HttpRequestBody.EMPTY_REQUEST_BODY, requestCookie);
     }
 
-    //TODO 테스트 추가
     private void validateMethodAndBody(HttpRequestLine requestLine, HttpRequestBody requestBody) {
         HttpMethod httpMethod = requestLine.getMethod();
         if (requestBody != HttpRequestBody.EMPTY_REQUEST_BODY && httpMethod != HttpMethod.POST) {
-            throw new RuntimeException("Method " + requestLine.getMethod() + " not supported");
+            throw new RequestProcessingException("Method " + requestLine.getMethod() + " not supported");
         }
     }
 

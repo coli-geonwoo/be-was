@@ -38,7 +38,7 @@ public class ExceptionHandlerRegistry {
                     .newInstance();
             return (HttpResponse) method.invoke(instance, exception);
         } catch (Exception e) {
-            throw new RuntimeException("Exception occurred while handling exception", e);
+            throw new ExceptionHandlerProcessingException(e);
         }
     }
 }

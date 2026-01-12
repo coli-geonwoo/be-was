@@ -5,6 +5,7 @@ import http.HttpMethod;
 import http.request.HttpRequestLine;
 import http.HttpVersion;
 import http.request.RequestUrl;
+import webserver.exception.RequestProcessingException;
 
 class HttpRequestLineParser implements HttpRequestParser<HttpRequestLine> {
 
@@ -28,7 +29,7 @@ class HttpRequestLineParser implements HttpRequestParser<HttpRequestLine> {
 
     private void validateRequestLine(StringTokenizer tokenizer) {
         if (tokenizer.countTokens() != HTTP_REQUEST_LINE_TOKEN_COUNT) {
-            throw new RuntimeException("Invalid request line: " + tokenizer.countTokens());
+            throw new RequestProcessingException("Invalid request line: " + tokenizer.countTokens());
         }
     }
 }
