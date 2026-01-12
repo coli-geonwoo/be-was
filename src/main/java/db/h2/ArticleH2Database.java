@@ -2,7 +2,8 @@ package db.h2;
 
 import application.model.Article;
 import application.repository.ArticleRepository;
-import db.RowMapper;
+import db.rowmapper.ArticlesRowMapper;
+import db.rowmapper.RowMapper;
 import db.SqlRunner;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+@SuppressWarnings(value = "unchecked")
 public class ArticleH2Database implements ArticleRepository {
 
     @Override
@@ -36,6 +38,7 @@ public class ArticleH2Database implements ArticleRepository {
                         }
                         throw new SQLException("Failed to insert new article");
                     } catch (Exception e) {
+                        e.printStackTrace();
                         throw new RuntimeException(e);
                     }
                 }
@@ -45,15 +48,14 @@ public class ArticleH2Database implements ArticleRepository {
     @Override
     public List<Article> findUserById(String userId) {
         String sql = "SELECT * FROM articles WHERE user_id = ?";
-        RowMapper<List<Article>> articleRowMapper = null;
+        RowMapper<List<Article>> articleRowMapper = new ArticlesRowMapper();
         return (List<Article>) SqlRunner.executeQuery(connection -> {
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
-                ResultSet resultSet = ps.executeQuery(sql);
-                if (resultSet.next()) {
-                    return articleRowMapper.mapRow(resultSet);
-                }
-                throw new SQLException("Failed to find articles with user_id: " + userId);
+                ps.setString(1, userId);
+                ResultSet resultSet = ps.executeQuery();
+                return articleRowMapper.mapRow(resultSet);
             } catch (SQLException e) {
+                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         });

@@ -3,6 +3,7 @@ package webserver;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import application.config.argumentresolver.RepositoryConfig;
 import application.model.Article;
 import application.model.User;
 import application.repository.ArticleRepository;
@@ -28,9 +29,9 @@ import org.junit.jupiter.api.Test;
 
 public class IntegrationTest {
 
-    private ArticleRepository articleRepository = new ArticleMemoryDatabase();
-    private SessionRepository sessionRepository = new SessionMemoryDatabase();
-    private UserRepository userRepository = new UserMemoryDatabase();
+    private ArticleRepository articleRepository = RepositoryConfig.articleRepository();
+    private SessionRepository sessionRepository = RepositoryConfig.sessionRepository();
+    private UserRepository userRepository = RepositoryConfig.userRepository();
 
     @BeforeAll
     public static void beforeAll() throws Exception {
