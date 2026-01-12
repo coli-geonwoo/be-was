@@ -1,9 +1,11 @@
 package webserver;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import application.model.Article;
+import application.model.User;
+import db.ArticleDatabase;
 import db.Database;
 import db.SessionDataBase;
 import http.HttpStatusCode;
@@ -16,7 +18,6 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import application.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -131,7 +132,7 @@ public class IntegrationTest {
         User user = new User("userId", "password", "name", "email@email.com");
         Database.addUser(user);
         HttpClient client = HttpClient.newHttpClient();
-        String body = "userId=" +  user.getUserId() + "&password=" + user.getPassword();
+        String body = "userId=" + user.getUserId() + "&password=" + user.getPassword();
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8081/login"))
@@ -211,7 +212,6 @@ public class IntegrationTest {
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .POST(HttpRequest.BodyPublishers.ofString(""))
                 .build();
-
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         Map<String, List<String>> responseHeader = response.headers().map();
@@ -305,6 +305,36 @@ public class IntegrationTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatusCode.REDIRECTED.getCode()),
                 () -> assertThat(responseHeader.get("location")).contains("/login/index.html")
+        );
+    }
+
+    @DisplayName("POST article로 게시글을 작성할 수 있다")
+    @Test
+    void createArticle() throws Exception {
+        HttpClient client = HttpClient.newHttpClient();
+        String sessionId = UUID.randomUUID().toString();
+        User user = new User("userId", "password", "name", "email@email.com");
+        Database.addUser(user);
+        SessionDataBase.saveData(sessionId, user.getUserId());
+        String body = "title=aa&content=bb";
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8081/article"))
+                .timeout(Duration.ofSeconds(3))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .setHeader("Cookie", "sid=" + sessionId)
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        Article articles = ArticleDatabase.findUserById("userId").get(0);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatusCode.OK_200.getCode()),
+                () -> assertThat(articles.getId()).isEqualTo(1L),
+                () -> assertThat(articles.getUserId()).isEqualTo(user.getUserId()),
+                () -> assertThat(articles.getTitle()).isEqualTo("aa"),
+                () -> assertThat(articles.getContent()).isEqualTo("bb")
         );
     }
 }
