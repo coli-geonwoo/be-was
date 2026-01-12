@@ -53,7 +53,7 @@ public class DefaultExceptionHandler {
         logger.error(exception.getMessage(), exception);
         return makeErrorResponse(
                 exception.getClass(),
-                HttpStatusCode.INTERNAL_SERVER_ERROR_500,
+                HttpStatusCode.METHOD_NOT_ALLOWED,
                 exception.getMessage(),
                 ""
         );

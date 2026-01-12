@@ -8,6 +8,7 @@ public enum HttpStatusCode {
     NOT_FOUND_404(404, "Not Found"),
     BAD_REQUEST_400(400, "Bad Request"),
     UNAUTHORIZED_401(401, "Unauthorized"),
+    METHOD_NOT_ALLOWED(405, "Method Not Allowed"),
     INTERNAL_SERVER_ERROR_500(500, "Internal Server Error"),
     ;
 
