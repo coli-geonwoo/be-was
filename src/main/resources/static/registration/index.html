@@ -23,7 +23,7 @@
       </header>
       <div class="page">
         <h2 class="page-title">회원가입</h2>
-        <form class="form", action = "/user/create", method = "post">
+        <form id="registration-form", class="form">
           <div class="textfield textfield_size_s">
             <p class="title_textfield">아이디</p>
             <input
@@ -72,5 +72,59 @@
         </form>
       </div>
     </div>
+    <script>
+      const form = document.getElementById("registration-form");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault(); // 기본 submit 막기
+
+        const formData = new FormData(form);
+
+        const userId = formData.get("userId")?.trim();
+        const password = formData.get("password")?.trim();
+        const name = formData.get("name")?.trim();
+
+        // 1️⃣ 길이 검증
+        if (userId.length < 4) {
+          alert("아이디는 4자 이상이어야 합니다.");
+          return;
+        }
+
+        if (name.length < 4) {
+          alert("닉네임은 4자 이상이어야 합니다.");
+          return;
+        }
+
+        if (password.length < 4) {
+          alert("비밀번호는 4자 이상이어야 합니다.");
+          return;
+        }
+
+        try {
+          const params = new URLSearchParams(formData);
+
+          const response = await fetch("/user/create", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: params.toString(),
+          });
+
+          if (response.status === 400) {
+            const message = await response.text();
+            alert(message || "요청이 올바르지 않습니다.");
+            form.reset();
+            return;
+          }
+
+          if (response.ok) {
+            window.location.href = "/login";
+          }
+        } catch (err) {
+          alert("서버와 통신 중 오류가 발생했습니다.");
+        }
+      });
+    </script>
   </body>
 </html>

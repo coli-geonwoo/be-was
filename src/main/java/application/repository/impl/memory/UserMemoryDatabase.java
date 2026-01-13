@@ -32,6 +32,13 @@ public class UserMemoryDatabase implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByName(String name) {
+        return users.values().stream()
+                .filter(user -> user.getName().equals(name))
+                .findAny();
+    }
+
+    @Override
     public Optional<User> findByUserIdAndPassword(String userId, String password) {
         return users.values().stream()
                 .filter(user -> user.getPassword().equals(password) && user.getUserId().equals(userId))

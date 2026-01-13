@@ -16,6 +16,6 @@ public class UserCreateHandler {
     @RequestMapping(method = HttpMethod.POST, path = "/user/create")
     public HttpResponse save(@RequestBody CreateUserRequest createUserRequest) {
         userService.save(createUserRequest);
-        return HttpResponse.redirect("/index.html");
+        return HttpResponse.redirect("/login");
     }
 }

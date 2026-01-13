@@ -33,6 +33,12 @@ public class UserH2Database implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByName(String name) {
+        String sql = "SELECT * FROM users WHERE name = ?";
+        return jdbcTemplate.executeQuery(sql, userRowMapper, name);
+    }
+
+    @Override
     public Optional<User> findByUserIdAndPassword(String userId, String password) {
         String sql = "SELECT * FROM users WHERE user_id = ? AND password = ?";
         return jdbcTemplate.executeQuery(sql, userRowMapper, userId, password);

@@ -4,6 +4,9 @@ import http.HttpStatusCode;
 
 public enum ErrorCode {
 
+    DUPLICATE_USER_ID(HttpStatusCode.BAD_REQUEST_400, "이미 존재하는 아이디입니다"),
+    DUPLICATE_USER_NAME(HttpStatusCode.BAD_REQUEST_400, "이미 존재하는 닉네임입니다"),
+    INVALID_USER_CREATE_INFO(HttpStatusCode.BAD_REQUEST_400, "유저의 닉네임, 아이디, 비밀번호는 4자 이상이어야 합니다"),
     REQUEST_SESSION_ID(HttpStatusCode.UNAUTHORIZED_401, "This access should be logged in"),
     LOGIN_FAILED(HttpStatusCode.UNAUTHORIZED_401, "Login failed"),
     AUTHENTICATION_FAILED(HttpStatusCode.UNAUTHORIZED_401, "Authentication failed"),
