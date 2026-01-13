@@ -23,7 +23,7 @@
       </header>
       <div class="page">
         <h2 class="page-title">게시글 작성</h2>
-        <form class="form" action = "/article" method ="post">
+        <form class="form" id="article-form">
           <div class="textfield textfield_size_title">
             <p class="title_textfield">제목</p>
             <input
@@ -44,6 +44,26 @@
               required
             ></textarea>
           </div>
+          <!-- 이미지 업로드 섹션 -->
+          <div class="image-upload-section">
+            <p class="title_textfield">이미지</p>
+            <label class="image-upload-btn">
+              <span>📷</span>
+              <span>이미지 추가</span>
+              <input
+                      type="file"
+                      id="image-input"
+                      accept="image/*"
+                      multiple
+                      style="display: none;"
+              />
+            </label>
+            <div id="selected-files" class="selected-files"></div>
+            <div id="upload-status" class="upload-status"></div>
+          </div>
+
+          <!-- 업로드된 이미지 URL들을 저장할 hidden input -->
+          <input type="hidden" name="imageUrls" id="image-urls" value="" />
           <button
             id="registration-btn"
             class="btn btn_contained btn_size_m"
@@ -55,5 +75,109 @@
         </form>
       </div>
     </div>
+    <script>
+      let selectedFiles = [];
+
+      const imageInput = document.getElementById('image-input');
+      const selectedFilesDiv = document.getElementById('selected-files');
+      const uploadStatus = document.getElementById('upload-status');
+      const articleForm = document.getElementById('article-form');
+
+      // 이미지 선택 시
+      imageInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files);
+
+        for (const file of files) {
+          if (file.size > 5 * 1024 * 1024) {
+            showStatus(`${file.name}은(는) 5MB를 초과합니다.`, 'error');
+            continue;
+          }
+          if (!file.type.startsWith('image/')) {
+            showStatus(`${file.name}은(는) 이미지 파일이 아닙니다.`, 'error');
+            continue;
+          }
+          selectedFiles.push(file);
+        }
+
+        if (selectedFiles.length > 0) {
+          selectedFilesDiv.textContent = `선택된 이미지: ${selectedFiles.length}개`;
+        }
+        imageInput.value = '';
+      });
+
+      // 폼 제출 시
+      articleForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const title = articleForm.querySelector('[name="title"]').value;
+        const content = articleForm.querySelector('[name="content"]').value;
+
+        try {
+          showStatus('업로드 중...', '');
+
+          // 1. 이미지 업로드
+          let imageUrls = [];
+          if (selectedFiles.length > 0) {
+            for (const file of selectedFiles) {
+              const formData = new FormData();
+              formData.append('image', file);
+
+              const response = await fetch('/articles/images', {
+                method: 'POST',
+                body: formData
+              });
+
+              if (!response.ok) throw new Error('이미지 업로드 실패');
+
+              const data = await response.json();
+              imageUrls.push(data.imageUrl);
+            }
+          }
+
+          // 2. 게시글 작성
+          const response = await fetch('/article', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              title: title,
+              content: content,
+              imageUrls: imageUrls
+            })
+          });
+
+          if (!response.ok) throw new Error('게시글 작성 실패');
+
+          showStatus('작성 완료!', 'success');
+          setTimeout(() => window.location.href = '/main', 500);
+
+        } catch (error) {
+          console.error('Submit error:', error);
+          showStatus('작성 실패. 다시 시도해주세요.', 'error');
+        }
+      });
+
+      function showStatus(message, type) {
+        uploadStatus.textContent = message;
+        uploadStatus.className = `upload-status ${type}`;
+      }
+    </script>
+    <script>
+      const logoutBtn = document.getElementById("logout-btn");
+      logoutBtn.addEventListener("click", async () => {
+        try {
+          const response = await fetch("/logout", {
+            method: "POST",
+          });
+
+          if (!response.ok) {
+            alert("로그아웃에 실패했습니다.");
+            return;
+          }
+          window.location.href = "/";
+        } catch (e) {
+          alert("서버와 통신할 수 없습니다.");
+        }
+      });
+    </script>
   </body>
 </html>

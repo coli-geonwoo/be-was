@@ -222,3 +222,41 @@ textarea.input_textfield {
   height: 16px; 
   background: #D9D9D9;
 }
+
+/* 이미지 업로드 섹션 */
+.image-upload-section {
+  margin-top: 24px;
+}
+
+/* 이미지 업로드 버튼 */
+.image-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #f5f5f5;
+  border: 1px dashed #999;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.image-upload-btn:hover {
+  background: #ececec;
+  border-color: #666;
+}
+
+/* 업로드 상태 메시지 */
+.upload-status {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+.upload-status.error {
+  color: #d32f2f;
+}
+
+.upload-status.success {
+  color: #388e3c;
+}
