@@ -1,21 +1,21 @@
-package db.h2;
+package application.repository.impl.h2;
 
 import application.model.Article;
 import application.repository.ArticleRepository;
 import db.JdbcTemplate;
-import db.SqlRunner;
-import db.rowmapper.ArticlesRowMapper;
-import db.rowmapper.InsertArticleRowMapper;
-import db.rowmapper.RowMapper;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import application.repository.rowmapper.SelectArticlesRowMapper;
+import application.repository.rowmapper.InsertArticleRowMapper;
+import db.RowMapper;
 import java.util.List;
 
 @SuppressWarnings(value = "unchecked")
 public class ArticleH2Database implements ArticleRepository {
 
-    private final JdbcTemplate jdbcTemplate = new JdbcTemplate();
+    private final JdbcTemplate jdbcTemplate;
+
+    public ArticleH2Database(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public Article save(Article article) {
@@ -41,7 +41,7 @@ public class ArticleH2Database implements ArticleRepository {
     @Override
     public List<Article> findUserById(String userId) {
         String sql = "SELECT * FROM articles WHERE user_id = ?";
-        RowMapper<List<Article>> articleRowMapper = new ArticlesRowMapper();
+        RowMapper<List<Article>> articleRowMapper = new SelectArticlesRowMapper();
         return jdbcTemplate.executeQuery(sql, articleRowMapper, userId);
     }
 

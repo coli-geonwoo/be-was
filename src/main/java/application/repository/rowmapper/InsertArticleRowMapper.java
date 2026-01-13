@@ -1,5 +1,6 @@
-package db.rowmapper;
+package application.repository.rowmapper;
 
+import db.RowMapper;
 import java.sql.ResultSet;
 
 public class InsertArticleRowMapper implements RowMapper<Long> {

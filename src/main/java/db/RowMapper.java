@@ -1,4 +1,4 @@
-package db.rowmapper;
+package db;
 
 import java.sql.ResultSet;
 

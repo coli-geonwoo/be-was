@@ -1,4 +1,4 @@
-package db.h2;
+package db;
 
 public record JdbcProperties(
         String url,

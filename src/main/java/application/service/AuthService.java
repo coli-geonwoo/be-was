@@ -1,10 +1,11 @@
 package application.service;
 
+import application.config.argumentresolver.RepositoryConfig;
 import application.dto.request.LoginRequest;
 import application.repository.SessionRepository;
 import application.repository.UserRepository;
-import db.memory.UserMemoryDatabase;
-import db.memory.SessionMemoryDatabase;
+import application.repository.impl.memory.UserMemoryDatabase;
+import application.repository.impl.memory.SessionMemoryDatabase;
 import application.exception.CustomException;
 import application.exception.ErrorCode;
 import java.util.Optional;
@@ -13,8 +14,8 @@ import java.util.UUID;
 
 public class AuthService {
 
-    private final SessionRepository sessionRepository = new SessionMemoryDatabase();
-    private final UserRepository userRepository = new UserMemoryDatabase();
+    private final SessionRepository sessionRepository = RepositoryConfig.sessionRepository();
+    private final UserRepository userRepository = RepositoryConfig.userRepository();
 
     public User authroize(String sessionId) {
         Optional<String> foundUserId = sessionRepository.getData(sessionId);

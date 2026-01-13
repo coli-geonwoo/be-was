@@ -1,6 +1,5 @@
 package db;
 
-import db.h2.JdbcProperties;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import org.slf4j.Logger;

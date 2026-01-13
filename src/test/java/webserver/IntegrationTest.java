@@ -9,9 +9,6 @@ import application.model.User;
 import application.repository.ArticleRepository;
 import application.repository.SessionRepository;
 import application.repository.UserRepository;
-import db.memory.ArticleMemoryDatabase;
-import db.memory.UserMemoryDatabase;
-import db.memory.SessionMemoryDatabase;
 import http.HttpStatusCode;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -47,7 +44,7 @@ public class IntegrationTest {
     }
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         userRepository.clear();
         sessionRepository.clear();
         articleRepository.clear();
@@ -141,6 +138,7 @@ public class IntegrationTest {
         User user = new User("userId", "password", "name", "email@email.com");
         userRepository.save(user);
         HttpClient client = HttpClient.newHttpClient();
+
         String body = "userId=" + user.getUserId() + "&password=" + user.getPassword();
 
         HttpRequest request = HttpRequest.newBuilder()

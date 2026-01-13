@@ -1,7 +1,5 @@
 package db;
 
-import db.h2.JdbcProperties;
-import db.rowmapper.RowMapper;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,8 +10,8 @@ public class JdbcTemplate {
 
     private final JdbcProperties jdbcProperties;
 
-    public JdbcTemplate() {
-        this.jdbcProperties = JdbcProperties.h2();
+    public JdbcTemplate(JdbcProperties jdbcProperties) {
+        this.jdbcProperties = jdbcProperties;
     }
 
     public <T> T executeQuery(String sql, RowMapper<T> rowMapper, Object... args) {

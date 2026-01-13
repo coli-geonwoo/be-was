@@ -1,4 +1,4 @@
-package db.memory;
+package application.repository.impl.memory;
 
 import application.repository.SessionRepository;
 import java.util.Map;

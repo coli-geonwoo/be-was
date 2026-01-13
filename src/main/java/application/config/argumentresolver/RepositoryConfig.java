@@ -3,21 +3,25 @@ package application.config.argumentresolver;
 import application.repository.ArticleRepository;
 import application.repository.SessionRepository;
 import application.repository.UserRepository;
-import db.h2.ArticleH2Database;
-import db.memory.ArticleMemoryDatabase;
-import db.memory.UserMemoryDatabase;
-import db.memory.SessionMemoryDatabase;
+import application.repository.impl.h2.ArticleH2Database;
+import application.repository.impl.h2.UserH2Database;
+import application.repository.impl.memory.SessionMemoryDatabase;
+import db.JdbcProperties;
+import db.JdbcTemplate;
 
 public class RepositoryConfig {
 
-    private RepositoryConfig() {}
+    private static final JdbcTemplate jdbcTemplate = new JdbcTemplate(JdbcProperties.h2());
+
+    private RepositoryConfig() {
+    }
 
     public static ArticleRepository articleRepository() {
-        return new ArticleH2Database();
+        return new ArticleH2Database(jdbcTemplate);
     }
 
     public static UserRepository userRepository() {
-        return new UserMemoryDatabase();
+        return new UserH2Database(jdbcTemplate);
     }
 
     public static SessionRepository sessionRepository() {
