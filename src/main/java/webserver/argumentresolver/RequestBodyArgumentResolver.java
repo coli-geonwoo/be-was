@@ -1,4 +1,4 @@
-package webserver.convertor;
+package webserver.argumentresolver;
 
 import http.ContentType;
 import http.request.HttpRequest;

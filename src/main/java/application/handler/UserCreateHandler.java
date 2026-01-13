@@ -4,7 +4,7 @@ import application.dto.request.CreateUserRequest;
 import application.service.UserService;
 import http.HttpMethod;
 import http.response.HttpResponse;
-import webserver.convertor.RequestBody;
+import webserver.argumentresolver.RequestBody;
 import webserver.handler.HttpHandler;
 import webserver.handler.RequestMapping;
 

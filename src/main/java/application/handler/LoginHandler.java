@@ -6,7 +6,7 @@ import http.HttpMethod;
 import http.response.HttpResponse;
 import http.response.ResponseCookie;
 import java.util.Map;
-import webserver.convertor.RequestBody;
+import webserver.argumentresolver.RequestBody;
 import webserver.handler.HttpHandler;
 import webserver.handler.RequestMapping;
 

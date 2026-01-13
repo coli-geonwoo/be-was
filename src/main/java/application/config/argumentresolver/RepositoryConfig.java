@@ -1,5 +1,6 @@
 package application.config.argumentresolver;
 
+import application.repository.ArticleImageRepository;
 import application.repository.ArticleRepository;
 import application.repository.SessionRepository;
 import application.repository.UserRepository;
@@ -26,5 +27,9 @@ public class RepositoryConfig {
 
     public static SessionRepository sessionRepository() {
         return new SessionMemoryDatabase();
+    }
+
+    public static ArticleImageRepository articleImageRepository() {
+        return null;
     }
 }

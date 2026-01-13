@@ -6,7 +6,7 @@ import application.service.AuthService;
 import http.request.HttpRequest;
 import http.request.RequestCookie;
 import java.lang.reflect.Parameter;
-import webserver.convertor.ArgumentResolver;
+import webserver.argumentresolver.ArgumentResolver;
 
 public class AuthMemberArgumentResolver implements ArgumentResolver {
 

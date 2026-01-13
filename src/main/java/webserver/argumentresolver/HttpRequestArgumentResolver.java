@@ -1,4 +1,4 @@
-package webserver.convertor;
+package webserver.argumentresolver;
 
 import http.request.HttpRequest;
 import java.lang.reflect.Parameter;
