@@ -18,6 +18,7 @@ public class DbInitializer {
                 jdbcProperties.password()
         )) {
             SqlRunner.initialize(conn, "schema.sql");
+            SqlRunner.initialize(conn, "data.sql");
             logger.info("Database initialized");
         } catch(Exception exception) {
             logger.error(exception.getMessage(), exception);
