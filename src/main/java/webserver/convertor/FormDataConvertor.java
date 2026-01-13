@@ -18,7 +18,7 @@ public class FormDataConvertor extends RequestBodyArgumentResolver {
     public boolean resolvableType(String contentType) {
         return ContentType.FORM_URLENCODED
                 .getResponseContentType()
-                .equals(contentType);
+                .equals(contentType.toLowerCase());
     }
 
     @Override

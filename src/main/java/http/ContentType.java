@@ -38,6 +38,6 @@ public enum ContentType {
     }
 
     public String getResponseContentType() {
-        return responseContentType;
+        return responseContentType.toLowerCase();
     }
 }
