@@ -1,16 +1,18 @@
 package http.request;
 
+import java.nio.charset.StandardCharsets;
+
 public class HttpRequestBody {
 
-    public static HttpRequestBody EMPTY_REQUEST_BODY = new HttpRequestBody("");
+    public static HttpRequestBody EMPTY_REQUEST_BODY = new HttpRequestBody("".getBytes(StandardCharsets.UTF_8));
 
-    private final String value;
+    private final byte[] value;
 
-    public HttpRequestBody(String value) {
+    public HttpRequestBody(byte[] value) {
         this.value = value;
     }
 
-    public String getValue() {
+    public byte[] getValue() {
         return value;
     }
 }

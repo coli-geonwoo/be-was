@@ -22,7 +22,8 @@ public class AuthService {
         if (foundUserId.isEmpty()) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
-        return userRepository.findById(foundUserId.get());
+        return userRepository.findById(foundUserId.get())
+                .orElseThrow(() -> new CustomException(ErrorCode.AUTHENTICATION_FAILED));
     }
 
     public String login(LoginRequest loginRequest) {

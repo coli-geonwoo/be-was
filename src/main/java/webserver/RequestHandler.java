@@ -4,6 +4,7 @@ import http.request.HttpRequest;
 import http.response.HttpResponse;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -42,9 +43,9 @@ public class RequestHandler implements Runnable {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
 
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        try (InputStream inputStream = connection.getInputStream();
              OutputStream out = connection.getOutputStream()) {
-            HttpRequest request = requestParserFacade.parse(br);
+            HttpRequest request = requestParserFacade.parse(inputStream);
             HttpResponse response = httpServlet.doDispatch(request);
             responseResolveFacade.resolve(request, response, new DataOutputStream(out));
             logger.debug("New Client Connect Response: {}", request.getRequestUrl());

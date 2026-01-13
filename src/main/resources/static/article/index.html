@@ -61,9 +61,6 @@
             <div id="selected-files" class="selected-files"></div>
             <div id="upload-status" class="upload-status"></div>
           </div>
-
-          <!-- 업로드된 이미지 URL들을 저장할 hidden input -->
-          <input type="hidden" name="imageUrls" id="image-urls" value="" />
           <button
             id="registration-btn"
             class="btn btn_contained btn_size_m"
@@ -101,9 +98,15 @@
 
         if (selectedFiles.length > 0) {
           selectedFilesDiv.textContent = `선택된 이미지: ${selectedFiles.length}개`;
+          showStatus('', ''); // 에러 메시지 초기화
         }
         imageInput.value = '';
       });
+
+      function showStatus(message, type) {
+        uploadStatus.textContent = message;
+        uploadStatus.className = `upload-status ${type}`;
+      }
 
       // 폼 제출 시
       articleForm.addEventListener('submit', async (e) => {
@@ -115,34 +118,20 @@
         try {
           showStatus('업로드 중...', '');
 
-          // 1. 이미지 업로드
-          let imageUrls = [];
-          if (selectedFiles.length > 0) {
-            for (const file of selectedFiles) {
-              const formData = new FormData();
-              formData.append('image', file);
+          // FormData에 모든 데이터 담기
+          const formData = new FormData();
+          formData.append('title', title);
+          formData.append('content', content);
 
-              const response = await fetch('/articles/images', {
-                method: 'POST',
-                body: formData
-              });
+          // 여러 이미지 추가 (같은 name으로)
+          selectedFiles.forEach(file => {
+            formData.append('images', file);
+          });
 
-              if (!response.ok) throw new Error('이미지 업로드 실패');
-
-              const data = await response.json();
-              imageUrls.push(data.imageUrl);
-            }
-          }
-
-          // 2. 게시글 작성
+          // 한 번에 전송
           const response = await fetch('/article', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              title: title,
-              content: content,
-              imageUrls: imageUrls
-            })
+            body: formData
           });
 
           if (!response.ok) throw new Error('게시글 작성 실패');
@@ -155,11 +144,6 @@
           showStatus('작성 실패. 다시 시도해주세요.', 'error');
         }
       });
-
-      function showStatus(message, type) {
-        uploadStatus.textContent = message;
-        uploadStatus.className = `upload-status ${type}`;
-      }
     </script>
     <script>
       const logoutBtn = document.getElementById("logout-btn");

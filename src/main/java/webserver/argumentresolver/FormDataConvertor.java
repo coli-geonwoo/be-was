@@ -33,17 +33,6 @@ public class FormDataConvertor extends RequestBodyArgumentResolver {
         return object;
     }
 
-    private void setFieldValue(Object object, Class<?> clazz, String fieldName, Object value) {
-        try {
-            Field field = clazz.getDeclaredField(fieldName);
-            field.setAccessible(true);
-            field.set(object, value);
-            field.setAccessible(false);
-        } catch (NoSuchFieldException | IllegalAccessException exception) {
-            throw new ArgumentResolvingException("Can't find field " + fieldName + " in class " + clazz.getName());
-        }
-    }
-
     private Map<String, String> convertToMap(String rawValue) {
         String[] tokens = rawValue.split(TOKEN_DELIMITER);
         Map<String, String> parameters = new HashMap<>();

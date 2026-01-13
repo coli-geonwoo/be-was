@@ -5,6 +5,7 @@ import static application.config.argumentresolver.AuthMemberArgumentResolver.SES
 import application.config.argumentresolver.AuthMember;
 import application.dto.request.ArticleCreateRequest;
 import application.model.User;
+import application.service.ArticleImageService;
 import application.service.ArticleService;
 import application.service.AuthService;
 import http.HttpMethod;
@@ -12,7 +13,8 @@ import http.request.HttpRequest;
 import http.request.RequestCookie;
 import http.response.HttpResponse;
 import http.response.ResponseCookie;
-import webserver.convertor.RequestBody;
+import webserver.argumentresolver.MultipartFile;
+import webserver.argumentresolver.RequestBody;
 import webserver.handler.HttpHandler;
 import webserver.handler.RequestMapping;
 
@@ -20,7 +22,8 @@ import webserver.handler.RequestMapping;
 public class ArticleHandler {
 
     private final AuthService authService = new AuthService();
-    public final ArticleService articleService = new ArticleService();
+    private final ArticleService articleService = new ArticleService();
+    private final ArticleImageService articleImageService = new ArticleImageService();
 
     @RequestMapping(method = HttpMethod.GET, path = "/article")
     public HttpResponse getArticle(HttpRequest request) {
@@ -41,5 +44,11 @@ public class ArticleHandler {
     ) {
         articleService.save(user, articleCreateRequest);
         return HttpResponse.ok(); //TODO 201로 전환
+    }
+
+    @RequestMapping(method = HttpMethod.POST, path = "/articles/images")
+    public HttpResponse uploadImage(@RequestBody MultipartFile image) {
+        articleImageService.saveImage(image);
+        return HttpResponse.ok();
     }
 }
