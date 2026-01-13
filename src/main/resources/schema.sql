@@ -12,3 +12,8 @@ CREATE TABLE IF NOT EXISTS articles (
         user_id  VARCHAR(50)   NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS article_images (
+    id          VARCHAR(36)   PRIMARY KEY,
+    article_id  BIGINT        NOT NULL,
+    image_url   VARCHAR(500)  NOT NULL
+);

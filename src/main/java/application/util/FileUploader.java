@@ -15,7 +15,7 @@ public class FileUploader {
         try {
             Path uploadPath = Paths.get(path);
             if(!Files.exists(uploadPath)) {
-                throw new RuntimeException("File does not exist");
+               Files.createDirectories(uploadPath);
             }
             Files.copy(inputStream, uploadPath);
         } catch (IOException e) {
