@@ -40,6 +40,6 @@ public class ArticleHandler {
             @RequestBody MultipartFiles multipartFiles
     ) {
         articleFacadeService.save(multipartFiles, user);
-        return HttpResponse.ok(); //TODO 201로 전환
+        return HttpResponse.redirect("/"); //TODO 201로 전환
     }
 }

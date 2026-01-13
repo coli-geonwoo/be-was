@@ -26,8 +26,7 @@ public class MultipartFileResolver extends RequestBodyArgumentResolver {
 
     @Override
     protected boolean resolvableType(String contentType) {
-        String lowerCaseContentType = contentType.toLowerCase();
-        return lowerCaseContentType.startsWith(ContentType.MULTIPART_FORM_DATA.getResponseContentType());
+        return contentType.startsWith(ContentType.MULTIPART_FORM_DATA.getResponseContentType());
     }
 
     @Override
@@ -68,14 +67,33 @@ public class MultipartFileResolver extends RequestBodyArgumentResolver {
         return result;
     }
 
+//    private List<Integer> findBoundaryIndices(byte[] data, byte[] boundary) {
+//        List<Integer> indices = new ArrayList<>();
+//        for (int i = 0; i <= data.length - boundary.length; i++) {
+//            //두 구간이 같은지 검증(Arrays.mismatch는 서로 다른 값이 없으면 -1을 반환)
+//            if (Arrays.mismatch(data, i, i + boundary.length, boundary, 0, boundary.length) == -1) {
+//                indices.add(i);
+//            }
+//        }
+//        return indices;
+//    }
+
     private List<Integer> findBoundaryIndices(byte[] data, byte[] boundary) {
         List<Integer> indices = new ArrayList<>();
+        String boundaryStr = new String(boundary, StandardCharsets.ISO_8859_1);
         for (int i = 0; i <= data.length - boundary.length; i++) {
-            //두 구간이 같은지 검증(Arrays.mismatch는 서로 다른 값이 없으면 -1을 반환)
-            if (Arrays.mismatch(data, i, i + boundary.length, boundary, 0, boundary.length) == -1) {
+            String chunk = new String(
+                    data,
+                    i,
+                    boundary.length,
+                    StandardCharsets.ISO_8859_1
+            );
+
+            if (chunk.equalsIgnoreCase(boundaryStr)) {
                 indices.add(i);
             }
         }
+
         return indices;
     }
 

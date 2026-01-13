@@ -12,6 +12,8 @@ public class MainPageHandler {
 
     @RequestMapping(method = HttpMethod.GET, path = "/main")
     public HttpResponse mainPage(@AuthMember User user) {
-        return new HttpResponse("/main/index.html");
+        HttpResponse response = new HttpResponse("/main/index.html");
+        response.addModelAttributes("account", user.getName());
+        return response;
     }
 }
