@@ -1,6 +1,6 @@
 package application.service;
 
-import application.config.argumentresolver.RepositoryConfig;
+import application.config.RepositoryConfig;
 import application.dto.request.CreateUserRequest;
 import application.model.User;
 import application.repository.UserRepository;

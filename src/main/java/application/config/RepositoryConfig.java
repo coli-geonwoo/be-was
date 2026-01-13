@@ -1,10 +1,11 @@
-package application.config.argumentresolver;
+package application.config;
 
 import application.repository.ArticleImageRepository;
 import application.repository.ArticleRepository;
 import application.repository.SessionRepository;
 import application.repository.UserRepository;
 import application.repository.impl.h2.ArticleH2Database;
+import application.repository.impl.h2.ArticleImageH2Database;
 import application.repository.impl.h2.UserH2Database;
 import application.repository.impl.memory.SessionMemoryDatabase;
 import db.JdbcProperties;
@@ -30,6 +31,6 @@ public class RepositoryConfig {
     }
 
     public static ArticleImageRepository articleImageRepository() {
-        return null;
+        return new ArticleImageH2Database(jdbcTemplate);
     }
 }

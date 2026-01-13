@@ -3,7 +3,7 @@ package webserver;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import application.config.argumentresolver.RepositoryConfig;
+import application.config.RepositoryConfig;
 import application.model.Article;
 import application.model.User;
 import application.repository.ArticleRepository;

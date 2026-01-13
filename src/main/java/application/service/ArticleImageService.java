@@ -1,15 +1,10 @@
 package application.service;
 
-import application.config.argumentresolver.RepositoryConfig;
+import application.config.RepositoryConfig;
 import application.model.Article;
 import application.model.ArticleImage;
 import application.repository.ArticleImageRepository;
-import application.repository.ArticleRepository;
 import application.util.FileUploader;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import webserver.argumentresolver.MultipartFile;
 

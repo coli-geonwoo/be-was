@@ -1,11 +1,9 @@
 package application.service;
 
-import application.config.argumentresolver.RepositoryConfig;
+import application.config.RepositoryConfig;
 import application.dto.request.LoginRequest;
 import application.repository.SessionRepository;
 import application.repository.UserRepository;
-import application.repository.impl.memory.UserMemoryDatabase;
-import application.repository.impl.memory.SessionMemoryDatabase;
 import application.exception.CustomException;
 import application.exception.ErrorCode;
 import java.util.Optional;
