@@ -2,6 +2,7 @@ package application.repository.impl.h2;
 
 import application.model.Article;
 import application.repository.ArticleRepository;
+import application.repository.rowmapper.SelectArticleRowMapper;
 import db.JdbcTemplate;
 import application.repository.rowmapper.SelectArticlesRowMapper;
 import application.repository.rowmapper.InsertArticleRowMapper;
@@ -11,6 +12,9 @@ import java.util.List;
 @SuppressWarnings(value = "unchecked")
 public class ArticleH2Database implements ArticleRepository {
 
+
+    private final RowMapper<List<Article>> articlesRowMapper = new SelectArticlesRowMapper();
+    private final RowMapper<Article> articleRowMapper = new SelectArticleRowMapper();
     private final JdbcTemplate jdbcTemplate;
 
     public ArticleH2Database(JdbcTemplate jdbcTemplate) {
@@ -41,8 +45,7 @@ public class ArticleH2Database implements ArticleRepository {
     @Override
     public List<Article> findUserById(String userId) {
         String sql = "SELECT * FROM articles WHERE user_id = ?";
-        RowMapper<List<Article>> articleRowMapper = new SelectArticlesRowMapper();
-        return jdbcTemplate.executeQuery(sql, articleRowMapper, userId);
+        return jdbcTemplate.executeQuery(sql, articlesRowMapper, userId);
     }
 
     @Override

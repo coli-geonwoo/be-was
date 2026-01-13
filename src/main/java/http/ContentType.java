@@ -5,6 +5,7 @@ import java.util.Optional;
 
 public enum ContentType {
 
+    PLAIN_TEXT(List.of(".txt"), "text/plain"),
     HTML(List.of(".html"), "text/html;charset=utf-8"),
     CSS(List.of(".css"),  "text/css;charset=utf-8"),
     JAVA_SCRIPT(List.of(".js"), "application/javascript;charset=utf-8"),
@@ -13,7 +14,8 @@ public enum ContentType {
     SVG(List.of(".svg"), "image/svg+xml"),
     GIF(List.of(".gif"), "image/gif"),
     ICO(List.of(".ico"), "image/x-icon"),
-    FORM_URLENCODED(List.of(), "application/x-www-form-urlencoded");
+    FORM_URLENCODED(List.of(), "application/x-www-form-urlencoded"),
+    MULTIPART_FORM_DATA(List.of(), "multipart/form-data");
     ;
 
     public static final String CONTENT_TYPE_HEADER_KEY = "Content-Type".toLowerCase();

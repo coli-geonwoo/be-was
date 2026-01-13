@@ -4,6 +4,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import application.dto.request.LoginRequest;
+import http.HttpMethod;
+import http.HttpVersion;
+import http.request.HttpRequest;
+import http.request.HttpRequestBody;
+import http.request.HttpRequestHeader;
+import http.request.HttpRequestLine;
+import http.request.RequestCookie;
+import http.request.RequestUrl;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,8 +23,14 @@ class FormDataConvertorTest {
     @Test
     void resolve() {
         FormDataConvertor convertor = new FormDataConvertor();
+        HttpRequest request = new HttpRequest(
+                new HttpRequestLine(HttpMethod.POST, new RequestUrl("/example", Map.of()), HttpVersion.HTTP_1_1),
+                new HttpRequestHeader(Map.of()),
+                new HttpRequestBody("userId=coli&password=pass1234".getBytes()),
+                RequestCookie.EMPTY_COOKIE
+        );
 
-        LoginRequest result = (LoginRequest) convertor.resolveBody("userId=coli&password=pass1234", LoginRequest.class);
+        LoginRequest result = (LoginRequest) convertor.resolve(request, LoginRequest.class);
 
         assertAll(
                 () -> assertThat(result.getPassword()).isEqualTo("pass1234"),

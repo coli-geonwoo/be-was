@@ -1,10 +1,10 @@
 package webserver.argumentresolver;
 
 import http.ContentType;
-import java.lang.reflect.Field;
+import http.request.HttpRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import webserver.exception.ArgumentResolvingException;
 import webserver.util.ClassScanUtils;
 
 public class FormDataConvertor extends RequestBodyArgumentResolver {
@@ -22,7 +22,9 @@ public class FormDataConvertor extends RequestBodyArgumentResolver {
     }
 
     @Override
-    public Object resolveBody(String body, Class<?> clazz) {
+    public Object resolve(HttpRequest request, Class<?> clazz) {
+        byte[] rawBody = request.getRequestBody().getValue();
+        String body = new String(rawBody, StandardCharsets.UTF_8);
         Map<String, String> dataMap = convertToMap(body);
         Object object = new ClassScanUtils<>().makeHandlerInstance(clazz);
         for (Map.Entry<String, String> entry : dataMap.entrySet()) {
