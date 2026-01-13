@@ -28,6 +28,10 @@ public class User {
         }
     }
 
+    public boolean hasSamePassword(String password) {
+        return this.password.equals(password);
+    }
+
     public String getUserId() {
         return userId;
     }

@@ -25,11 +25,11 @@ public class AuthService {
     }
 
     public String login(LoginRequest loginRequest) {
-        User foundUser = userRepository.findByUserIdAndPassword(
-                loginRequest.getUserId(),
-                loginRequest.getPassword()
-        ).orElseThrow(() -> new CustomException(ErrorCode.LOGIN_FAILED));
-
+        User foundUser = userRepository.findById(loginRequest.getUserId())
+                        .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        if(!foundUser.hasSamePassword(loginRequest.getPassword())) {
+            throw new CustomException(ErrorCode.LOGIN_FAILED);
+        }
         String sessionId = UUID.randomUUID().toString();
         saveSessionData(foundUser, sessionId);
         return sessionId;

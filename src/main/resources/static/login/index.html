@@ -72,8 +72,20 @@
                 body: params.toString()
             });
 
+            if (response.status === 404) {
+                const goRegister = confirm(
+                    "존재하지 않는 아이디입니다.\n회원가입하시겠습니까?"
+                );
+
+                if (goRegister) {
+                    window.location.href = "/registration";
+                }
+                return;
+            }
+
             if (response.status === 401) {
-                alert("아이디 또는 비밀번호가 올바르지 않습니다. 다시 시도해주세요.");
+                alert("비밀번호가 틀렸습니다");
+                form.reset();
                 return;
             }
 
