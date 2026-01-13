@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ArticlesRowMapper implements RowMapper<List<Article>> {
 
-    private final RowMapper<Article> articleRowMapper = new ArticleRowMapper();
+    private final RowMapper<Article> articleRowMapper = new SelectArticleRowMapper();
 
     @Override
     public List<Article> mapRow(ResultSet rs) {

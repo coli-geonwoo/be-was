@@ -3,7 +3,7 @@ package db.rowmapper;
 import application.model.Article;
 import java.sql.ResultSet;
 
-public class ArticleRowMapper implements RowMapper<Article> {
+public class SelectArticleRowMapper implements RowMapper<Article> {
 
     @Override
     public Article mapRow(ResultSet rs) {
