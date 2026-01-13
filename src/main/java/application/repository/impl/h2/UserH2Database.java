@@ -12,7 +12,7 @@ import java.util.Optional;
 public class UserH2Database implements UserRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<User> userRowMapper = new SelectUserRowMapper();
+    private final RowMapper<Optional<User>> userRowMapper = new SelectUserRowMapper();
     private final RowMapper<List<User>> usersRowMapper = new SelectUsersRowMapper();
 
     public UserH2Database(JdbcTemplate jdbcTemplate) {
@@ -27,7 +27,7 @@ public class UserH2Database implements UserRepository {
     }
 
     @Override
-    public User findById(String id) {
+    public Optional<User> findById(String id) {
         String sql = "SELECT * FROM users WHERE user_id = ?";
         return jdbcTemplate.executeQuery(sql, userRowMapper, id);
     }
@@ -35,7 +35,7 @@ public class UserH2Database implements UserRepository {
     @Override
     public Optional<User> findByUserIdAndPassword(String userId, String password) {
         String sql = "SELECT * FROM users WHERE user_id = ? AND password = ?";
-        return Optional.ofNullable(jdbcTemplate.executeQuery(sql, userRowMapper, userId, password));
+        return jdbcTemplate.executeQuery(sql, userRowMapper, userId, password);
     }
 
     @Override

@@ -27,8 +27,8 @@ public class UserMemoryDatabase implements UserRepository {
     }
 
     @Override
-    public User findById(String userId) {
-        return users.get(userId);
+    public Optional<User> findById(String userId) {
+        return Optional.ofNullable(users.get(userId));
     }
 
     @Override
