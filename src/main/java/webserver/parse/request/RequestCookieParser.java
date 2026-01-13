@@ -1,7 +1,6 @@
 package webserver.parse.request;
 
 import http.request.RequestCookie;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 

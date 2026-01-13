@@ -16,7 +16,7 @@ public enum ContentType {
     FORM_URLENCODED(List.of(), "application/x-www-form-urlencoded");
     ;
 
-    public static final String CONTENT_TYPE_HEADER_KEY = "Content-Type";
+    public static final String CONTENT_TYPE_HEADER_KEY = "Content-Type".toLowerCase();
 
     private final List<String> extensions;
     private final String responseContentType;

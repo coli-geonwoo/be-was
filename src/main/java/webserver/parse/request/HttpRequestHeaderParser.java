@@ -9,7 +9,6 @@ class HttpRequestHeaderParser implements HttpRequestParser<HttpRequestHeader> {
 
     private static final String HTTP_REQUEST_HEADER_DELIMITER = ":";
 
-    //TODO 과연 key: value가 제대로 파싱될까?
     @Override
     public HttpRequestHeader parse(String input) {
         Map<String, String> headers = new HashMap<>();
@@ -17,8 +16,11 @@ class HttpRequestHeaderParser implements HttpRequestParser<HttpRequestHeader> {
         while (tokenizer.hasMoreTokens()) {
             String headerContents = tokenizer.nextToken();
             int firstDelimiterIndex = headerContents.indexOf(HTTP_REQUEST_HEADER_DELIMITER);
-            String key = headerContents.substring(0, firstDelimiterIndex).trim();
-            String value = headerContents.substring(firstDelimiterIndex + 1).trim();
+            if (firstDelimiterIndex == -1) {
+                break;
+            }
+            String key = headerContents.substring(0, firstDelimiterIndex).trim().toLowerCase();
+            String value = headerContents.substring(firstDelimiterIndex + 1).trim().toLowerCase();
             headers.put(key, value);
         }
         return new HttpRequestHeader(headers);

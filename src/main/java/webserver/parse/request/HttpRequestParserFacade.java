@@ -3,6 +3,10 @@ package webserver.parse.request;
 import http.request.RequestCookie;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import http.HttpMethod;
@@ -17,11 +21,12 @@ public class HttpRequestParserFacade {
 
     private static final int REQUEST_LINE_INDEX = 0;
     private static final String REQUEST_LINE_DELIMITER = "\r\n";
-    private static final String REQUEST_HEADER_DELIMITER = "\r\n\r\n";
+    private static final String CONTENT_LENGTH_HEADER = "Content-Length".toLowerCase();
+    private static final String COOKIE_HEADER_NAME = "Cookie".toLowerCase();
 
     private final HttpRequestParser<HttpRequestLine> httpRequestLineParser;
     private final HttpRequestParser<HttpRequestHeader> httpRequestHeaderParser;
-    private final HttpRequestParser<HttpRequestBody> httpRequestBodyParser;
+    private final HttpRequestBodyParser httpRequestBodyParser;
     private final HttpRequestParser<RequestCookie> cookieParser;
 
     public HttpRequestParserFacade() {
@@ -31,79 +36,55 @@ public class HttpRequestParserFacade {
         this.cookieParser = new RequestCookieParser();
     }
 
-    public HttpRequest parse(BufferedReader bufferedReader) throws IOException {
-        String rawRequest = getRawHttpRequest(bufferedReader);
+    public HttpRequest parse(InputStream inputStream) throws IOException {
 
-        int firstLineEnd = rawRequest.indexOf(REQUEST_LINE_DELIMITER);
-        int headerEnd = rawRequest.indexOf(REQUEST_HEADER_DELIMITER);
-        String[] lines = rawRequest.split(REQUEST_LINE_DELIMITER);
+        String rawHeaderPart = getRawHeaderPart(inputStream);
+        String[] lines = rawHeaderPart.split(REQUEST_LINE_DELIMITER);
 
         String rawRequestLine = lines[REQUEST_LINE_INDEX];
         HttpRequestLine requestLine = httpRequestLineParser.parse(rawRequestLine);
         logger.debug("Request Line - {}", rawRequestLine);
 
-        String headerPart = parseRawHeaderPart(rawRequest, firstLineEnd, headerEnd);
-        HttpRequestHeader requestHeader = httpRequestHeaderParser.parse(headerPart);
-        logger.debug("Request Header : {}", headerPart);
+        rawHeaderPart = rawHeaderPart.substring(rawHeaderPart.indexOf(REQUEST_LINE_DELIMITER) + REQUEST_LINE_DELIMITER.length());
+        logger.debug("Request Header : {}", rawHeaderPart);
+        HttpRequestHeader requestHeader = httpRequestHeaderParser.parse(rawHeaderPart);
 
         RequestCookie requestCookie = RequestCookie.EMPTY_COOKIE;
-        if(requestHeader.containsHeader("Cookie")) {
-            String rawCookie = requestHeader.getHeaderContent("Cookie");
+        if(requestHeader.containsHeader(COOKIE_HEADER_NAME)) {
+            String rawCookie = requestHeader.getHeaderContent(COOKIE_HEADER_NAME);
             requestCookie = cookieParser.parse(rawCookie);
             logger.debug("Request Cookie - {}", rawCookie);
         }
 
         if(requestLine.getMethod() == HttpMethod.POST) {
-            int contentLength = Integer.parseInt(requestHeader.getHeaderContent("Content-Length"));
-            String rawBodyPart = parseRawBodyPart(rawRequest, headerEnd, contentLength);
-            logger.debug("Request body : {}", rawBodyPart);
-            HttpRequestBody requestBody = httpRequestBodyParser.parse(rawBodyPart);
+            int contentLength = Integer.parseInt(requestHeader.getHeaderContent(CONTENT_LENGTH_HEADER));
+            HttpRequestBody requestBody = httpRequestBodyParser.parseBody(inputStream, contentLength);
+            logger.debug("Request body : {}", new String(requestBody.getValue(), StandardCharsets.UTF_8));
             return new HttpRequest(requestLine, requestHeader, requestBody, requestCookie);
         }
         return new HttpRequest(requestLine, requestHeader, requestCookie);
     }
 
-    private String getRawHttpRequest(BufferedReader br) throws IOException {
-        StringBuilder rawRequest = new StringBuilder();
-        String line;
-        int contentLength = 0;
+    private String getRawHeaderPart(InputStream inputStream) throws IOException {
+        StringBuilder headerBuilder = new StringBuilder();
+        int consecutiveNewlines = 0;
 
-        while ((line = br.readLine()) != null) {
-            rawRequest.append(line).append("\r\n");
-            if (line.isEmpty()) {
+        while (true) {
+            int b = inputStream.read();
+            if (b == -1) {
                 break;
             }
-
-            if (line.startsWith("Content-Length:")) {
-                contentLength = Integer.parseInt(line.substring("Content-Length:".length()).trim());
-            }
-        }
-
-        if (contentLength > 0) {
-            char[] bodyBuffer = new char[contentLength];
-            int totalRead = 0;
-
-            while (totalRead < contentLength) {
-                int read = br.read(bodyBuffer, totalRead, contentLength - totalRead);;
-                if (read == -1) {
+            char c = (char) b;
+            headerBuilder.append(c);
+            if (c == '\r' || c == '\n') {
+                consecutiveNewlines++;
+                if (consecutiveNewlines == 4) {
                     break;
                 }
-                totalRead += read;
+            } else {
+                consecutiveNewlines = 0;
             }
-            rawRequest.append(new String(bodyBuffer, 0, totalRead));
         }
-        return rawRequest.toString();
-    }
-
-    private String parseRawHeaderPart(String rawRequest, int firstLineEnd, int headerEnd) {
-        return rawRequest.substring(
-                firstLineEnd + 2,
-                headerEnd
-        );
-    }
-
-    private String parseRawBodyPart(String rawRequest, int headerEnd, int contentLength) {
-        int startIndex = headerEnd + REQUEST_HEADER_DELIMITER.length();
-        return rawRequest.substring(startIndex, startIndex + contentLength);
+        return headerBuilder.toString();
     }
 }

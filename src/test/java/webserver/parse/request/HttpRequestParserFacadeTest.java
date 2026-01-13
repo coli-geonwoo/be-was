@@ -27,9 +27,8 @@ class HttpRequestParserFacadeTest {
                         "Connection: keep-alive\r\n" +
                         "\r\n";
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(rawRequest.getBytes())));
         HttpRequestParserFacade requestParserFacade = new HttpRequestParserFacade();
-        HttpRequest request = requestParserFacade.parse(bufferedReader);
+        HttpRequest request = requestParserFacade.parse(new ByteArrayInputStream(rawRequest.getBytes()));
 
         HttpRequestLine requestLine = request.getRequestLine();
         HttpRequestHeader requestHeader = request.getRequestHeader();
@@ -58,10 +57,8 @@ class HttpRequestParserFacadeTest {
                 "\r\n" +
                 "userId=coli&password=password&name=GeonWoo&email=email@email.com";
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(rawRequest.getBytes())));
-
         HttpRequestParserFacade requestParserFacade = new HttpRequestParserFacade();
-        HttpRequest request = requestParserFacade.parse(bufferedReader);
+        HttpRequest request = requestParserFacade.parse(new ByteArrayInputStream(rawRequest.getBytes()));
 
         HttpRequestLine requestLine = request.getRequestLine();
         HttpRequestHeader requestHeader = request.getRequestHeader();

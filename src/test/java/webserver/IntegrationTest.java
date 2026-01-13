@@ -120,7 +120,7 @@ public class IntegrationTest {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        User foundUser = userRepository.findById("javajigi");
+        User foundUser = userRepository.findById("javajigi").get();
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatusCode.REDIRECTED.getCode()),
