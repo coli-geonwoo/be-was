@@ -31,7 +31,10 @@ public class ExceptionHandlerRegistry {
 
     public HttpResponse handleByExceptionHandler(Exception exception) {
         Class<? extends Exception> exceptionClass = exception.getClass();
-        Method method = exceptionHandlers.get(exceptionClass);
+        Method method = exceptionHandlers.getOrDefault(
+                exceptionClass,
+                exceptionHandlers.get(Exception.class)
+        );
         try {
             Object instance = method.getDeclaringClass()
                     .getConstructor()
