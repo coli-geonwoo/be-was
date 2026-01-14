@@ -17,7 +17,8 @@ public class SelectUserRowMapper implements RowMapper<Optional<User>> {
             String name = rs.getString("name");
             String email = rs.getString("email");
             String password = rs.getString("password");
-            return Optional.of(new User(userId, password, name, email));
+            String imageUrl = rs.getString("image_url");
+            return Optional.of(new User(userId, password, name, email, imageUrl));
         } catch (Exception e) {
             throw new RuntimeException("Failed to map user row", e);
         }

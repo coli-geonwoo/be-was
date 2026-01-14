@@ -17,7 +17,8 @@ public class SelectUsersRowMapper implements RowMapper<List<User>> {
                 String name = rs.getString("name");
                 String email = rs.getString("email");
                 String password = rs.getString("password");
-                users.add(new User(userId, password, name, email));
+                String imageUrl = rs.getString("image_url");
+                users.add(new User(userId, password, name, email, imageUrl));
             }
             return users;
         } catch (Exception e) {
