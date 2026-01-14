@@ -14,6 +14,8 @@ public class MyPageHandler {
     public HttpResponse myPage(
             @AuthMember User user
     ) {
-        return new HttpResponse("/mypage/index.html");
+        HttpResponse response = new HttpResponse("/mypage/index.html");
+        response.addModelAttributes("nickname", user.getName());
+        return response;
     }
 }
