@@ -6,8 +6,8 @@ public class ArticleCreateRequest {
     private String content;
 
     public ArticleCreateRequest(String title, String content) {
-        this.title = title;
-        this.content = content;
+        this.title = title == null ? "" : title;
+        this.content = content == null ? "" : content;
     }
 
     public ArticleCreateRequest() {

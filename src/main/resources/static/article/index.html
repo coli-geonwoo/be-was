@@ -31,7 +31,6 @@
                     type="text"
                     name="title"
                     placeholder="제목을 입력하세요"
-                    required
             />
           </div>
           <div class="textfield textfield_size_m">
@@ -41,7 +40,6 @@
               name = "content"
               placeholder="글의 내용을 입력하세요"
               autocomplete="username"
-              required
             ></textarea>
           </div>
           <!-- 이미지 업로드 섹션 -->
@@ -112,16 +110,21 @@
       articleForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const title = articleForm.querySelector('[name="title"]').value;
-        const content = articleForm.querySelector('[name="content"]').value;
+        const titleInput = articleForm.querySelector('[name="title"]').value;
+        const contentInput = articleForm.querySelector('[name="content"]').value;
+
+        const formData = new FormData();
+
+        if (titleInput && titleInput.trim() !== "") {
+          formData.append('title', titleInput.trim());
+        }
+
+        if (contentInput && contentInput.trim() !== "") {
+          formData.append('content', contentInput.trim());
+        }
 
         try {
           showStatus('업로드 중...', '');
-
-          // FormData에 모든 데이터 담기
-          const formData = new FormData();
-          formData.append('title', title);
-          formData.append('content', content);
 
           // 여러 이미지 추가 (같은 name으로)
           selectedFiles.forEach(file => {

@@ -20,21 +20,16 @@ public class ArticleFacadeService {
     }
 
     public void save(MultipartFiles multipartFiles, User user) {
-        String title = getMultipartFile(multipartFiles, "title", 0).getValue();
-        String content = getMultipartFile(multipartFiles, "content", 0).getValue();
+        String title = multipartFiles.getFirstFileValue("title");
+        String content = multipartFiles.getFirstFileValue("content");
+        List<MultipartFile> images = multipartFiles.getFiles("images");
+        if(images.isEmpty()) {
+            throw new CustomException(ErrorCode.INVALID_ARTICLE_INPUT);
+        }
         ArticleCreateRequest articleCreateRequest = new ArticleCreateRequest(title, content);
         Article savedArticle = articleService.save(user, articleCreateRequest);
-        multipartFiles.getFiles("images")
-                .stream()
+        images.stream()
                 .filter(image -> !image.isFormField())
                 .forEach(image -> articleImageService.saveImage(savedArticle, image));
-    }
-
-    private MultipartFile getMultipartFile(MultipartFiles multipartFiles, String fileName, int index) {
-        List<MultipartFile> files = multipartFiles.getFiles(fileName);
-        if(files.size() <= index) {
-            throw new CustomException(ErrorCode.INVALID_MULTIPART_FILE);
-        }
-        return files.get(index);
     }
 }

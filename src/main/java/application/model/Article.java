@@ -25,7 +25,7 @@ public class Article {
     }
 
     private void validate(String value) {
-        if(value == null || value.isBlank()) {
+        if(value == null) {
             throw new CustomException(ErrorCode.INVALID_ARTICLE_INPUT);
         }
     }
