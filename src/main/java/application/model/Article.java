@@ -2,6 +2,7 @@ package application.model;
 
 import application.exception.CustomException;
 import application.exception.ErrorCode;
+import java.time.LocalDateTime;
 
 public class Article {
 
@@ -9,8 +10,9 @@ public class Article {
     private final String title;
     private final String content;
     private final String userId;
+    private final LocalDateTime creationDate;
 
-    public Article(Long id, String title, String content, String userId) {
+    public Article(Long id, String title, String content, String userId, LocalDateTime creationDate) {
         validate(title);
         validate(content);
         validate(userId);
@@ -18,10 +20,11 @@ public class Article {
         this.title = title;
         this.content = content;
         this.userId = userId;
+        this.creationDate = creationDate;
     }
 
-    public Article(String title, String content, String userId) {
-        this(null, title, content, userId);
+    public Article(String title, String content, String userId, LocalDateTime creationDate) {
+        this(null, title, content, userId, creationDate);
     }
 
     private void validate(String value) {
@@ -48,5 +51,9 @@ public class Article {
 
     public String getTitle() {
         return title;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
     }
 }

@@ -3,6 +3,7 @@ package application.repository.rowmapper;
 import application.model.Article;
 import db.RowMapper;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
 
 public class SelectArticleRowMapper implements RowMapper<Article> {
 
@@ -16,7 +17,8 @@ public class SelectArticleRowMapper implements RowMapper<Article> {
             String title = rs.getString("title");
             String content = rs.getString("content");
             String userId = rs.getString("user_id");
-            return new Article(id, title, content, userId);
+            LocalDateTime createdAt = rs.getObject("created_at", LocalDateTime.class);
+            return new Article(id, title, content, userId, createdAt);
         } catch (Exception e) {
             throw new RuntimeException("Failed to map article row", e);
         }

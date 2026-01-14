@@ -3,6 +3,7 @@ package application.repository.rowmapper;
 import application.model.Article;
 import db.RowMapper;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,8 @@ public class SelectArticlesRowMapper implements RowMapper<List<Article>> {
                 String title = rs.getString("title");
                 String content = rs.getString("content");
                 String userId = rs.getString("user_id");
-                articles.add(new Article(id, title, content, userId));
+                LocalDateTime createdAt = rs.getObject("created_at", LocalDateTime.class);
+                articles.add(new Article(id, title, content, userId, createdAt));
             }
             return articles;
         } catch (Exception e) {

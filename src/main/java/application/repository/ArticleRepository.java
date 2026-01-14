@@ -10,4 +10,8 @@ public interface ArticleRepository {
     List<Article> findUserById(String userId);
 
     void clear();
+
+    int count();
+
+    Article getLatestArticle(int offset);
 }
