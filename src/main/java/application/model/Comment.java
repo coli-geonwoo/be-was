@@ -1,5 +1,6 @@
 package application.model;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Comment {
@@ -8,16 +9,18 @@ public class Comment {
     private final long articleId;
     private final String userId;
     private final String content;
+    private final LocalDateTime createdAt;
 
-    public Comment(String id, long articleId, String userId, String content) {
+    public Comment(String id, long articleId, String userId, String content, LocalDateTime createdAt) {
         this.id = id;
         this.articleId = articleId;
         this.userId = userId;
         this.content = content;
+        this.createdAt = createdAt;
     }
 
-    public Comment(long articleId, String userId, String content) {
-        this(UUID.randomUUID().toString(), articleId, userId, content);
+    public Comment(long articleId, String userId, String content, LocalDateTime createdAt) {
+        this(UUID.randomUUID().toString(), articleId, userId, content, createdAt);
     }
 
     public String getUserId() {

@@ -25,4 +25,5 @@ CREATE TABLE IF NOT EXISTS comments (
     article_id  BIGINT        NOT NULL,
     user_id     VARCHAR(500)  NOT NULL,
     content      VARCHAR(500) NOT NULL,
+    created_at TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
