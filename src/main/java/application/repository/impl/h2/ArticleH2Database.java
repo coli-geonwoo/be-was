@@ -70,7 +70,7 @@ public class ArticleH2Database implements ArticleRepository {
 
     @Override
     public Article getLatestArticle(int offset) {
-        String sql = "SELECT * FROM articles ORDER BY created_at DESC LIMIT ?";
+        String sql = "SELECT * FROM articles ORDER BY created_at DESC LIMIT 1 OFFSET ?";
         return jdbcTemplate.executeQuery(sql, articleRowMapper, offset);
     }
 }
