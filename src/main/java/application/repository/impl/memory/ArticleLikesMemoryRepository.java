@@ -9,7 +9,13 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class ArticleLikesMemoryRepository implements ArticleLikesRepository {
 
-    private final Map<Long, AtomicLong> likesData = new HashMap<>();
+    private static final Map<Long, AtomicLong> likesData = new HashMap<>();
+
+    static {
+        likesData.put(1L, new AtomicLong());
+        likesData.put(2L, new AtomicLong());
+        likesData.put(3L, new AtomicLong());
+    }
 
     @Override
     public ArticleLikes save(ArticleLikes articleLikes) {
