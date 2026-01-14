@@ -14,6 +14,8 @@ public interface UserRepository {
 
     Optional<User> findByUserIdAndPassword(String userId, String password);
 
+    User updateUserInfo(String userId, String nickname, String password, String imageUrl);
+
     List<User> findAll();
 
     void clear();

@@ -6,7 +6,7 @@ import application.exception.ErrorCode;
 public class User {
 
     private static final int MIN_VALUE_LENGTH = 4;
-    private static final String DEFAULT_IMAGE_URL = "https://avatars.githubusercontent.com/u/148152234?s=400&v=4";
+    public static final String DEFAULT_IMAGE_URL = "https://avatars.githubusercontent.com/u/148152234?s=400&v=4";
 
     private String userId;
     private String password;

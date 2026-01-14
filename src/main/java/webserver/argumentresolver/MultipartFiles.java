@@ -14,4 +14,12 @@ public class MultipartFiles {
     public List<MultipartFile> getFiles(String name) {
         return values.getOrDefault(name, List.of());
     }
+
+    public String getFirstFileValue(String name) {
+        List<MultipartFile> files = values.getOrDefault(name, List.of());
+        if(files.isEmpty()) {
+            return null;
+        }
+        return files.get(0).getValue();
+    }
 }

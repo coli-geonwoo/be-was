@@ -16,6 +16,7 @@ public class MyPageHandler {
     ) {
         HttpResponse response = new HttpResponse("/mypage/index.html");
         response.addModelAttributes("nickname", user.getName());
+        response.addModelAttributes("profileImage", user.getImageUrl());
         return response;
     }
 }

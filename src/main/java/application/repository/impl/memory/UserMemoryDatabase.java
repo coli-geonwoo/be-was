@@ -1,5 +1,7 @@
 package application.repository.impl.memory;
 
+import application.exception.CustomException;
+import application.exception.ErrorCode;
 import application.model.User;
 import application.repository.UserRepository;
 import java.util.List;
@@ -43,6 +45,21 @@ public class UserMemoryDatabase implements UserRepository {
         return users.values().stream()
                 .filter(user -> user.getPassword().equals(password) && user.getUserId().equals(userId))
                 .findAny();
+    }
+
+    @Override
+    public User updateUserInfo(String userId, String nickname, String password, String imageUrl) {
+        User foundUser = findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User updatedUser = new User(
+                foundUser.getUserId(),
+                password == null ? foundUser.getPassword() : password,
+                nickname == null ? foundUser.getName() : nickname,
+                foundUser.getEmail(),
+                imageUrl == null ? foundUser.getImageUrl() : imageUrl
+        );
+        users.put(updatedUser.getUserId(), updatedUser);
+        return users.get(userId);
     }
 
     @Override

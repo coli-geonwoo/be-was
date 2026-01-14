@@ -2,6 +2,7 @@ package application.handler;
 
 import application.config.argumentresolver.AuthMember;
 import application.dto.request.UserCreateRequest;
+import application.dto.request.UserUpdateRequest;
 import application.model.User;
 import application.service.UserService;
 import http.HttpMethod;
@@ -22,13 +23,12 @@ public class UserHandler {
         return HttpResponse.redirect("/login");
     }
 
-    @RequestMapping(method = HttpMethod.PATCH, path = "/mypage")
+    @RequestMapping(method = HttpMethod.PATCH, path = "/user")
     public HttpResponse update(
             @AuthMember User user,
             @RequestBody MultipartFiles multipartFiles
     ) {
-        HttpResponse response = new HttpResponse("/mypage/index.html");
-        response.addModelAttributes("nickname", user.getName());
-        return response;
+        userService.update(user, new UserUpdateRequest(multipartFiles));
+        return HttpResponse.ok();
     }
 }

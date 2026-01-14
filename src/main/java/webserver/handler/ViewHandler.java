@@ -4,7 +4,8 @@ import http.request.HttpRequest;
 import http.ContentType;
 import http.response.HttpResponse;
 import http.response.HttpResponseBody;
-import http.response.ModelAttributes;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import webserver.view.View;
 import webserver.view.ViewResolver;
 
@@ -18,13 +19,15 @@ public class ViewHandler implements Handler {
 
     @Override
     public boolean canHandle(String path) {
-        return ContentType.mapToType(path)
+        String decodedPath = URLDecoder.decode(path, StandardCharsets.UTF_8);
+        return ContentType.mapToType(decodedPath.substring(1))
                 .isPresent();
     }
 
     @Override
     public HttpResponse handle(HttpRequest request) {
-        return handleByFileName(request.getRequestUrl());
+        String decodedPath = URLDecoder.decode(request.getRequestUrl(), StandardCharsets.UTF_8);
+        return handleByFileName(decodedPath.substring(1));
     }
 
     public HttpResponse handleWithResponse(HttpResponse response) {

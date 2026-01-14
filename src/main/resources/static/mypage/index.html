@@ -24,7 +24,7 @@
       <div class="page">
         <h2 class="page-title">마이페이지</h2>
         <div class="profile_image">
-          <img id="profile-img" class="profile" src="https://avatars.githubusercontent.com/u/148152234?s=400&v=4" />
+          <img id="profile-img" class="profile" src="{{profileImage}}" />
         </div>
         <div class="profile_frame">
           <div class="btn_profile">
@@ -196,7 +196,6 @@
       }
 
       // 폼 제출
-      // 폼 제출
       document.getElementById('profile-form').addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -245,8 +244,11 @@
         } else if (selectedFile) {
           // 새 이미지 업로드
           formData.append('profileImage', selectedFile);
+          formData.append('deleteProfile', 'false');
+
           console.log('이미지 업로드:', selectedFile.name, selectedFile.size, selectedFile.type);
         } else {
+          formData.append('deleteProfile', 'false');
           console.log('이미지 변경 없음');
         }
 
@@ -269,13 +271,7 @@
           }
 
           alert('프로필이 성공적으로 수정되었습니다.');
-
-          // 프로필 다시 로드
-          selectedFile = null;
-          isProfileDeleted = false;
-          document.getElementById('password-input').value = '';
-          document.getElementById('password-confirm-input').value = '';
-          await loadProfile();
+          window.location.href = '/main';
 
         } catch (e) {
           alert('서버와 통신할 수 없습니다.');

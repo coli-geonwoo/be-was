@@ -2,15 +2,18 @@ package application.service;
 
 import application.config.RepositoryConfig;
 import application.dto.request.UserCreateRequest;
+import application.dto.request.UserUpdateRequest;
 import application.exception.CustomException;
 import application.exception.ErrorCode;
 import application.model.User;
 import application.repository.UserRepository;
-import webserver.argumentresolver.MultipartFiles;
+import application.util.FileUploader;
+import webserver.argumentresolver.MultipartFile;
 
 public class UserService {
 
     private final UserRepository userRepository = RepositoryConfig.userRepository();
+    private final FileUploader fileUploader = new FileUploader();
 
     public User save(UserCreateRequest userCreateRequest) {
         validateDuplicateName(userCreateRequest.getName());
@@ -37,7 +40,28 @@ public class UserService {
 
     }
 
-    public User update(MultipartFiles multipartFiles) {
+    public User update(User user, UserUpdateRequest userUpdateRequest) {
+        if (userUpdateRequest.image() != null) {
+            MultipartFile multipartFile = userUpdateRequest.image();
+            String imageUrl = fileUploader.imageUpload(
+                    multipartFile.getInputStream(),
+                    multipartFile.getOriginalFilename()
+            );
+            return userRepository.updateUserInfo(user.getUserId(), userUpdateRequest.nickname(),
+                    userUpdateRequest.password(), imageUrl);
+        }
+        return userRepository.updateUserInfo(
+                user.getUserId(),
+                userUpdateRequest.nickname(),
+                userUpdateRequest.password(),
+                getUpdateImageUrl(userUpdateRequest)
+        );
+    }
+
+    private String getUpdateImageUrl(UserUpdateRequest userUpdateRequest) {
+        if(userUpdateRequest.deleteProfile()) {
+            return User.DEFAULT_IMAGE_URL;
+        }
         return null;
     }
 }

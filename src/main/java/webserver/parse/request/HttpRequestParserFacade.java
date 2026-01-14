@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import http.HttpMethod;
@@ -19,6 +20,7 @@ public class HttpRequestParserFacade {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpRequestParserFacade.class);
 
+    private static final List<HttpMethod> REQUEST_BODY_METHOD = Arrays.asList(HttpMethod.POST, HttpMethod.PATCH, HttpMethod.PUT, HttpMethod.DELETE);
     private static final int REQUEST_LINE_INDEX = 0;
     private static final String REQUEST_LINE_DELIMITER = "\r\n";
     private static final String CONTENT_LENGTH_HEADER = "Content-Length".toLowerCase();
@@ -56,7 +58,7 @@ public class HttpRequestParserFacade {
             logger.debug("Request Cookie - {}", rawCookie);
         }
 
-        if(requestLine.getMethod() == HttpMethod.POST) {
+        if(REQUEST_BODY_METHOD.contains(requestLine.getMethod())) {
             int contentLength = Integer.parseInt(requestHeader.getHeaderContent(CONTENT_LENGTH_HEADER));
             HttpRequestBody requestBody = httpRequestBodyParser.parseBody(inputStream, contentLength);
             logger.debug("Request body : {}", new String(requestBody.getValue(), StandardCharsets.UTF_8));

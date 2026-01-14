@@ -5,8 +5,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JdbcTemplate {
+
+    private final Logger logger = LoggerFactory.getLogger(JdbcTemplate.class);
 
     private final JdbcProperties jdbcProperties;
 
@@ -25,6 +30,7 @@ public class JdbcTemplate {
             for (int i = 0; i < args.length; i++) {
                 ps.setObject(i + 1, args[i]);
             }
+            logger.info("Executing query: " + sql + " with parameters: " + Arrays.toString(args));
             ResultSet resultSet = ps.executeQuery();
             return rowMapper.mapRow(resultSet);
         } catch (SQLException e) {
@@ -43,6 +49,7 @@ public class JdbcTemplate {
             for (int i = 0; i < args.length; i++) {
                 preparedStatement.setObject(i + 1, args[i]);
             }
+            logger.info("Executing query: " + sql + " with args: " + Arrays.toString(args));
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error execute Update" + sql, e);

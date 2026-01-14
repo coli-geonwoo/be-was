@@ -1,5 +1,7 @@
 package application.repository.impl.h2;
 
+import application.exception.CustomException;
+import application.exception.ErrorCode;
 import application.model.User;
 import application.repository.UserRepository;
 import db.JdbcTemplate;
@@ -42,6 +44,21 @@ public class UserH2Database implements UserRepository {
     public Optional<User> findByUserIdAndPassword(String userId, String password) {
         String sql = "SELECT * FROM users WHERE user_id = ? AND password = ?";
         return jdbcTemplate.executeQuery(sql, userRowMapper, userId, password);
+    }
+
+    @Override
+    public User updateUserInfo(String userId, String nickname, String password, String imageUrl) {
+        String sql = """
+                UPDATE users
+                SET name = COALESCE(?, name),
+                    password = COALESCE(?, password),
+                    image_url = COALESCE(?, image_url)
+                WHERE user_id = ?
+                """;
+        jdbcTemplate.executeUpdate(sql, nickname, password, imageUrl, userId);
+
+        return findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
     @Override
