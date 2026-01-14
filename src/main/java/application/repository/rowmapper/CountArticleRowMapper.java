@@ -9,7 +9,10 @@ public class CountArticleRowMapper implements RowMapper<Integer> {
     @Override
     public Integer mapRow(ResultSet rs) {
         try {
-            return rs.getInt(0);
+            if(!rs.next()) {
+                throw new RuntimeException("No Count Article Found");
+            }
+            return rs.getInt(1);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
