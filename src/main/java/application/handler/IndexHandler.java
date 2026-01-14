@@ -14,6 +14,7 @@ public class IndexHandler {
     public HttpResponse index(@AuthMember User user) {
         HttpResponse httpResponse = new HttpResponse("/main/index.html");
         httpResponse.addModelAttributes("account", user.getName());
+        httpResponse.addModelAttributes("profileImage", user.getImageUrl());
         return httpResponse;
     }
 }

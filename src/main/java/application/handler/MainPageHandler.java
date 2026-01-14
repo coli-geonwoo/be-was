@@ -14,6 +14,7 @@ public class MainPageHandler {
     public HttpResponse mainPage(@AuthMember User user) {
         HttpResponse response = new HttpResponse("/main/index.html");
         response.addModelAttributes("account", user.getName());
+        response.addModelAttributes("profileImage", user.getImageUrl());
         return response;
     }
 }
