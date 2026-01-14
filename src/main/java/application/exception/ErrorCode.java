@@ -11,6 +11,7 @@ public enum ErrorCode {
     LOGIN_FAILED(HttpStatusCode.UNAUTHORIZED_401, "비밀번호가 일치하지 않습니다"),
     AUTHENTICATION_FAILED(HttpStatusCode.UNAUTHORIZED_401, "Authentication failed"),
     USER_NOT_FOUND(HttpStatusCode.NOT_FOUND_404, "User not found"),
+    ARTICLE_LIKES_NOT_FOUND(HttpStatusCode.NOT_FOUND_404, "ARTICLES LIKES NOT FOUND"),
     INVALID_ARTICLE_INPUT(HttpStatusCode.BAD_REQUEST_400, "Invalid article input"),
     INVALID_MULTIPART_FILE(HttpStatusCode.BAD_REQUEST_400, "Invalid multipart file"),
 
