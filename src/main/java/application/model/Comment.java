@@ -38,4 +38,8 @@ public class Comment {
     public String getContent() {
         return content;
     }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 }

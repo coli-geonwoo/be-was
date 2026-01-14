@@ -3,6 +3,7 @@ let total = 0;
 let images = [];
 let imageIndex = 0;
 let allComments = [];
+let articleId = null;
 
 document.addEventListener("DOMContentLoaded", () => {
     loadArticle();
@@ -21,6 +22,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    document.getElementById("write-comment-btn").onclick = () => {
+        if (!articleId) return;
+        location.href = `/comment?articleId=${articleId}`;
+    };
+
     document.getElementById("next-image").onclick = () => changeImage(1);
     document.getElementById("prev-image").onclick = () => changeImage(-1);
 
@@ -32,6 +38,7 @@ async function loadArticle() {
     const article = await res.json();
 
     total = article.total;
+    articleId = article.articleId;
 
     // 제목 / 내용
     document.getElementById("post-title").textContent = article.title;
@@ -84,7 +91,12 @@ function renderTopComments() {
 
     const btn = document.getElementById("show-all-btn");
     btn.textContent = `모든 댓글보기 (${allComments.length})`;
-    btn.classList.toggle("hidden", allComments.length <= 3);
+    if (allComments.length > 3) {
+        btn.textContent = `모든 댓글 보기 (${allComments.length})`;
+        btn.classList.remove("hidden");
+    } else {
+        btn.classList.add("hidden");
+    }
 }
 
 function renderAllComments() {

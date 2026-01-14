@@ -11,6 +11,14 @@
       <header class="header">
         <a href="/main"><img src="../img/signiture.svg" /></a>
         <ul class="header__menu">
+          <li class="header__menu__item header__greeting">
+            <img
+                    class="header__profile-img"
+                    src="{{profileImage}}"
+                    alt="프로필 이미지"
+            />
+            <span>안녕하세요, {{account}}님!</span>
+          </li>
           <li class="header__menu__item">
             <a class="btn btn_contained btn_size_s" href="/article">글쓰기</a>
           </li>
@@ -43,5 +51,48 @@
         </form>
       </div>
     </div>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const articleId = Number(params.get("articleId"));
+
+      if (!articleId) {
+        alert("잘못된 접근입니다.");
+        location.href = "/main";
+      }
+
+      document.getElementById("registration-btn").addEventListener("click", async () => {
+        const textarea = document.querySelector(".input_textfield");
+        const content = textarea.value.trim();
+
+        if (!content) {
+          alert("댓글 내용을 입력하세요.");
+          textarea.focus();
+          return;
+        }
+
+        try {
+          const res = await fetch("/comment", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              articleId: articleId,
+              content: content
+            })
+          });
+
+          if (!res.ok) {
+            throw new Error("댓글 등록 실패");
+          }
+
+          location.href = "/main"; //메인화면으로 이동하기
+
+        } catch (e) {
+          alert("댓글 작성 중 오류가 발생했습니다.");
+          console.error(e);
+        }
+      });
+    </script>
   </body>
 </html>
