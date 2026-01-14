@@ -7,6 +7,7 @@ import java.util.List;
 
 public record ArticleResponse(
         int total,
+        long articleId,
         String title,
         String content,
         String nickname,
@@ -20,6 +21,7 @@ public record ArticleResponse(
     public ArticleResponse(int total, Article article, User user, List<ArticleImage> images, long likes, CommentResponse commentResponse) {
         this(
                 total,
+                article.getId(),
                 article.getTitle(),
                 article.getContent(),
                 user.getName(),
