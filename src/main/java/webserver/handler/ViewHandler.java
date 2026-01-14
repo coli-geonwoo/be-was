@@ -29,10 +29,7 @@ public class ViewHandler implements Handler {
 
     public HttpResponse handleWithResponse(HttpResponse response) {
         if(response.hasViewName()) {
-            return handleByFileNameAndModelAttributes(
-                    response.getViewName(),
-                    response.getModelAttributes()
-            );
+            return handleByFileNameAndModelAttributes(response);
         }
         return response;
     }
@@ -43,9 +40,15 @@ public class ViewHandler implements Handler {
         return new HttpResponse(body);
     }
 
-    public HttpResponse handleByFileNameAndModelAttributes(String fileName, ModelAttributes modelAttributes) {
-        View view = viewResolver.resolveStaticFileWithModelAttributes(fileName, modelAttributes);
+    public HttpResponse handleByFileNameAndModelAttributes(HttpResponse response) {
+        View view = viewResolver.resolveStaticFileWithModelAttributes(response.getViewName(), response.getModelAttributes());
         HttpResponseBody body = new HttpResponseBody(view.getContent());
-        return new HttpResponse(body);
+        return new HttpResponse(
+                response.getStatusLine(),
+                response.getHeaders(),
+                response.getViewName(),
+                body,
+                response.getCookie()
+        );
     }
 }

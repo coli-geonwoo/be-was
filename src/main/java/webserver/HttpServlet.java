@@ -29,8 +29,8 @@ public class HttpServlet {
             HttpResponse response = handleByViewHandlerOrApplicationHandler(request);
             return viewHandler.handleWithResponse(response);
         } catch (Exception e) {
-            HttpResponse exceptionHandledException = handleException(e);
-            return viewHandler.handleWithResponse(exceptionHandledException);
+            HttpResponse exceptionHandledResponse = handleException(e);
+            return viewHandler.handleWithResponse(exceptionHandledResponse);
         }
     }
 

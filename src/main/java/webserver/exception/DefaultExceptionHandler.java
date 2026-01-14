@@ -1,7 +1,14 @@
 package webserver.exception;
 
 import http.HttpStatusCode;
+import http.HttpVersion;
 import http.response.HttpResponse;
+import http.response.HttpResponseBody;
+import http.response.HttpResponseHeader;
+import http.response.ResponseCookie;
+import http.response.ResponseStatusLine;
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,7 +94,14 @@ public class DefaultExceptionHandler {
             String message,
             String path
     ) {
-        HttpResponse httpResponse = new HttpResponse("/error/error.html");
+        HttpResponse httpResponse = new HttpResponse(
+                new ResponseStatusLine(HttpVersion.HTTP_1_1, httpStatusCode),
+                new HttpResponseHeader(new HashMap<>()),
+                "/error/error.html",
+                HttpResponseBody.EMPTY_RESPONSE_BODY,
+                ResponseCookie.EXPIRED_RESPONSE_COOKIE
+        );
+
         httpResponse.addModelAttributes("status", String.valueOf(httpStatusCode.getCode()));
         httpResponse.addModelAttributes("message", message);
         httpResponse.addModelAttributes("error", exceptionType.getSimpleName());
