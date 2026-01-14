@@ -196,6 +196,7 @@
       }
 
       // 폼 제출
+      // 폼 제출
       document.getElementById('profile-form').addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -224,21 +225,39 @@
 
         // FormData 생성
         const formData = new FormData();
+
+        // 닉네임은 항상 포함
         formData.append('nickname', nickname);
 
+        // 비밀번호가 입력된 경우에만 포함
         if (password) {
           formData.append('password', password);
         }
 
         // 프로필 이미지 처리
+        console.log('isProfileDeleted:', isProfileDeleted);
+        console.log('selectedFile:', selectedFile);
+
         if (isProfileDeleted) {
+          // 이미지 삭제 요청
           formData.append('deleteProfile', 'true');
+          console.log('이미지 삭제 요청');
         } else if (selectedFile) {
+          // 새 이미지 업로드
           formData.append('profileImage', selectedFile);
+          console.log('이미지 업로드:', selectedFile.name, selectedFile.size, selectedFile.type);
+        } else {
+          console.log('이미지 변경 없음');
+        }
+
+        // FormData 내용 확인
+        console.log('FormData 내용:');
+        for (let pair of formData.entries()) {
+          console.log(pair[0], pair[1]);
         }
 
         try {
-          const response = await fetch('/mypage', {
+          const response = await fetch('/user', {
             method: 'PATCH',
             body: formData
           });
