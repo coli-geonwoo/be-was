@@ -83,6 +83,7 @@ function renderTopComments() {
     allComments.slice(0, 3).forEach(renderComment);
 
     const btn = document.getElementById("show-all-btn");
+    btn.textContent = `모든 댓글보기 (${allComments.length})`;
     btn.classList.toggle("hidden", allComments.length <= 3);
 }
 
