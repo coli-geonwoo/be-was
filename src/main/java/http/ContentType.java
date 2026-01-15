@@ -15,7 +15,8 @@ public enum ContentType {
     GIF(List.of(".gif"), "image/gif"),
     ICO(List.of(".ico"), "image/x-icon"),
     FORM_URLENCODED(List.of(), "application/x-www-form-urlencoded"),
-    MULTIPART_FORM_DATA(List.of(), "multipart/form-data");
+    MULTIPART_FORM_DATA(List.of(), "multipart/form-data"),
+    JSON(List.of(".json"), "application/json");
     ;
 
     public static final String CONTENT_TYPE_HEADER_KEY = "Content-Type".toLowerCase();
