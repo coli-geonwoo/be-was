@@ -4,6 +4,7 @@ import static application.config.argumentresolver.AuthMemberArgumentResolver.SES
 
 import application.config.argumentresolver.AuthMember;
 import application.dto.response.ArticleCreateResponse;
+import application.dto.response.ArticleOffSetResponse;
 import application.dto.response.LatestArticleResponse;
 import application.dto.response.LikesResponse;
 import application.model.User;
@@ -64,6 +65,14 @@ public class ArticleHandler {
         long articleId = Long.parseLong(request.getRequestParameter("articleId"));
         LikesResponse likesResponse = articleFacadeService.incrementLikes(articleId);
         String response = getJsonResponse(likesResponse);
+        return new HttpResponse(new HttpResponseBody(response.getBytes()), ContentType.JSON);
+    }
+
+    @RequestMapping(method = HttpMethod.GET, path= "/article/id")
+    public HttpResponse findById(HttpRequest request) {
+        long articleId = Long.parseLong(request.getRequestParameter("articleId"));
+        ArticleOffSetResponse articleOffset = articleFacadeService.getArticleOffSetById(articleId);
+        String response = getJsonResponse(articleOffset);
         return new HttpResponse(new HttpResponseBody(response.getBytes()), ContentType.JSON);
     }
 

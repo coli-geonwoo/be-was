@@ -137,14 +137,14 @@
             body: formData
           });
 
-          console.log('Response status:', response.status);
-          console.log('Response ok:', response.ok);
-          console.log('Response headers:', response.headers.get('content-type'));
-
           if (!response.ok) throw new Error('게시글 작성 실패');
 
-          const data = await response.json();
-          const offset = data.offSet;
+          const offSetResponse = await fetch('/article/id?articleId=' + articleId, {
+            method: 'GET',
+          });
+
+          const data = await offSetResponse.json();
+          const offset = await data.offSet;
           console.log("offset : ", offset);
 
           showStatus('작성 완료!', 'success');

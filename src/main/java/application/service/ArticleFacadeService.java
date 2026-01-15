@@ -2,6 +2,7 @@ package application.service;
 
 import application.dto.request.ArticleCreateRequest;
 import application.dto.response.ArticleCreateResponse;
+import application.dto.response.ArticleOffSetResponse;
 import application.dto.response.LatestArticleResponse;
 import application.dto.response.CommentResponse;
 import application.dto.response.LikesResponse;
@@ -37,19 +38,19 @@ public class ArticleFacadeService {
         }
         ArticleCreateRequest articleCreateRequest = new ArticleCreateRequest(title, content);
         Article savedArticle = articleService.save(user, articleCreateRequest);
-        long offSet = getArticleOffSetById(savedArticle.getId());
+        long offSet = getArticleOffSetById(savedArticle.getId()).offSet();
         images.stream()
                 .filter(image -> !image.isFormField())
                 .forEach(image -> articleImageService.saveImage(savedArticle, image));
         return new ArticleCreateResponse(savedArticle.getId(), offSet);
     }
 
-    private long getArticleOffSetById(long articleId) {
+    public ArticleOffSetResponse getArticleOffSetById(long articleId) {
         int total = articleService.count();
         if (total < articleId) {
             throw new CustomException(ErrorCode.INVALID_LATEST_ARTICLE_REQUEST);
         }
-        return total - articleId;
+        return new ArticleOffSetResponse(total - articleId, articleId);
     }
 
     public LatestArticleResponse getLatestArticle(int offset) {

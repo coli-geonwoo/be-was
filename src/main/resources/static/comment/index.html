@@ -86,8 +86,14 @@
             throw new Error("댓글 등록 실패");
           }
 
-          location.href = "/main"; //메인화면으로 이동하기
+          const offSetResponse = await fetch('/article/id?articleId=' + articleId, {
+            method: 'GET',
+          });
+          const data = await offSetResponse.json();
+          const offset = await data.offSet;
+          console.log("offset : ", offset);
 
+          setTimeout(() => window.location.href = `/main?offset=${offset}`, 500);
         } catch (e) {
           alert("댓글 작성 중 오류가 발생했습니다.");
           console.error(e);

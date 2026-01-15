@@ -41,17 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function loadArticle() {
-    const urlParams_i = new URLSearchParams(window.location.search);
-    const initialOffset_i = urlParams_i.get('offset');
-    let offset_i = 0;
-    if (initialOffset_i) {
-        const parsed = parseInt(initialOffset_i);
-        if (!isNaN(parsed) && parsed >= 0) {
-            offset_i = parsed;
-        }
-    }
-
-    const res = await fetch(`/article/latest?offset=${offset_i}`);
+    const res = await fetch(`/article/latest?offset=${offset}`);
 
     if (res.status === 400) {
         console.log("show empty state")
