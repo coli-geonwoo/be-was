@@ -34,8 +34,11 @@ public class ArticleHandler {
     public HttpResponse getArticle(HttpRequest request) {
         if (request.hasCookie(SESSION_ID_COOKIE_KEY)) {
             RequestCookie requestCookie = request.getRequestCookie();
-            authService.authroize(requestCookie.get(SESSION_ID_COOKIE_KEY));
-            return new HttpResponse("/article/index.html");
+            User user = authService.authroize(requestCookie.get(SESSION_ID_COOKIE_KEY));
+            HttpResponse response = new HttpResponse("/article/index.html");
+            response.addModelAttributes("account", user.getName());
+            response.addModelAttributes("profileImage", user.getImageUrl());
+            return response;
         }
         HttpResponse unAuthorizedResponse = HttpResponse.redirect("/login/index.html");
         unAuthorizedResponse.setCookie(ResponseCookie.EXPIRED_RESPONSE_COOKIE);
