@@ -52,6 +52,14 @@ async function loadArticle() {
     console.log("hide empty state")
     hideEmptyState()
 
+    //계정정보 치환
+    document.querySelector(".post__account__nickname").textContent =
+        article.nickname;
+
+    const profileImg = document.querySelector(".post__account__img");
+    profileImg.src = article.imageUrl;
+    profileImg.alt = article.nickname;
+
     // 제목 / 내용
     document.getElementById("post-title").textContent = article.title;
     document.getElementById("post-content").textContent = article.content;
