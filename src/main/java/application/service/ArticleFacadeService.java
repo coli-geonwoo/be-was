@@ -1,7 +1,7 @@
 package application.service;
 
 import application.dto.request.ArticleCreateRequest;
-import application.dto.response.ArticleResponse;
+import application.dto.response.LatestArticleResponse;
 import application.dto.response.CommentResponse;
 import application.dto.response.LikesResponse;
 import application.exception.CustomException;
@@ -41,7 +41,7 @@ public class ArticleFacadeService {
                 .forEach(image -> articleImageService.saveImage(savedArticle, image));
     }
 
-    public ArticleResponse getLatestArticle(int offset) {
+    public LatestArticleResponse getLatestArticle(int offset) {
         int total = articleService.count();
         if (total <= offset) {
             throw new CustomException(ErrorCode.INVALID_LATEST_ARTICLE_REQUEST);
@@ -52,7 +52,15 @@ public class ArticleFacadeService {
         long likes = articleService.countArticleLikes(article.getId());
         CommentResponse commentResponse = commentService.findByArticleId(article.getId());
 
-        return new ArticleResponse(total, article, user, images, likes, commentResponse);
+        return new LatestArticleResponse(total, article, user, images, likes, commentResponse);
+    }
+
+    public long getArticleOffSetById(long articleId) {
+        int total = articleService.count();
+        if (total < articleId) {
+            throw new CustomException(ErrorCode.INVALID_LATEST_ARTICLE_REQUEST);
+        }
+        return total - articleId;
     }
 
 

@@ -5,7 +5,7 @@ import application.model.ArticleImage;
 import application.model.User;
 import java.util.List;
 
-public record ArticleResponse(
+public record LatestArticleResponse(
         int total,
         long articleId,
         String title,
@@ -18,7 +18,7 @@ public record ArticleResponse(
 
 ) {
 
-    public ArticleResponse(int total, Article article, User user, List<ArticleImage> images, long likes, CommentResponse commentResponse) {
+    public LatestArticleResponse(int total, Article article, User user, List<ArticleImage> images, long likes, CommentResponse commentResponse) {
         this(
                 total,
                 article.getId(),

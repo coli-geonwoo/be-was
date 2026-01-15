@@ -3,7 +3,7 @@ package application.handler;
 import static application.config.argumentresolver.AuthMemberArgumentResolver.SESSION_ID_COOKIE_KEY;
 
 import application.config.argumentresolver.AuthMember;
-import application.dto.response.ArticleResponse;
+import application.dto.response.LatestArticleResponse;
 import application.dto.response.LikesResponse;
 import application.model.User;
 import application.service.ArticleFacadeService;
@@ -39,6 +39,21 @@ public class ArticleHandler {
         return unAuthorizedResponse;
     }
 
+    @RequestMapping(method = HttpMethod.GET, path= "/article/latest")
+    public HttpResponse getLatestArticle(HttpRequest request) {
+        String offset = request.getRequestParameter("offset");
+        LatestArticleResponse latestArticle = articleFacadeService.getLatestArticle(Integer.valueOf(offset));
+        String response = getJsonResponse(latestArticle);
+        return new HttpResponse(new HttpResponseBody(response.getBytes()));
+    }
+
+    @RequestMapping(method = HttpMethod.GET, path ="/article/id")
+    public HttpResponse getArticleById(HttpRequest request) {
+        String id = request.getRequestParameter("articleId");
+        long offSet = articleFacadeService.getArticleOffSetById(Long.parseLong(id));
+        return HttpResponse.redirect("/article/latest?=offset" + offSet);
+    }
+
     @RequestMapping(method = HttpMethod.POST, path = "/article")
     public HttpResponse save(
             @AuthMember User user,
@@ -46,14 +61,6 @@ public class ArticleHandler {
     ) {
         articleFacadeService.save(multipartFiles, user);
         return HttpResponse.redirect("/"); //TODO 201로 전환
-    }
-
-    @RequestMapping(method = HttpMethod.GET, path= "/article/latest")
-    public HttpResponse getLatestArticle(HttpRequest request) {
-        String offset = request.getRequestParameter("offset");
-        ArticleResponse latestArticle = articleFacadeService.getLatestArticle(Integer.valueOf(offset));
-        String response = getJsonResponse(latestArticle);
-        return new HttpResponse(new HttpResponseBody(response.getBytes()));
     }
 
     @RequestMapping(method = HttpMethod.POST, path= "/article/likes")
