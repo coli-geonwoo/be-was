@@ -42,8 +42,8 @@ public class CommentHandler {
     @RequestMapping(method = HttpMethod.POST, path = "/comment")
     public HttpResponse createComment(
             @AuthMember User user,
-            @RequestBody CommentCreateRequest commentCreateRequest) {
-
+            @RequestBody CommentCreateRequest commentCreateRequest
+    ) {
         commentService.save(user, commentCreateRequest);
         return HttpResponse.ok();
     }

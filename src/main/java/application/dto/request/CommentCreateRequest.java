@@ -5,8 +5,9 @@ public class CommentCreateRequest {
     private long articleId;
     private String content;
 
-    public CommentCreateRequest(long articleId) {
+    public CommentCreateRequest(long articleId, String content) {
         this.articleId = articleId;
+        this.content = content;
     }
 
     private CommentCreateRequest() {}
