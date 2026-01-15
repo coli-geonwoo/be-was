@@ -147,6 +147,9 @@
 
           if (!response.ok) throw new Error('게시글 작성 실패');
 
+          const jsonData = await response.json();
+          articleId = await jsonData.articleId;
+
           const offSetResponse = await fetch('/article/id?articleId=' + articleId, {
             method: 'GET',
           });
