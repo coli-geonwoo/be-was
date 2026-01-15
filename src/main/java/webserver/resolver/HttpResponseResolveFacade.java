@@ -53,9 +53,16 @@ public class HttpResponseResolveFacade {
     }
 
     private void addHeaders(HttpResponse response, String requestUrl) {
+        String contentType;
+        if(response.getContentType() != null) {
+                contentType = response.getContentType()
+                        .getResponseContentType();
+        }else {
+            contentType = ContentType.mapToType(requestUrl)
+                    .orElse(ContentType.HTML)
+                    .getResponseContentType();
+        }
         byte[] body = response.getBody();
-        String contentType = ContentType.mapToType(requestUrl)
-                        .orElse(ContentType.HTML.getResponseContentType());
         response.addHeader(ContentType.CONTENT_TYPE_HEADER_KEY, contentType);
         response.addHeader(CONTENT_LENGTH_HEADER, String.valueOf(body.length));
     }

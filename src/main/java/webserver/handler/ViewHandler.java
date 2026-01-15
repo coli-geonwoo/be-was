@@ -40,7 +40,8 @@ public class ViewHandler implements Handler {
     public HttpResponse handleByFileName(String fileName) {
         View view = viewResolver.resolveStaticFileByName(fileName);
         HttpResponseBody body = new HttpResponseBody(view.getContent());
-        return new HttpResponse(body);
+        ContentType contentType = ContentType.mapToType(fileName).orElse(ContentType.HTML);
+        return new HttpResponse(body, contentType);
     }
 
     public HttpResponse handleByFileNameAndModelAttributes(HttpResponse response) {
@@ -51,7 +52,8 @@ public class ViewHandler implements Handler {
                 response.getHeaders(),
                 response.getViewName(),
                 body,
-                response.getCookie()
+                response.getCookie(),
+                ContentType.HTML
         );
     }
 }

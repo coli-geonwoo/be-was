@@ -1,4 +1,6 @@
-let offset = 0;
+const urlParams = new URLSearchParams(window.location.search);
+const initialOffset = urlParams.get('offset');
+let offset = initialOffset ? parseInt(initialOffset) : 0;
 let total = 0;
 let images = [];
 let imageIndex = 0;
@@ -39,7 +41,17 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function loadArticle() {
-    const res = await fetch(`/article/latest?offset=${offset}`);
+    const urlParams_i = new URLSearchParams(window.location.search);
+    const initialOffset_i = urlParams_i.get('offset');
+    let offset_i = 0;
+    if (initialOffset_i) {
+        const parsed = parseInt(initialOffset_i);
+        if (!isNaN(parsed) && parsed >= 0) {
+            offset_i = parsed;
+        }
+    }
+
+    const res = await fetch(`/article/latest?offset=${offset_i}`);
 
     if (res.status === 400) {
         console.log("show empty state")

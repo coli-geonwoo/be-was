@@ -29,11 +29,11 @@ public enum ContentType {
         this.responseContentType = responseContentType;
     }
 
-    public static Optional<String> mapToType(String path) {
+    public static Optional<ContentType> mapToType(String path) {
         for(ContentType contentType : ContentType.values()) {
             for(String extension : contentType.extensions) {
                 if(path.endsWith(extension)) {
-                    return Optional.of(contentType.responseContentType);
+                    return Optional.of(contentType);
                 }
             }
         }

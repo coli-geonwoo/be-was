@@ -1,5 +1,6 @@
 package webserver.exception;
 
+import http.ContentType;
 import http.HttpStatusCode;
 import http.HttpVersion;
 import http.response.HttpResponse;
@@ -99,7 +100,8 @@ public class DefaultExceptionHandler {
                 new HttpResponseHeader(new HashMap<>()),
                 "/error/error.html",
                 HttpResponseBody.EMPTY_RESPONSE_BODY,
-                ResponseCookie.EXPIRED_RESPONSE_COOKIE
+                ResponseCookie.EXPIRED_RESPONSE_COOKIE,
+                ContentType.HTML
         );
 
         httpResponse.addModelAttributes("status", String.valueOf(httpStatusCode.getCode()));

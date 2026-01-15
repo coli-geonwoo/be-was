@@ -1,5 +1,6 @@
 package http.response;
 
+import http.ContentType;
 import http.HttpStatusCode;
 import http.HttpVersion;
 import java.util.HashMap;
@@ -13,13 +14,15 @@ public class HttpResponse {
     private final ModelAttributes modelAttributes;
     private final HttpResponseBody body;
     private ResponseCookie responseCookie;
+    private ContentType contentType;
 
     public HttpResponse(
             ResponseStatusLine statusLine,
             HttpResponseHeader headers,
             String viewName,
             HttpResponseBody body,
-            ResponseCookie responseCookie
+            ResponseCookie responseCookie,
+            ContentType contentType
     ) {
         this.statusLine = statusLine;
         this.headers = headers;
@@ -27,6 +30,7 @@ public class HttpResponse {
         this.modelAttributes = new ModelAttributes(new HashMap<>());
         this.body = body;
         this.responseCookie = responseCookie;
+        this.contentType = contentType;
     }
 
     public HttpResponse(String viewName) {
@@ -35,22 +39,24 @@ public class HttpResponse {
                 new HttpResponseHeader(new HashMap<>()),
                 viewName,
                 HttpResponseBody.EMPTY_RESPONSE_BODY,
-                null
+                null,
+                ContentType.HTML
         );
     }
 
-    public HttpResponse(HttpResponseBody body) {
+    public HttpResponse(HttpResponseBody body, ContentType contentType) {
         this(
                 new ResponseStatusLine(HttpVersion.HTTP_1_1, HttpStatusCode.OK_200),
                 new HttpResponseHeader(new HashMap<>()),
                 null,
                 body,
-                null
+                null,
+                contentType
         );
     }
 
     public static HttpResponse ok() {
-        return new HttpResponse(HttpResponseBody.EMPTY_RESPONSE_BODY);
+        return new HttpResponse(HttpResponseBody.EMPTY_RESPONSE_BODY, ContentType.HTML);
     }
 
     public static HttpResponse redirect(String viewName) {
@@ -61,7 +67,8 @@ public class HttpResponse {
                 new HttpResponseHeader(headers),
                 null,
                 HttpResponseBody.EMPTY_RESPONSE_BODY,
-                null
+                null,
+                ContentType.HTML
         );
     }
 
@@ -110,5 +117,9 @@ public class HttpResponse {
 
     public ModelAttributes getModelAttributes() {
         return modelAttributes;
+    }
+
+    public ContentType getContentType() {
+        return contentType;
     }
 }

@@ -1,5 +1,6 @@
 package application.exception;
 
+import http.ContentType;
 import http.HttpVersion;
 import http.response.HttpResponse;
 import http.response.HttpResponseBody;
@@ -33,7 +34,8 @@ public class GlobalExceptionHandler {
                 new HttpResponseHeader(new HashMap<>()),
                 null,
                 new HttpResponseBody(errorCode.getMessage().getBytes()),
-                null
+                null,
+                ContentType.HTML
         );
     }
 }

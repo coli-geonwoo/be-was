@@ -72,7 +72,7 @@
     </div>
     <script>
       let selectedFiles = [];
-
+      let articleId = null;
       const imageInput = document.getElementById('image-input');
       const selectedFilesDiv = document.getElementById('selected-files');
       const uploadStatus = document.getElementById('upload-status');
@@ -137,10 +137,18 @@
             body: formData
           });
 
+          console.log('Response status:', response.status);
+          console.log('Response ok:', response.ok);
+          console.log('Response headers:', response.headers.get('content-type'));
+
           if (!response.ok) throw new Error('게시글 작성 실패');
 
+          const data = await response.json();
+          const offset = data.offSet;
+          console.log("offset : ", offset);
+
           showStatus('작성 완료!', 'success');
-          setTimeout(() => window.location.href = '/main', 500);
+          setTimeout(() => window.location.href = `/main?offset=${offset}`, 500);
 
         } catch (error) {
           console.error('Submit error:', error);

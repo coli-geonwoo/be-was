@@ -3,6 +3,7 @@ package application.handler;
 import static application.config.argumentresolver.AuthMemberArgumentResolver.SESSION_ID_COOKIE_KEY;
 
 import application.config.argumentresolver.AuthMember;
+import application.dto.response.ArticleCreateResponse;
 import application.dto.response.LatestArticleResponse;
 import application.dto.response.LikesResponse;
 import application.model.User;
@@ -10,6 +11,7 @@ import application.service.ArticleFacadeService;
 import application.service.AuthService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import http.ContentType;
 import http.HttpMethod;
 import http.request.HttpRequest;
 import http.request.RequestCookie;
@@ -44,14 +46,7 @@ public class ArticleHandler {
         String offset = request.getRequestParameter("offset");
         LatestArticleResponse latestArticle = articleFacadeService.getLatestArticle(Integer.valueOf(offset));
         String response = getJsonResponse(latestArticle);
-        return new HttpResponse(new HttpResponseBody(response.getBytes()));
-    }
-
-    @RequestMapping(method = HttpMethod.GET, path ="/article/id")
-    public HttpResponse getArticleById(HttpRequest request) {
-        String id = request.getRequestParameter("articleId");
-        long offSet = articleFacadeService.getArticleOffSetById(Long.parseLong(id));
-        return HttpResponse.redirect("/article/latest?=offset" + offSet);
+        return new HttpResponse(new HttpResponseBody(response.getBytes()), ContentType.JSON);
     }
 
     @RequestMapping(method = HttpMethod.POST, path = "/article")
@@ -59,8 +54,9 @@ public class ArticleHandler {
             @AuthMember User user,
             @RequestBody MultipartFiles multipartFiles
     ) {
-        articleFacadeService.save(multipartFiles, user);
-        return HttpResponse.redirect("/"); //TODO 201로 전환
+        ArticleCreateResponse createResponse = articleFacadeService.save(multipartFiles, user);
+        String response = getJsonResponse(createResponse);
+        return new HttpResponse(new HttpResponseBody(response.getBytes()), ContentType.JSON);
     }
 
     @RequestMapping(method = HttpMethod.POST, path= "/article/likes")
@@ -68,7 +64,7 @@ public class ArticleHandler {
         long articleId = Long.parseLong(request.getRequestParameter("articleId"));
         LikesResponse likesResponse = articleFacadeService.incrementLikes(articleId);
         String response = getJsonResponse(likesResponse);
-        return new HttpResponse(new HttpResponseBody(response.getBytes()));
+        return new HttpResponse(new HttpResponseBody(response.getBytes()), ContentType.JSON);
     }
 
     private String getJsonResponse(Object object) {

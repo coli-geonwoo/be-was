@@ -1,6 +1,7 @@
 package application.service;
 
 import application.dto.request.ArticleCreateRequest;
+import application.dto.response.ArticleCreateResponse;
 import application.dto.response.LatestArticleResponse;
 import application.dto.response.CommentResponse;
 import application.dto.response.LikesResponse;
@@ -27,7 +28,7 @@ public class ArticleFacadeService {
         this.userService = new UserService();
     }
 
-    public void save(MultipartFiles multipartFiles, User user) {
+    public ArticleCreateResponse save(MultipartFiles multipartFiles, User user) {
         String title = multipartFiles.getFirstFileValue("title");
         String content = multipartFiles.getFirstFileValue("content");
         List<MultipartFile> images = multipartFiles.getFiles("images");
@@ -36,9 +37,19 @@ public class ArticleFacadeService {
         }
         ArticleCreateRequest articleCreateRequest = new ArticleCreateRequest(title, content);
         Article savedArticle = articleService.save(user, articleCreateRequest);
+        long offSet = getArticleOffSetById(savedArticle.getId());
         images.stream()
                 .filter(image -> !image.isFormField())
                 .forEach(image -> articleImageService.saveImage(savedArticle, image));
+        return new ArticleCreateResponse(savedArticle.getId(), offSet);
+    }
+
+    private long getArticleOffSetById(long articleId) {
+        int total = articleService.count();
+        if (total < articleId) {
+            throw new CustomException(ErrorCode.INVALID_LATEST_ARTICLE_REQUEST);
+        }
+        return total - articleId;
     }
 
     public LatestArticleResponse getLatestArticle(int offset) {
@@ -53,14 +64,6 @@ public class ArticleFacadeService {
         CommentResponse commentResponse = commentService.findByArticleId(article.getId());
 
         return new LatestArticleResponse(total, article, user, images, likes, commentResponse);
-    }
-
-    public long getArticleOffSetById(long articleId) {
-        int total = articleService.count();
-        if (total < articleId) {
-            throw new CustomException(ErrorCode.INVALID_LATEST_ARTICLE_REQUEST);
-        }
-        return total - articleId;
     }
 
 
