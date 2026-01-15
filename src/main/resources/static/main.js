@@ -35,10 +35,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadArticle() {
     const res = await fetch(`/article/latest?offset=${offset}`);
-    const article = await res.json();
 
+    if (res.status === 400) {
+        console.log("show empty state")
+        showEmptyState();
+        return;
+    }
+    const article = await res.json();
     total = article.total;
     articleId = article.articleId;
+    console.log("hide empty state")
+    hideEmptyState()
 
     // 제목 / 내용
     document.getElementById("post-title").textContent = article.title;
@@ -58,6 +65,21 @@ async function loadArticle() {
     renderTopComments();
     updateNavButtons()
 }
+
+function showEmptyState() {
+    document.getElementById("wrapper").style.display = "none";
+    document.getElementById("empty-state").style.display = "flex";
+
+    // 네비게이션 버튼 숨김
+    document.getElementById("prev-article").style.display = "none";
+    document.getElementById("next-article").style.display = "none";
+}
+
+function hideEmptyState() {
+    document.getElementById("wrapper").style.display = "block";
+    document.getElementById("empty-state").style.display = "none";
+}
+
 
 function renderImage() {
     document.getElementById("post-image").src = images[imageIndex] || "";

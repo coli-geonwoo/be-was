@@ -30,7 +30,7 @@ public class ArticleFacadeService {
         String title = multipartFiles.getFirstFileValue("title");
         String content = multipartFiles.getFirstFileValue("content");
         List<MultipartFile> images = multipartFiles.getFiles("images");
-        if(images.isEmpty()) {
+        if (images.isEmpty()) {
             throw new CustomException(ErrorCode.INVALID_ARTICLE_INPUT);
         }
         ArticleCreateRequest articleCreateRequest = new ArticleCreateRequest(title, content);
@@ -42,6 +42,9 @@ public class ArticleFacadeService {
 
     public ArticleResponse getLatestArticle(int offset) {
         int total = articleService.count();
+        if (total <= offset) {
+            throw new CustomException(ErrorCode.INVALID_LATEST_ARTICLE_REQUEST);
+        }
         Article article = articleService.findLatestArticle(offset);
         User user = userService.findById(article.getUserId());
         List<ArticleImage> images = articleImageService.findByArticleId(article.getId());
