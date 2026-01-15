@@ -30,4 +30,9 @@ public class ArticleLikesMemoryRepository implements ArticleLikesRepository {
         }
         return Optional.of(new ArticleLikes(articleId, likesData.get(articleId).get()));
     }
+
+    @Override
+    public long incrementAndGet(long articleId) {
+        return likesData.get(articleId).incrementAndGet();
+    }
 }

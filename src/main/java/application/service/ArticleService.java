@@ -41,4 +41,8 @@ public class ArticleService {
                 .orElseThrow(() -> new CustomException(ErrorCode.ARTICLE_LIKES_NOT_FOUND))
                 .getCount();
     }
+
+    public long incrementAndGetLikes(long articleId) {
+        return articleLikesRepository.incrementAndGet(articleId);
+    }
 }

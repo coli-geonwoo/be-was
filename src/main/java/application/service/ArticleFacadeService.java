@@ -3,6 +3,7 @@ package application.service;
 import application.dto.request.ArticleCreateRequest;
 import application.dto.response.ArticleResponse;
 import application.dto.response.CommentResponse;
+import application.dto.response.LikesResponse;
 import application.exception.CustomException;
 import application.exception.ErrorCode;
 import application.model.Article;
@@ -52,5 +53,11 @@ public class ArticleFacadeService {
         CommentResponse commentResponse = commentService.findByArticleId(article.getId());
 
         return new ArticleResponse(total, article, user, images, likes, commentResponse);
+    }
+
+
+    public LikesResponse incrementLikes(long articleId) {
+        long likesCount = articleService.incrementAndGetLikes(articleId);
+        return new LikesResponse(likesCount);
     }
 }

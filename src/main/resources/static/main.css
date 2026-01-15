@@ -212,3 +212,16 @@ button:disabled {
   line-height: 1.4;
 }
 
+.post__menu__btn.liked {
+  transform: scale(1.2);
+  transition: transform 0.15s ease;
+}
+
+.post__menu__btn {
+  transition: transform 0.15s ease;
+}
+
+.post__menu__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

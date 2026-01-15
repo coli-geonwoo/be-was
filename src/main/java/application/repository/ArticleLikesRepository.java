@@ -8,4 +8,6 @@ public interface ArticleLikesRepository {
     ArticleLikes save(ArticleLikes articleLikes);
 
     Optional<ArticleLikes> findByArticleId(long articleId);
+
+    long incrementAndGet(long articleId);
 }

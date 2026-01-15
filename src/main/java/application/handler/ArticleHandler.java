@@ -4,6 +4,7 @@ import static application.config.argumentresolver.AuthMemberArgumentResolver.SES
 
 import application.config.argumentresolver.AuthMember;
 import application.dto.response.ArticleResponse;
+import application.dto.response.LikesResponse;
 import application.model.User;
 import application.service.ArticleFacadeService;
 import application.service.AuthService;
@@ -55,10 +56,18 @@ public class ArticleHandler {
         return new HttpResponse(new HttpResponseBody(response.getBytes()));
     }
 
-    private String getJsonResponse(ArticleResponse articleResponse) {
+    @RequestMapping(method = HttpMethod.POST, path= "/article/likes")
+    public HttpResponse updateLikes(HttpRequest request) {
+        long articleId = Long.parseLong(request.getRequestParameter("articleId"));
+        LikesResponse likesResponse = articleFacadeService.incrementLikes(articleId);
+        String response = getJsonResponse(likesResponse);
+        return new HttpResponse(new HttpResponseBody(response.getBytes()));
+    }
+
+    private String getJsonResponse(Object object) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.writeValueAsString(articleResponse);
+            return objectMapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

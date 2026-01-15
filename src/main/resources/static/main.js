@@ -5,8 +5,13 @@ let imageIndex = 0;
 let allComments = [];
 let articleId = null;
 
+const likeBtn = document.getElementById("like-btn");
+const likeCountEl = document.getElementById("like-count");
+
 document.addEventListener("DOMContentLoaded", () => {
     loadArticle();
+
+    document.getElementById("like-btn").onclick = handleLikeClick;
 
     document.getElementById("next-article").onclick = () => {
         if (offset < total - 1) {
@@ -65,6 +70,43 @@ async function loadArticle() {
     renderTopComments();
     updateNavButtons()
 }
+
+async function handleLikeClick() {
+    if (!articleId) return;
+    if (likeBtn.disabled) return; //이미 POST를 보낸 상황에서는 요청 무시하기
+    likeBtn.disabled = true;
+
+    try {
+        const res = await fetch(`/article/likes?articleId=` + articleId, {
+            method: "POST",
+        });
+
+        if (!res.ok) return;
+
+        const data = await res.json(); // { count: number }
+
+        // 좋아요 수 갱신
+        const countEl = document.getElementById("like-count");
+        countEl.textContent = data.count;
+
+        animateLikeButton();
+    } catch (e) {
+        console.error("like error", e);
+    } finally {
+        likeBtn.disabled = false; //다시 활성화하기
+    }
+}
+
+function animateLikeButton() {
+    const btn = document.getElementById("like-btn");
+
+    btn.classList.add("liked");
+
+    setTimeout(() => {
+        btn.classList.remove("liked");
+    }, 150);
+}
+
 
 function showEmptyState() {
     document.getElementById("wrapper").style.display = "none";
