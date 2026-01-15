@@ -23,7 +23,7 @@ public class UserH2Database implements UserRepository {
 
     @Override
     public User save(User user) {
-        String sql = "INSERT INTO users (user_id, name, password, email, image_url) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO users (user_id, name, password, email, image_url) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.executeUpdate(sql, user.getUserId(), user.getName(), user.getPassword(), user.getEmail(), user.getImageUrl());
         return user;
     }
