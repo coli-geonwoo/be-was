@@ -27,6 +27,29 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User update(User user, UserUpdateRequest userUpdateRequest) {
+        validateDuplicateName(userUpdateRequest.nickname());
+        if (userUpdateRequest.image() != null) {
+            MultipartFile multipartFile = userUpdateRequest.image();
+            String imageUrl = fileUploader.imageUpload(
+                    multipartFile.getInputStream(),
+                    multipartFile.getOriginalFilename()
+            );
+            return userRepository.updateUserInfo(
+                    user.getUserId(),
+                    userUpdateRequest.nickname(),
+                    userUpdateRequest.password(),
+                    imageUrl
+            );
+        }
+        return userRepository.updateUserInfo(
+                user.getUserId(),
+                userUpdateRequest.nickname(),
+                userUpdateRequest.password(),
+                getUpdateImageUrl(userUpdateRequest)
+        );
+    }
+
     private void validateDuplicateName(String name) {
         if (userRepository.findByName(name).isPresent()) {
             throw new CustomException(ErrorCode.DUPLICATE_USER_NAME);
@@ -38,24 +61,6 @@ public class UserService {
             throw new CustomException(ErrorCode.DUPLICATE_USER_ID);
         }
 
-    }
-
-    public User update(User user, UserUpdateRequest userUpdateRequest) {
-        if (userUpdateRequest.image() != null) {
-            MultipartFile multipartFile = userUpdateRequest.image();
-            String imageUrl = fileUploader.imageUpload(
-                    multipartFile.getInputStream(),
-                    multipartFile.getOriginalFilename()
-            );
-            return userRepository.updateUserInfo(user.getUserId(), userUpdateRequest.nickname(),
-                    userUpdateRequest.password(), imageUrl);
-        }
-        return userRepository.updateUserInfo(
-                user.getUserId(),
-                userUpdateRequest.nickname(),
-                userUpdateRequest.password(),
-                getUpdateImageUrl(userUpdateRequest)
-        );
     }
 
     private String getUpdateImageUrl(UserUpdateRequest userUpdateRequest) {
